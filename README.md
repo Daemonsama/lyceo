@@ -50,3 +50,5 @@ Le projet a été pensé pour être évolutif. Parmi les fonctionnalités envisa
 - Intégration d'un module de paiement en ligne (ex: Stripe)
 - Tableau de bord utilisateur avec suivi de progression
 - Gestion des utilisateurs par l'administrateur
+
+modif 1
