@@ -1,0 +1,38 @@
+<h2 class="mt-5">Quiz entre les chapitres</h2>
+<p class="text-muted">Un quiz bloque le passage au chapitre suivant tant qu'il n'est pas validé par l'apprenant.</p>
+
+<table class="table table-bordered bg-white">
+    <thead>
+        <tr>
+            <th>Chapitre terminé</th>
+            <th>Quiz</th>
+            <th>Questions</th>
+            <th>Seuil</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for chapitre in formation.chapitres %}
+        <tr>
+            <td>{{ chapitre.ordre }}. {{ chapitre.titre }}</td>
+            {% if chapitre.quiz %}
+                <td>{{ chapitre.quiz.titre }}</td>
+                <td>{{ chapitre.quiz.questions|length }}</td>
+                <td>{{ chapitre.quiz.seuilReussite }}%</td>
+                <td>
+                    <a class="btn btn-sm btn-primary" href="{{ path('app_admin_quiz_edit', {quiz: chapitre.quiz.id}) }}">Gérer</a>
+                </td>
+            {% else %}
+                <td colspan="3" class="text-muted">Aucun quiz</td>
+                <td>
+                    <a class="btn btn-sm btn-success" href="{{ path('app_admin_quiz_new', {chapitre: chapitre.id}) }}">Créer un quiz</a>
+                </td>
+            {% endif %}
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="5">Ajoutez d'abord des chapitres à cette formation.</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

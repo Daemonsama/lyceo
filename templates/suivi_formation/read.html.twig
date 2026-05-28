@@ -1,0 +1,208 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ chapitre.titre }} – {{ chapitre.formation.titre }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/read.css') }}">
+{% endblock %}
+
+{% block body %}
+
+{% set chapitres = chapitre.formation.chapitres %}
+{% set total = chapitres|length %}
+{% set index = 1 %}
+
+{% for chap in chapitres %}
+    {% if chap.id == chapitre.id %}
+        {% set index = loop.index %}
+    {% endif %}
+{% endfor %}
+
+{% set progression = total > 0 ? ((index / total) * 100)|round : 0 %}
+{% set isLastChapter = index == total %}
+
+<div class="learning-layout" id="learningLayout">
+
+    {# SIDEBAR #}
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="formation-badge">
+                <i class="bi bi-mortarboard-fill"></i>
+                <span>Formation</span>
+            </div>
+            <h2>{{ chapitre.formation.titre }}</h2>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-label">
+                <span>Chapitre {{ index }} sur {{ total }}</span>
+                <span style="color: var(--spc-primary); font-weight: 600;">
+                    {{ progression }}%
+                </span>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar-fill" style="width: {{ progression }}%"></div>
+            </div>
+        </div>
+
+        <div class="chapters-list">
+            <div class="chapters-list-title">Chapitres</div>
+
+            {% for chap in chapitres %}
+                {% set state = chap.id == chapitre.id ? 'active' : (loop.index < index ? 'completed' : 'upcoming') %}
+
+                <a href="{{ path('app_suivi_formation', {'chapitre': chap.id}) }}"
+                   class="chapter-item {{ state }}">
+
+                    <div class="chapter-icon {{ state }}">
+                        {% if state == 'active' %}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M8 5V19L19 12L8 5Z" fill="currentColor"/>
+                            </svg>
+                        {% elseif state == 'completed' %}
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                                <path d="M5 13L9 17L19 7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        {% else %}
+                            {{ loop.index }}
+                        {% endif %}
+                    </div>
+
+                    <div class="chapter-info">
+                        <div class="chapter-title">{{ chap.titre }}</div>
+                        <div class="chapter-duration">
+                            Chapitre {{ loop.index }}
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    </aside>
+
+    {# TOGGLE SIDEBAR #}
+    <button class="sidebar-toggle" id="sidebarToggle" title="Masquer/Afficher le menu">
+        ☰
+    </button>
+
+    {# CONTENU PRINCIPAL #}
+    <main class="main-content">
+
+        <div class="content-topbar">
+            <nav class="breadcrumb-nav">
+                <a href="{{ path('app_formation_show', {'formation': chapitre.formation.id}) }}">
+                    {{ chapitre.formation.titre }}
+                </a>
+                <span>›</span>
+                <span>{{ chapitre.titre }}</span>
+            </nav>
+
+            {% if userFormation.chapitreEncours and chapitre.id == userFormation.chapitreEncours.id %}
+                <span class="current-badge">Chapitre en cours</span>
+            {% endif %}
+        </div>
+
+        <div class="content-area">
+
+            <div class="chapter-number">
+                Chapitre {{ index }} / {{ total }}
+            </div>
+
+            <h1 class="chapter-main-title">
+                {{ chapitre.titre }}
+            </h1>
+
+            <div class="chapter-meta">
+                <span>
+                    <i class="bi bi-book me-1"></i>
+                    {{ chapitre.formation.titre }}
+                </span>
+                <span>•</span>
+                <span>{{ progression }}% de progression</span>
+            </div>
+
+            {% if mediaDisplay is not null %}
+                <div class="chapter-media-block">
+                    {% include 'chapitre/_media.html.twig' with {mediaDisplay: mediaDisplay} %}
+                </div>
+            {% endif %}
+
+            <div class="chapter-content-body">
+                {{ chapitre.contenu|raw }}
+            </div>
+
+            {#
+                Fallback important:
+                si chapitreEncours n'est pas défini (ou cassé après des modifs),
+                on garde les boutons d'action visibles sur le chapitre affiché.
+            #}
+            {% set isCurrentChapter = (userFormation.chapitreEncours is not null)
+                ? (chapitre.id == userFormation.chapitreEncours.id)
+                : true %}
+
+            <div class="chapter-navigation">
+                <a href="{{ path('app_formation_show', {'formation': chapitre.formation.id}) }}" class="nav-btn nav-btn-prev">
+                    <span>←</span>
+                    <span class="nav-btn-text">
+                        <span class="nav-btn-label">Retour</span>
+                        <span>Vue d'ensemble</span>
+                    </span>
+                </a>
+
+                {% if needsQuiz %}
+                    <a href="{{ path('app_quiz_formation', {'chapitre': chapitre.id}) }}" class="nav-btn nav-btn-next">
+                        <span class="nav-btn-text" style="text-align: right;">
+                            <span class="nav-btn-label">Quiz</span>
+                            <span>Tester mes connaissances</span>
+                        </span>
+                        <span class="nav-icon">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+                                <path d="M9 11L12 14L22 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                <path d="M21 12V19C21 20.1 20.1 21 19 21H5C3.9 21 3 20.1 3 19V5C3 3.9 3.9 3 5 3H16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                    </a>
+                {% elseif isCurrentChapter %}
+                    <a href="{{ path('app_formation_chap_suivant', {'chapitre': chapitre.id}) }}" class="nav-btn nav-btn-next">
+                        <span class="nav-btn-text" style="text-align: right;">
+                            <span class="nav-btn-label">
+                                {{ isLastChapter ? 'Terminer' : 'Suivant' }}
+                            </span>
+                            <span>
+                                {% if isLastChapter %}
+                                    Fin de la formation
+                                {% else %}
+                                    {% for chap in chapitres %}
+                                        {% if loop.index == index + 1 %}
+                                            {{ chap.titre }}
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
+                            </span>
+                        </span>
+                        <span>→</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    const toggle = document.getElementById('sidebarToggle');
+    const sidebar = document.getElementById('sidebar');
+    const layout = document.getElementById('learningLayout');
+
+    if (toggle && sidebar && layout) {
+        toggle.addEventListener('click', () => {
+            sidebar.classList.toggle('hidden');
+            layout.classList.toggle('sidebar-hidden');
+            toggle.textContent = sidebar.classList.contains('hidden') ? '▶' : '☰';
+        });
+    }
+</script>
+
+{% endblock %}

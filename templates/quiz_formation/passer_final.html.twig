@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Quiz final – {{ formation.titre }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/quiz.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5 quiz-page">
+        <div class="text-center mb-2">
+            <span class="badge bg-primary mb-2">Quiz final</span>
+            <h1 class="mb-1">{{ formation.titre }}</h1>
+        </div>
+        <p class="text-center text-muted mb-4">
+            {{ questions|length }} question(s) tirée(s) au hasard parmi {{ totalQuestionsPool }} question(s) de tous les chapitres.
+            <br>Score minimum : {{ seuilReussite }}%
+        </p>
+
+        {% if quizSubmitted %}
+            <div class="alert {{ passed ? 'alert-success' : 'alert-danger' }} text-center mb-4" role="alert">
+                {% if passed %}
+                    <strong>Félicitations !</strong> Quiz final réussi avec {{ score }}%.
+                    <br><span class="small">Vous avez terminé la formation.</span>
+                {% else %}
+                    <strong>Score insuffisant :</strong> {{ score }}% (minimum {{ seuilReussite }}%)
+                    <br><span class="small">Réessayez autant de fois que nécessaire.</span>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <form method="post" class="card shadow-sm quiz-form {{ quizSubmitted ? 'quiz-form--submitted' : '' }}">
+            <input type="hidden" name="_token" value="{{ csrf_token('quiz_final_' ~ formation.id) }}">
+
+            <div class="card-body px-4 py-4">
+                {% for question in questions %}
+                    <fieldset class="mb-4 pb-4 {% if not loop.last %}border-bottom{% endif %}" {% if quizSubmitted %}disabled{% endif %}>
+                        <legend class="fs-5 fw-semibold mb-3">
+                            {{ loop.index }}. {{ question.enonce }}
+                            {% if question.quiz.chapitre is defined %}
+                                <span class="badge bg-light text-dark fw-normal ms-1">{{ question.quiz.chapitre.titre }}</span>
+                            {% endif %}
+                        </legend>
+                        {% for reponse in question.reponses %}
+                            {% if reponse.libelle|trim is not empty %}
+                                {% set isChecked = (submittedAnswers[question.id] ?? submittedAnswers[question.id ~ ''] ?? null) == reponse.id %}
+                                <div class="form-check mb-2">
+                                    <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="reponses[{{ question.id }}]"
+                                        id="q{{ question.id }}_r{{ reponse.id }}"
+                                        value="{{ reponse.id }}"
+                                        {% if quizSubmitted %}
+                                            disabled
+                                            {% if isChecked %}checked{% endif %}
+                                        {% else %}
+                                            required
+                                        {% endif %}
+                                    >
+                                    <label class="form-check-label" for="q{{ question.id }}_r{{ reponse.id }}">
+                                        {{ reponse.libelle }}
+                                    </label>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </fieldset>
+                {% endfor %}
+            </div>
+
+            <div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2 bg-white">
+                <a href="{{ path('app_formation_show', {formation: formation.id}) }}" class="btn btn-outline-secondary">
+                    ← Retour à la formation
+                </a>
+
+                {% if quizSubmitted %}
+                    {% if passed %}
+                        <a href="{{ path('app_formation_show', {formation: formation.id}) }}" class="btn btn-success btn-lg">
+                            Formation terminée <i class="bi bi-trophy ms-1"></i>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_quiz_final', {formation: formation.id}) }}" class="btn btn-primary btn-lg">
+                            Réessayer
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        Valider le quiz final
+                    </button>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}{{ is_new ? 'Nouvelle question' : 'Modifier la question' }}{% endblock %}
+
+{% block body %}
+    <h1>{{ is_new ? 'Nouvelle question' : 'Modifier la question' }}</h1>
+    <p class="text-muted">Quiz : {{ quiz.titre }}</p>
+
+    {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_row(form.enonce) }}
+            {{ form_row(form.ordre) }}
+        </div>
+
+        <h3>Réponses possibles</h3>
+        <p class="text-muted small">Cochez exactement une bonne réponse. Laissez vides les réponses inutilisées.</p>
+
+        <div data-collection-holder>
+            {% for reponseField in form.reponses %}
+                <div class="card mb-2">
+                    <div class="card-body row align-items-center">
+                        <div class="col-md-8">
+                            {{ form_row(reponseField.libelle, {label: false}) }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form_row(reponseField.estCorrecte) }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button class="btn btn-primary mt-3">Enregistrer</button>
+    {{ form_end(form) }}
+
+    <a class="btn btn-secondary mt-3" href="{{ path('app_admin_quiz_edit', {quiz: quiz.id}) }}">Retour au quiz</a>
+{% endblock %}

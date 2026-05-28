@@ -1,0 +1,65 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Formation{% endblock %}
+
+{% block body %}
+    <h1>Formation</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ formation.id }}</td>
+            </tr>
+            <tr>
+                <th>Titre</th>
+                <td>{{ formation.titre }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ formation.description }}</td>
+            </tr>
+            <tr>
+                <th>Prix</th>
+                <td>{{ formation.prix }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_admin_formation_index') }}">back to list</a>
+
+    <a href="{{ path('app_admin_formation_edit', {'formation': formation.id}) }}">edit</a>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Titre</th>
+            <th>Contenu</th>
+            <th>Media</th>
+            <th>Ordre</th>
+            <th>actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for chapitre in formation.chapitres %}
+            <tr>
+                <td>{{ chapitre.id }}</td>
+                <td>{{ chapitre.titre }}</td>
+                <td>{{ chapitre.contenu }}</td>
+                <td>{{ chapitre.media }}</td>
+                <td>{{ chapitre.ordre }}</td>
+                <td>
+                    <a href="{{ path('app_admin_chapitre_show', {'chapitre': chapitre.id}) }}">show</a>
+                    <a href="{{ path('app_admin_chapitre_edit', {'chapitre': chapitre.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="6">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}

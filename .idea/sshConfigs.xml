@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SshConfigs">
+    <configs>
+      <sshConfig authType="PASSWORD" host="cloud68.net15.fr" id="6262f05d-0020-4d69-bfba-c201fff5f441" port="22" nameFormat="DESCRIPTIVE" username="spcformation" useOpenSSHConfig="true" />
+    </configs>
+  </component>
+</project>

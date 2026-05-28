@@ -1,0 +1,34 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Liste des formations{% endblock %}
+
+{% block body %}
+    <h1>Liste des formations</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for formation in formations %}
+            <tr>
+                <td>{{ formation.id }}</td>
+                <td>{{ formation.titre }}</td>
+                <td>
+                    <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {'formation': formation.id}) }}">Modifier</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Aucune formation crée.</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a class="btn btn-success" href="{{ path('app_admin_formation_new') }}">Créer une nouvelle formation</a>
+{% endblock %}

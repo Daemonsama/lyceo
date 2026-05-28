@@ -1,0 +1,39 @@
+{{ form_start(form) }}
+
+{{ form_row(form.titre) }}
+{{ form_row(form.contenu) }}
+
+<div class="card mb-3">
+    <div class="card-header bg-white">
+        <strong>Média du chapitre</strong>
+    </div>
+    <div class="card-body">
+        {% if mediaDisplay is defined and mediaDisplay is not null %}
+            <p class="text-muted small">Aperçu actuel :</p>
+            {% include 'chapitre/_media.html.twig' with {mediaDisplay: mediaDisplay} %}
+            <hr>
+        {% endif %}
+
+        {{ form_row(form.media) }}
+        {{ form_row(form.mediaUrl) }}
+        {% if chapitre is defined and chapitre.hasMedia %}
+            {{ form_row(form.removeMedia) }}
+        {% endif %}
+    </div>
+</div>
+
+{{ form_row(form.ordre) }}
+
+<button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
+
+{{ form_end(form) }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.ckeditor').forEach(textarea => {
+            if (typeof CKEDITOR !== 'undefined') {
+                CKEDITOR.replace(textarea, { height: 200 });
+            }
+        });
+    });
+</script>

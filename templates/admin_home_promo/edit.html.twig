@@ -1,0 +1,46 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Média d'accueil{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">Média d'accueil</li>
+{% endblock %}
+
+{% set bl = form.vars.data %}
+
+{% block body %}
+<div class="container py-4" id="promo" style="scroll-margin-top: 5.5rem;">
+    <h1 class="mb-2">Média d'accueil</h1>
+    <p class="text-muted mb-4">Vidéo ou lien affiché à la place de l’ancienne carte sur la page d’accueil (section « Pour qui »).</p>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {{ form_start(form, { attr: { class: 'card shadow-sm border-0', enctype: 'multipart/form-data' } }) }}
+        <div class="card-body">
+            {{ form_row(form.sectionTitle) }}
+            {{ form_row(form.sectionLead) }}
+            {{ form_row(form.videoFile) }}
+            {% if bl.hasUploadedVideo %}
+                <p class="small text-muted">Fichier actuel : <code>{{ bl.videoFilename }}</code></p>
+                {{ form_row(form.removeUploadedVideo) }}
+            {% endif %}
+            {{ form_row(form.videoUrl) }}
+        </div>
+        <div class="card-footer bg-white border-top">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-check-lg"></i> Enregistrer
+            </button>
+            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary ms-2" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right"></i> Voir le site
+            </a>
+        </div>
+    {{ form_end(form) }}
+</div>
+{% endblock %}

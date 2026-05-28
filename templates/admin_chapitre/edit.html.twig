@@ -1,0 +1,15 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Modifier le chapitre{% endblock %}
+
+{% block body %}
+    <h1>Modifier le chapitre</h1>
+
+    {{ include('admin_chapitre/_form.html.twig', {button_label: 'Sauvegarder', chapitre: chapitre, mediaDisplay: mediaDisplay}) }}
+
+    <div class="mt-3">
+        <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {'formation': chapitre.formation.id}) }}">Retour à la formation</a>
+        {{ include('admin_chapitre/_delete_form.html.twig') }}
+    </div>
+
+{% endblock %}

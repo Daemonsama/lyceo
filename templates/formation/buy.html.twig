@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ formation.titre }}{% endblock %}
+
+{% block body %}
+
+    <div class="row pt-5">
+        <div class="col col-sm-12 text-center">
+            <h1>Interface bancaire</h1>
+        </div>
+    </div>
+    <div class="row pt-5">
+        <div class="col col-sm-12 text-center">
+            <a class="btn btn-primary" href="{{ path('app_formation_ipn', {'formation':formation.id}) }}">Valider l'achat</a>
+            <a class="btn btn-danger" href="{{ path('app_formation_show', {'formation':formation.id}) }}">Annuler l'achat</a>
+        </div>
+    </div>
+
+{% endblock %}

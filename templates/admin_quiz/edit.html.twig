@@ -1,0 +1,64 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Gérer le quiz{% endblock %}
+
+{% block body %}
+    <h1>{{ quiz.titre }}</h1>
+    <p class="text-muted">
+        Formation : {{ formation.titre }} —
+        Après le chapitre {{ quiz.chapitre.ordre }}. {{ quiz.chapitre.titre }}
+    </p>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            {{ form_start(form) }}
+                {{ form_widget(form) }}
+                <button class="btn btn-primary">Enregistrer les paramètres</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Questions ({{ quiz.questions|length }})</h2>
+        <a class="btn btn-success" href="{{ path('app_admin_quiz_question_new', {quiz: quiz.id}) }}">Ajouter une question</a>
+    </div>
+
+    {% if quiz.questions is empty %}
+        <div class="alert alert-warning">Ajoutez au moins une question pour que le quiz soit actif.</div>
+    {% else %}
+        <table class="table table-striped bg-white">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Énoncé</th>
+                    <th>Réponses</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for question in quiz.questions %}
+                <tr>
+                    <td>{{ question.ordre }}</td>
+                    <td>{{ question.enonce|striptags|slice(0, 80) }}{% if question.enonce|length > 80 %}…{% endif %}</td>
+                    <td>{{ question.reponses|length }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-secondary" href="{{ path('app_admin_quiz_question_edit', {question: question.id}) }}">Modifier</a>
+                        <form method="post" action="{{ path('app_admin_quiz_question_delete', {question: question.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer cette question ?');">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ question.id) }}">
+                            <button class="btn btn-sm btn-danger">Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
+    <div class="mt-4">
+        <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {formation: formation.id}) }}">Retour à la formation</a>
+        <form method="post" action="{{ path('app_admin_quiz_delete', {quiz: quiz.id}) }}" class="d-inline" onsubmit="return confirm('Supprimer ce quiz et toutes ses questions ?');">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ quiz.id) }}">
+            <button class="btn btn-outline-danger">Supprimer le quiz</button>
+        </form>
+    </div>
+{% endblock %}

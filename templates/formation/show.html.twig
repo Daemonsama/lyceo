@@ -1,0 +1,199 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ formation.titre }}{% endblock %}
+
+{% block body %}
+
+    {# Bandeau pleine largeur #}
+    <div class="formation-header-fullwidth">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">{{ formation.titre }}</h1>
+                    <div class="d-flex gap-3 mb-3">
+                    <span class="badge bg-light text-dark">
+                        <i class="bi bi-book"></i> {{ formation.chapitres|length }} chapitres
+                    </span>
+                        <span class="badge bg-light text-dark">
+                        <i class="bi bi-clock"></i> Accès illimité
+                    </span>
+                    </div>
+                </div>
+                {% if not app.user.hasFormation(formation) %}
+                    <div class="col-lg-4 text-lg-end">
+                        <div class="price-badge">{{ formation.prix }}€</div>
+                        <p class="mb-0 opacity-75">Prix unique</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+
+        <div class="row mb-5">
+
+            {# Colonne gauche : vidéo + description #}
+            <div class="col-lg-8">
+
+                {# Vidéo de présentation #}
+                {% if formation.media %}
+                    {% set mediaRaw = formation.media|trim %}
+                    {% set mediaLower = mediaRaw|lower %}
+
+                    {% if 'youtube.com' in mediaLower or 'youtu.be' in mediaLower %}
+                        {% set youtubeId = '' %}
+                        {% if 'watch?v=' in mediaRaw %}
+                            {% set youtubeId = mediaRaw|split('watch?v=')|last|split('&')|first %}
+                        {% elseif 'youtu.be/' in mediaRaw %}
+                            {% set youtubeId = mediaRaw|split('youtu.be/')|last|split('?')|first %}
+                        {% elseif 'youtube.com/embed/' in mediaRaw %}
+                            {% set youtubeId = mediaRaw|split('youtube.com/embed/')|last|split('?')|first %}
+                        {% endif %}
+                        <div class="formation-video-wrapper mb-4">
+                            <div class="formation-video-badge">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15 10L19.553 7.724A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Vidéo de la formation
+                            </div>
+                            <h3 class="formation-video-title">Présentation de la formation</h3>
+                            <div class="formation-youtube-wrapper">
+                                <iframe
+                                    src="https://www.youtube.com/embed/{{ youtubeId }}"
+                                    title="Vidéo de la formation"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                    {% elseif mediaLower ends with '.mp4' or mediaLower ends with '.webm' or mediaLower ends with '.ogg' %}
+                        <div class="formation-video-wrapper mb-4">
+                            <div class="formation-video-badge">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15 10L19.553 7.724A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                Vidéo de la formation
+                            </div>
+                            <h3 class="formation-video-title">Présentation de la formation</h3>
+                            <video controls class="formation-video-player">
+                                <source src="{{ asset('medias/' ~ mediaRaw) }}">
+                                Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                        </div>
+                    {% endif %}
+                {% endif %}
+
+                {# Description #}
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h3 class="h4 mb-3">
+                            <i class="bi bi-info-circle text-primary"></i> À propos de cette formation
+                        </h3>
+                        <div class="text-muted">
+                            {{ formation.description|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Sidebar avec actions #}
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                    <div class="card-body p-4">
+                        {% if not app.user.hasFormation(formation) %}
+                            <h5 class="mb-3">Commencer cette formation</h5>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-primary btn-lg"
+                                   href="{{ path('app_formation_buy', {'formation':formation.id}) }}">
+                                    <i class="bi bi-cart-plus"></i> Acheter pour {{ formation.prix }}€
+                                </a>
+                                <a class="btn btn-outline-secondary" href="{{ path('app_formation') }}">
+                                    <i class="bi bi-arrow-left"></i> Retour au catalogue
+                                </a>
+                            </div>
+                        {% else %}
+                            <h5 class="mb-3">Accès rapide</h5>
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-primary btn-lg"
+                                   href="{{ path('app_suivi_formation', {
+                                       'chapitre': chapitreEnCours ? chapitreEnCours.id : formation.chapitres[0].id
+                                   }) }}">
+                                    <i class="bi bi-play-circle"></i>
+                                    {{ chapitreEnCours ? 'Reprendre la formation' : 'Commencer la formation' }}
+                                </a>
+                                <a class="btn btn-outline-secondary" href="{{ path('app_formation') }}">
+                                    <i class="bi bi-arrow-left"></i> Catalogue des formations
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {# Liste des chapitres #}
+        <div class="accordion" id="chapitresAccordion">
+            {% for chapitre in formation.chapitres %}
+                <div class="card chapitre-card mb-3 border-0 shadow-sm
+                {{ chapitreEnCours and chapitre.id == chapitreEnCours.id ? 'chapitre-en-cours' : '' }}">
+                    <div class="card-header bg-white border-0" id="heading{{ chapitre.id }}">
+                        <div class="d-flex align-items-center py-2">
+                            <div class="chapter-number me-3">
+                                {{ loop.index }}
+                            </div>
+                            <div class="flex-grow-1">
+                                <h5 class="mb-1">
+                                    {{ chapitre.titre }}
+                                    {% if chapitreEnCours and chapitre.id == chapitreEnCours.id %}
+                                        <span class="badge bg-primary ms-2">
+                                        <i class="bi bi-star-fill"></i> En cours
+                                    </span>
+                                    {% endif %}
+                                </h5>
+                            </div>
+                            {% if app.user.hasFormation(formation) %}
+                                <a href="{{ path('app_suivi_formation', {'chapitre':chapitre.id}) }}"
+                                   class="btn btn-sm {{ chapitreEnCours and chapitre.id == chapitreEnCours.id ? 'btn-primary' : 'btn-outline-primary' }}">
+                                    <i class="bi bi-play-circle"></i>
+                                    {{ chapitreEnCours and chapitre.id == chapitreEnCours.id ? 'Continuer' : 'Voir' }}
+                                </a>
+                                {% if chapitre.quiz %}
+                                    <span class="badge bg-info text-dark ms-1" title="Quiz disponible pour ce chapitre">
+                                        <i class="bi bi-patch-question"></i> Quiz
+                                    </span>
+                                {% endif %}
+                            {% else %}
+                                <button class="btn btn-sm btn-outline-secondary" disabled>
+                                    <i class="bi bi-lock"></i> Verrouillé
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        {# Call to action final (uniquement si pas acheté) #}
+        {% if not app.user.hasFormation(formation) %}
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card bg-primary text-white border-0 shadow">
+                        <div class="card-body text-center p-5">
+                            <h3 class="mb-3">Prêt à commencer ?</h3>
+                            <p class="mb-4 opacity-75">Accédez immédiatement à tous les chapitres</p>
+                            <a href="{{ path('app_formation_buy', {'formation':formation.id}) }}"
+                               class="btn btn-light btn-lg px-5">
+                                Acheter pour {{ formation.prix }}€
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

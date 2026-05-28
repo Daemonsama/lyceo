@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="a1c92c41-f234-41ac-95b8-c49a8c127d19" name="cloud68.net15.fr">
+        <fileTransfer rootFolder="/home/spcformation/public_html" accessType="SFTP" host="cloud68.net15.fr" port="22" sshConfigId="6262f05d-0020-4d69-bfba-c201fff5f441" sshConfig="spcformation@cloud68.net15.fr:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

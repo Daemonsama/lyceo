@@ -1,0 +1,265 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Modifier la page d'accueil{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">Page d'accueil</li>
+{% endblock %}
+
+{% set hp = form.vars.data %}
+{% if hp.hasUploadedAboutImage %}
+    {% set previewSrc = asset('uploads/homepage/' ~ hp.aboutImageFilename) %}
+{% elseif hp.aboutImageUrl|trim != '' %}
+    {% set previewSrc = hp.aboutImageUrl %}
+{% else %}
+    {% set previewSrc = '' %}
+{% endif %}
+
+{% block body %}
+<div class="container py-4">
+    <h1 class="mb-3">Contenu de la page d'accueil</h1>
+
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {{ form_start(form, { attr: { class: 'card shadow-sm border-0', enctype: 'multipart/form-data' } }) }}
+        <div class="card-body">
+            <h2 class="h5 mb-3" style="color: #667eea;">Bandeau principal</h2>
+            {{ form_row(form.heroTitlePrefix) }}
+            {{ form_row(form.heroTitleHighlight) }}
+            {{ form_row(form.heroLead) }}
+
+            <hr class="my-4">
+
+            <div id="photo" class="scroll-anchor-photo">
+                <h2 class="h5 mb-3" style="color: #667eea;">Photo « À propos »</h2>
+                {{ form_row(form.aboutImageFile) }}
+                {% if hp.hasUploadedAboutImage %}
+                    <p class="small text-muted mb-2">Fichier actuel : <code>{{ hp.aboutImageFilename }}</code></p>
+                    {{ form_row(form.removeUploadedAboutImage) }}
+                {% endif %}
+
+                <div class="card border mb-4 bg-light">
+                    <div class="card-body text-center pt-4">
+                        <div id="homeAboutPreviewFrame"
+                             class="mx-auto mb-3 position-relative user-select-none"
+                             style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25); touch-action: none; cursor: grab; background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);">
+                            {% if previewSrc %}
+                                <img id="homeAboutPreviewImg"
+                                     src="{{ previewSrc }}"
+                                     alt=""
+                                     draggable="false"
+                                     class="position-absolute top-0 start-0"
+                                     style="width: 100%; height: 100%; pointer-events: none;">
+                            {% else %}
+                                <div id="homeAboutPreviewPlaceholder" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
+                                </div>
+                                <img id="homeAboutPreviewImg"
+                                     src=""
+                                     alt=""
+                                     draggable="false"
+                                     class="d-none position-absolute top-0 start-0"
+                                     style="width: 100%; height: 100%; pointer-events: none;">
+                            {% endif %}
+                        </div>
+                        <p class="small text-muted mb-3">Glissez pour déplacer le cadrage, molette pour zoomer.</p>
+                        <div class="visually-hidden">
+                            {{ form_widget(form.aboutImagePanX) }}
+                            {{ form_widget(form.aboutImagePanY) }}
+                            {{ form_widget(form.aboutImageZoom) }}
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_row(form.aboutImageUrl) }}
+            </div>
+
+            <hr class="my-4">
+
+            <h2 class="h5 mb-3" style="color: #667eea;">Textes « À propos »</h2>
+            {{ form_row(form.aboutName) }}
+            {{ form_row(form.aboutRole) }}
+            {{ form_row(form.aboutHeading) }}
+            {{ form_row(form.aboutParagraph1) }}
+            {{ form_row(form.aboutParagraph2) }}
+            {{ form_row(form.aboutListTitle) }}
+            {{ form_row(form.aboutListItems) }}
+
+            <hr class="my-4">
+
+            <h2 class="h5 mb-3" style="color: #667eea;">Badges sous le texte</h2>
+            <div class="row g-3">
+                <div class="col-md-4">{{ form_row(form.aboutBadge1) }}</div>
+                <div class="col-md-4">{{ form_row(form.aboutBadge2) }}</div>
+                <div class="col-md-4">{{ form_row(form.aboutBadge3) }}</div>
+            </div>
+        </div>
+        <div class="card-footer bg-white border-top">
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="bi bi-check-lg"></i> Enregistrer
+            </button>
+            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary ms-2" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right"></i> Voir le site
+            </a>
+        </div>
+    {{ form_end(form) }}
+</div>
+
+<style>
+    .scroll-anchor-photo { scroll-margin-top: 5.5rem; }
+</style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+    (function () {
+        const frame = document.getElementById('homeAboutPreviewFrame');
+        let img = document.getElementById('homeAboutPreviewImg');
+        const placeholder = document.getElementById('homeAboutPreviewPlaceholder');
+        const fileEl = document.getElementById('{{ form.aboutImageFile.vars.id|e('js') }}');
+        const urlEl = document.getElementById('{{ form.aboutImageUrl.vars.id|e('js') }}');
+        const panXEl = document.getElementById('{{ form.aboutImagePanX.vars.id|e('js') }}');
+        const panYEl = document.getElementById('{{ form.aboutImagePanY.vars.id|e('js') }}');
+        const zoomEl = document.getElementById('{{ form.aboutImageZoom.vars.id|e('js') }}');
+
+        function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+        function readState() {
+            return {
+                panX: parseInt(panXEl.value, 10) || 50,
+                panY: parseInt(panYEl.value, 10) || 50,
+                zoom: parseInt(zoomEl.value, 10) || 100,
+            };
+        }
+
+        function writeState(panX, panY, zoom) {
+            panXEl.value = String(Math.round(clamp(panX, 0, 100)));
+            panYEl.value = String(Math.round(clamp(panY, 0, 100)));
+            zoomEl.value = String(Math.round(clamp(zoom, 100, 250)));
+            applyStyles();
+        }
+
+        function applyStyles() {
+            if (!img || !img.getAttribute('src')) return;
+            const st = readState();
+            img.style.objectFit = 'cover';
+            img.style.objectPosition = st.panX + '% ' + st.panY + '%';
+            img.style.transform = 'scale(' + (st.zoom / 100) + ')';
+            img.style.transformOrigin = 'center center';
+            img.classList.remove('d-none');
+            if (placeholder) placeholder.classList.add('d-none');
+        }
+
+        function showImgFromUrl(url) {
+            if (!img) img = document.getElementById('homeAboutPreviewImg');
+            if (!img || !url) return;
+            img.src = url;
+            img.onload = function () { applyStyles(); };
+            if (img.complete) applyStyles();
+        }
+
+        let dragging = false;
+        let lastX = 0;
+        let lastY = 0;
+
+        function onDown(clientX, clientY) {
+            if (!img || !img.getAttribute('src')) return;
+            dragging = true;
+            lastX = clientX;
+            lastY = clientY;
+            if (frame) frame.style.cursor = 'grabbing';
+        }
+
+        function onMove(clientX, clientY, ev) {
+            if (!dragging || !frame) return;
+            const dx = clientX - lastX;
+            const dy = clientY - lastY;
+            lastX = clientX;
+            lastY = clientY;
+            const w = frame.clientWidth || 200;
+            const h = frame.clientHeight || 200;
+            let st = readState();
+            st.panX -= (dx / w) * 100;
+            st.panY -= (dy / h) * 100;
+            writeState(st.panX, st.panY, st.zoom);
+            if (ev) ev.preventDefault();
+        }
+
+        function onUp() {
+            dragging = false;
+            if (frame) frame.style.cursor = 'grab';
+        }
+
+        if (frame) {
+            frame.addEventListener('mousedown', function (e) {
+                onDown(e.clientX, e.clientY);
+            });
+            frame.addEventListener('wheel', function (e) {
+                if (!img || !img.getAttribute('src')) return;
+                e.preventDefault();
+                let st = readState();
+                st.zoom -= e.deltaY * 0.12;
+                writeState(st.panX, st.panY, st.zoom);
+            }, { passive: false });
+
+            frame.addEventListener('touchstart', function (e) {
+                if (!e.touches.length) return;
+                onDown(e.touches[0].clientX, e.touches[0].clientY);
+            }, { passive: true });
+
+            frame.addEventListener('touchmove', function (e) {
+                if (!dragging || !e.touches.length) return;
+                onMove(e.touches[0].clientX, e.touches[0].clientY, e);
+            }, { passive: false });
+
+            frame.addEventListener('touchend', onUp);
+            frame.addEventListener('touchcancel', onUp);
+        }
+
+        document.addEventListener('mousemove', function (e) {
+            onMove(e.clientX, e.clientY, null);
+        });
+
+        document.addEventListener('mouseup', onUp);
+
+        if (fileEl) {
+            fileEl.addEventListener('change', function () {
+                const f = this.files && this.files[0];
+                if (!f) return;
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    if (e.target && e.target.result) {
+                        showImgFromUrl(e.target.result);
+                    }
+                };
+                reader.readAsDataURL(f);
+            });
+        }
+
+        if (urlEl) {
+            let t;
+            urlEl.addEventListener('input', function () {
+                clearTimeout(t);
+                const v = (this.value || '').trim();
+                t = setTimeout(function () {
+                    if (v.indexOf('http') === 0) {
+                        showImgFromUrl(v);
+                    }
+                }, 350);
+            });
+        }
+
+        if (img && img.getAttribute('src')) {
+            applyStyles();
+        }
+    })();
+    </script>
+{% endblock %}

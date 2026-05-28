@@ -1,0 +1,144 @@
+{# templates/profil/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil - SPC Formation{% endblock %}
+
+{% block body %}
+    <style>
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .chapitre-en-cours .chapter-number {
+            animation: pulse 2s infinite;
+        }
+        .formation-card {
+            transition: all 0.3s ease;
+        }
+        .formation-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1) !important;
+        }
+    </style>
+
+    {# Hero Section #}
+    <div class="py-5 text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-2">Bonjour {{ user.prenom ?: user.email }} 👋</h1>
+            <p class="lead mb-0">Bienvenue sur votre espace de formation</p>
+        </div>
+    </div>
+
+    {# Contenu principal #}
+    <div class="container my-5">
+        <div class="row">
+            {# Colonne principale #}
+            <div class="col-lg-8">
+                <h2 class="h4 mb-4">Mes formations</h2>
+
+                {% if user.formationUsers is empty %}
+                    <div class="card shadow-sm border-0 p-5">
+                        <div class="text-center">
+                            <i class="bi bi-inbox display-1 text-muted mb-3"></i>
+                            <p class="text-muted mb-0">Tu n'as pas encore de formation enregistrée.</p>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="row g-4">
+                        {% for formationUser in user.formationUsers %}
+                            {% set formation = formationUser.formation %}
+                            {% set isEnCours = formationUser.chapitreEncours is defined and formationUser.chapitreEncours %}
+
+                            <div class="col-12">
+                                <div class="card shadow-sm border-0 formation-card {% if isEnCours %}chapitre-en-cours{% endif %}"
+                                     style="{% if isEnCours %}background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%); border-left: 4px solid #667eea !important;{% endif %}">
+                                    <div class="card-body p-4">
+                                        <div class="d-flex align-items-start gap-3">
+                                            {# Badge numéro #}
+                                            <div class="chapter-number" style="background: {% if isEnCours %}linear-gradient(135deg, #667eea 0%, #764ba2 100%){% else %}#667eea{% endif %}; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.25rem; flex-shrink: 0; {% if isEnCours %}box-shadow: 0 0 20px rgba(102, 126, 234, 0.4);{% endif %}">
+                                                {{ loop.index }}
+                                            </div>
+
+                                            <div class="flex-grow-1">
+                                                {# Titre avec badge En cours #}
+                                                <div class="d-flex align-items-center mb-2 flex-wrap gap-2">
+                                                    <h3 class="h5 mb-0">
+                                                        {% if formation.id is defined %}
+                                                            <a class="text-decoration-none" style="color: #212529;" href="{{ path('app_formation_show', {'formation': formation.id}) }}">
+                                                                {{ formation.titre }}
+                                                            </a>
+                                                        {% else %}
+                                                            {{ formation.titre }}
+                                                        {% endif %}
+                                                    </h3>
+                                                    {% if isEnCours %}
+                                                        <span class="badge bg-primary">
+                                                            <i class="bi bi-star-fill"></i> En cours
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
+
+                                                {# Infos compactes #}
+                                                <div class="d-flex gap-3 mb-3 flex-wrap" style="color: #6c757d; font-size: 0.9rem;">
+                                                    {% if formation.chapitres is defined %}
+                                                        <span>
+                                                            <i class="bi bi-list-ul"></i>
+                                                            {{ formation.chapitres|length }} chapitre{{ formation.chapitres|length > 1 ? 's' : '' }}
+                                                        </span>
+                                                    {% endif %}
+                                                </div>
+
+                                                {# Bouton d'action #}
+                                                {% if formation.id is defined %}
+                                                    <a class="btn {% if isEnCours %}btn-primary{% else %}btn-outline-primary{% endif %}"
+                                                       href="{{ path('app_formation_show', {'formation': formation.id}) }}">
+                                                        <i class="bi bi-play-circle"></i>
+                                                        {{ isEnCours ? 'Continuer la formation' : 'Voir la formation' }}
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            {# Sidebar #}
+            <div class="col-lg-4 mt-4 mt-lg-0">
+                <div style="position: sticky; top: 20px;">
+                    <div class="card shadow-sm border-0 p-4 mb-4">
+                        <h3 class="h5 mb-3">
+                            <i class="bi bi-person-circle" style="color: #667eea;"></i>
+                            Mes informations
+                        </h3>
+                        <div class="mb-3">
+                            <small class="text-muted d-block mb-1">Email</small>
+                            <strong>{{ user.email }}</strong>
+                        </div>
+                        {% if user.prenom %}
+                            <div class="mb-3">
+                                <small class="text-muted d-block mb-1">Prénom</small>
+                                <strong>{{ user.prenom }}</strong>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="card shadow-sm border-0 p-4" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">
+                        <h3 class="h5 mb-3">
+                            <i class="bi bi-graph-up" style="color: #667eea;"></i>
+                            Statistiques
+                        </h3>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted">Formations totales</span>
+                            <strong style="color: #667eea; font-size: 1.5rem;">{{ user.formationUsers|length }}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

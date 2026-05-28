@@ -1,0 +1,15 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Nouveau quiz{% endblock %}
+
+{% block body %}
+    <h1>Nouveau quiz</h1>
+    <p class="text-muted">Après le chapitre : <strong>{{ chapitre.ordre }}. {{ chapitre.titre }}</strong></p>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button class="btn btn-primary mt-3">Créer le quiz</button>
+    {{ form_end(form) }}
+
+    <a class="btn btn-secondary mt-3" href="{{ path('app_admin_formation_edit', {formation: formation.id}) }}">Retour</a>
+{% endblock %}

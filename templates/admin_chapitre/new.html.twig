@@ -1,0 +1,11 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Nouveau chapitre{% endblock %}
+
+{% block body %}
+    <h1>Créer un nouveau chapitre</h1>
+
+    {{ include('admin_chapitre/_form.html.twig', {chapitre: chapitre, mediaDisplay: mediaDisplay|default(null)}) }}
+
+    <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {'formation': formation.id}) }}">Retourner à la formation</a>
+{% endblock %}

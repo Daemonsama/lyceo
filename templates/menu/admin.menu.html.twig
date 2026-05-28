@@ -1,0 +1,84 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+    <div class="container-fluid">
+        <a class="navbar-brand fw-bold" href="{{ path('app_admin') }}">
+            <i class="bi bi-shield-lock-fill"></i> Administration
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="adminNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_admin' ? 'active' : '' }}"
+                       href="{{ path('app_admin') }}">
+                        <i class="bi bi-speedometer2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_admin_home_page_edit' ? 'active' : '' }}"
+                       href="{{ path('app_admin_home_page_edit') }}">
+                        <i class="bi bi-house-door"></i> Page d'accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') == 'app_admin_home_promo' ? 'active' : '' }}"
+                       href="{{ path('app_admin_home_promo') }}">
+                        <i class="bi bi-play-btn"></i> Média d'accueil
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_categorie' ? 'active' : '' }}"
+                       href="{{ path('app_categorie_index') }}">
+                        <i class="bi bi-tags"></i> Catégories
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_admin_formation' ? 'active' : '' }}"
+                       href="{{ path('app_admin_formation_index') }}">
+                        <i class="bi bi-book"></i> Formations & Chapitres
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled text-muted" href="#">
+                        <i class="bi bi-credit-card"></i> Paiements
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link disabled text-muted" href="#">
+                        <i class="bi bi-graph-up"></i> Statistiques
+                    </a>
+                </li>
+            </ul>
+
+            {# ✅ Liens à droite #}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_home') }}">
+                        <i class="bi bi-arrow-left-circle"></i> Retour au site
+                    </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="adminUserDropdown" role="button"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person-circle"></i> {{ app.user.email|split('@')[0] }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="adminUserDropdown">
+                        <li>
+                            <a class="dropdown-item" href="{{ path('app_mon_profil') }}">
+                                <i class="bi bi-person"></i> Mon Profil
+                            </a>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <a class="dropdown-item text-danger" href="{{ path('app_logout') }}">
+                                <i class="bi bi-box-arrow-right"></i> Déconnexion
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

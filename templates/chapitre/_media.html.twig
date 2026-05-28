@@ -1,0 +1,40 @@
+{# Affichage du média d'un chapitre — variable : mediaDisplay (résultat de ChapitreMediaDisplayHelper) #}
+{% if mediaDisplay is not null %}
+    <div class="chapitre-media text-center bg-light p-3">
+        {% if mediaDisplay.kind == 'upload_image' %}
+            <img
+                src="{{ asset(mediaDisplay.src) }}"
+                class="img-fluid rounded"
+                style="max-height: 480px;"
+                alt="Illustration du chapitre"
+            >
+        {% elseif mediaDisplay.kind == 'upload_video' or mediaDisplay.kind == 'direct' %}
+            <video
+                controls
+                playsinline
+                preload="metadata"
+                class="w-100 rounded bg-dark"
+                style="max-height: 520px;"
+            >
+                <source src="{{ mediaDisplay.kind == 'upload_video' ? asset(mediaDisplay.src) : mediaDisplay.src }}">
+                Votre navigateur ne prend pas en charge la lecture vidéo.
+            </video>
+        {% elseif mediaDisplay.kind in ['drive', 'youtube', 'vimeo', 'iframe'] %}
+            <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm">
+                <iframe
+                    src="{{ mediaDisplay.src }}"
+                    title="Vidéo du chapitre"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowfullscreen
+                    loading="lazy"
+                    referrerpolicy="strict-origin-when-cross-origin"
+                ></iframe>
+            </div>
+            {% if mediaDisplay.kind == 'drive' %}
+                <p class="small text-muted mt-2 mb-0">
+                    <i class="bi bi-google"></i> Vidéo hébergée sur Google Drive
+                </p>
+            {% endif %}
+        {% endif %}
+    </div>
+{% endif %}

@@ -1,0 +1,12 @@
+{{ form_start(form) }}
+    {{ form_widget(form) }}
+<button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
+{{ form_end(form) }}
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        ClassicEditor
+            .create(document.querySelector('.ckeditor'))
+            .catch(error => console.error(error));
+    });
+</script>
