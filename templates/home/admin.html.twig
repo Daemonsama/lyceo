@@ -6,7 +6,7 @@
 
     <h1>Panneau de configuration</h1>
 
-    <p>Bienvenue dans le panneau de configuration des <strong>administrateurs</strong>. Vous pouvez gérer les catégories, formations, chapitres, la page d’accueil et le média promotionnel.</p>
+    <p>Bienvenue dans le panneau de configuration des <strong>administrateurs</strong>. Vous pouvez gérer les catégories, formations, chapitres, la page d’accueil, le média promotionnel et les messages de contact.</p>
 
     <div class="row g-3 mt-2">
         <div class="col-md-6 col-lg-4">
@@ -22,6 +22,14 @@
                 <div class="card-body">
                     <h2 class="h5"><i class="bi bi-play-btn text-primary"></i> Média d’accueil</h2>
                     <p class="card-text text-muted small mb-0">Vidéo promotionnelle de la page d'accueil (fichier ou lien YouTube, Vimeo, etc.).</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ path('app_admin_contact_index') }}" class="card h-100 text-decoration-none text-dark border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-envelope text-primary"></i> Messages de contact</h2>
+                    <p class="card-text text-muted small mb-0">Consulter les demandes envoyées depuis le formulaire « Nous contacter ».</p>
                 </div>
             </a>
         </div>

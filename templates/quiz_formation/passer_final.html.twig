@@ -23,6 +23,13 @@
                 {% if passed %}
                     <strong>Félicitations !</strong> Quiz final réussi avec {{ score }}%.
                     <br><span class="small">Vous avez terminé la formation.</span>
+                    {% if formationBadgeAsset %}
+                        <div class="mt-3">
+                            <img src="{{ asset(formationBadgeAsset) }}"
+                                 alt="Badge de fin de formation"
+                                 style="max-width: 170px; width: 100%; height: auto;">
+                        </div>
+                    {% endif %}
                 {% else %}
                     <strong>Score insuffisant :</strong> {{ score }}% (minimum {{ seuilReussite }}%)
                     <br><span class="small">Réessayez autant de fois que nécessaire.</span>

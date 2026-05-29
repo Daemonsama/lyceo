@@ -114,6 +114,13 @@
                                 </a>
                             </div>
                         {% else %}
+                            {% if formationTerminee and formationBadgeAsset %}
+                                <div class="text-center mb-3">
+                                    <img src="{{ asset(formationBadgeAsset) }}"
+                                         alt="Badge de fin de formation"
+                                         style="max-width: 180px; width: 100%; height: auto;">
+                                </div>
+                            {% endif %}
                             <h5 class="mb-3">Accès rapide</h5>
                             <div class="d-grid gap-2">
                                 <a class="btn btn-primary btn-lg"
@@ -160,7 +167,7 @@
                                     <i class="bi bi-play-circle"></i>
                                     {{ chapitreEnCours and chapitre.id == chapitreEnCours.id ? 'Continuer' : 'Voir' }}
                                 </a>
-                                {% if chapitre.quiz %}
+                                {% if chapitre.quiz and chapitre.quiz.questions|length > 0 %}
                                     <span class="badge bg-info text-dark ms-1" title="Quiz disponible pour ce chapitre">
                                         <i class="bi bi-patch-question"></i> Quiz
                                     </span>

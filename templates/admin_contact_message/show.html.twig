@@ -1,0 +1,61 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Message de {{ message.nom }}{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{ path('app_admin_contact_index') }}">Messages de contact</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Message #{{ message.id }}</li>
+{% endblock %}
+
+{% block body %}
+    <div class="container py-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+            <h1 class="h2 mb-0"><i class="bi bi-envelope-open text-primary"></i> Détail du message</h1>
+            <a href="{{ path('app_admin_contact_index') }}" class="btn btn-outline-secondary">
+                <i class="bi bi-arrow-left"></i> Retour à la liste
+            </a>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+                <dl class="row mb-0">
+                    <dt class="col-sm-3 text-muted">Reçu le</dt>
+                    <dd class="col-sm-9">{{ message.createdAt|date('d/m/Y à H:i') }}</dd>
+
+                    <dt class="col-sm-3 text-muted">Nom</dt>
+                    <dd class="col-sm-9">{{ message.nom }}</dd>
+
+                    <dt class="col-sm-3 text-muted">E-mail</dt>
+                    <dd class="col-sm-9">
+                        <a href="mailto:{{ message.email }}">{{ message.email }}</a>
+                    </dd>
+
+                    <dt class="col-sm-3 text-muted">Téléphone</dt>
+                    <dd class="col-sm-9">
+                        <a href="tel:{{ message.telephone|replace({' ': ''}) }}">{{ message.telephone }}</a>
+                    </dd>
+
+                    <dt class="col-sm-3 text-muted">Message</dt>
+                    <dd class="col-sm-9">
+                        <div class="p-3 bg-light rounded border">{{ message.message|nl2br }}</div>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="mt-4 d-flex flex-wrap gap-2">
+            <a href="mailto:{{ message.email }}?subject={{ ('Re: votre message — SPC Formation')|url_encode }}"
+               class="btn btn-primary">
+                <i class="bi bi-reply"></i> Répondre par e-mail
+            </a>
+
+            <form method="post" action="{{ path('app_admin_contact_delete', { id: message.id }) }}"
+                  onsubmit="return confirm('Supprimer ce message définitivement ?');" class="d-inline">
+                <input type="hidden" name="_token" value="{{ csrf_token('delete_contact' ~ message.id) }}">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-trash"></i> Supprimer
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

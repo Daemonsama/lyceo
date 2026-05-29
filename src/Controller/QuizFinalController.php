@@ -90,6 +90,28 @@ final class QuizFinalController extends AbstractController
             'passed' => $passed,
             'score' => $score,
             'submittedAnswers' => $submittedAnswers,
+            'formationBadgeAsset' => $this->resolveFormationBadgeAsset(),
         ]);
+    }
+
+    private function resolveFormationBadgeAsset(): ?string
+    {
+        $projectDir = $this->getParameter('kernel.project_dir');
+        $candidates = [
+            ['public/badges/badge.png', 'badges/badge.png'],
+            ['public/badges/badge.jpg', 'badges/badge.jpg'],
+            ['public/badges/badge.jpeg', 'badges/badge.jpeg'],
+            ['public/badges/badge.webp', 'badges/badge.webp'],
+            ['public/badge.png', 'badge.png'],
+            ['public/medias/badge.png', 'medias/badge.png'],
+        ];
+
+        foreach ($candidates as [$fsPath, $assetPath]) {
+            if (is_file($projectDir.DIRECTORY_SEPARATOR.str_replace('/', DIRECTORY_SEPARATOR, $fsPath))) {
+                return $assetPath;
+            }
+        }
+
+        return null;
     }
 }

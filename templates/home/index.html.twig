@@ -313,4 +313,79 @@
         </div>
     </div>
 
+    {# Contact #}
+    <div class="py-5" id="contact" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container py-4">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="text-center text-white mb-4">
+                        <h2 class="display-5 fw-bold mb-3">Nous contacter</h2>
+                        <p class="lead mb-0 opacity-90">Une question sur nos formations ? Écrivez-nous, nous vous répondrons dans les meilleurs délais.</p>
+                    </div>
+
+                    {% for flash_success in app.flashes('contact_success') %}
+                        <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                            <i class="bi bi-check-circle-fill me-2"></i>{{ flash_success }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                        </div>
+                    {% endfor %}
+                    {% for flash_warning in app.flashes('contact_warning') %}
+                        <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ flash_warning }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                        </div>
+                    {% endfor %}
+
+                    <div class="card shadow-lg border-0">
+                        <div class="card-body p-4 p-md-5">
+                            {{ form_start(contactForm, { attr: { class: 'contact-form', novalidate: 'novalidate' } }) }}
+
+                            {% if contactForm.vars.errors|length > 0 %}
+                                <div class="alert alert-danger">
+                                    {{ form_errors(contactForm) }}
+                                </div>
+                            {% endif %}
+
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-person text-primary me-2"></i>{{ form_label(contactForm.nom) }}
+                                    </label>
+                                    {{ form_widget(contactForm.nom, { attr: { class: 'form-control form-control-lg' } }) }}
+                                    {{ form_errors(contactForm.nom) }}
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-envelope text-primary me-2"></i>{{ form_label(contactForm.email) }}
+                                    </label>
+                                    {{ form_widget(contactForm.email, { attr: { class: 'form-control form-control-lg' } }) }}
+                                    {{ form_errors(contactForm.email) }}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-telephone text-primary me-2"></i>{{ form_label(contactForm.telephone) }}
+                                    </label>
+                                    {{ form_widget(contactForm.telephone, { attr: { class: 'form-control form-control-lg' } }) }}
+                                    {{ form_errors(contactForm.telephone) }}
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-semibold">
+                                        <i class="bi bi-chat-left-text text-primary me-2"></i>{{ form_label(contactForm.message) }}
+                                    </label>
+                                    {{ form_widget(contactForm.message, { attr: { class: 'form-control form-control-lg' } }) }}
+                                    {{ form_errors(contactForm.message) }}
+                                </div>
+                                <div class="col-12 d-grid">
+                                    {{ form_widget(contactForm.submit, { attr: { class: 'btn btn-primary btn-lg cta-button' } }) }}
+                                </div>
+                            </div>
+
+                            {{ form_end(contactForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

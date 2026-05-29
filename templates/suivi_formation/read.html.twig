@@ -23,6 +23,7 @@
 
 {% set progression = total > 0 ? ((index / total) * 100)|round : 0 %}
 {% set isLastChapter = index == total %}
+{% set chapterHasQuiz = chapitre.quiz is not null and chapitre.quiz.questions|length > 0 %}
 
 <div class="learning-layout" id="learningLayout">
 
@@ -152,11 +153,11 @@
                     </span>
                 </a>
 
-                {% if needsQuiz %}
+                {% if chapterHasQuiz %}
                     <a href="{{ path('app_quiz_formation', {'chapitre': chapitre.id}) }}" class="nav-btn nav-btn-next">
                         <span class="nav-btn-text" style="text-align: right;">
                             <span class="nav-btn-label">Quiz</span>
-                            <span>Tester mes connaissances</span>
+                            <span>{{ needsQuiz ? 'Tester mes connaissances' : 'Revoir le quiz' }}</span>
                         </span>
                         <span class="nav-icon">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none">

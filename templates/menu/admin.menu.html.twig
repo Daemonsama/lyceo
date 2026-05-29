@@ -29,6 +29,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_admin_contact' ? 'active' : '' }}"
+                       href="{{ path('app_admin_contact_index') }}">
+                        <i class="bi bi-envelope"></i> Messages contact
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ app.request.attributes.get('_route') starts with 'app_categorie' ? 'active' : '' }}"
                        href="{{ path('app_categorie_index') }}">
                         <i class="bi bi-tags"></i> Catégories
