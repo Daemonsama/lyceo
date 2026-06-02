@@ -22,6 +22,13 @@
                                 </div>
 
                                 {# MESSAGES D'ERREUR #}
+                                {% for message in app.flashes('success') %}
+                                    <div class="alert alert-success alert-custom d-flex align-items-center" role="alert">
+                                        <i class="bi bi-check-circle-fill me-2"></i>
+                                        <div>{{ message }}</div>
+                                    </div>
+                                {% endfor %}
+
                                 {% if error %}
                                     <div class="alert alert-danger alert-custom d-flex align-items-center" role="alert">
                                         <i class="bi bi-exclamation-triangle-fill me-2"></i>
@@ -59,11 +66,11 @@
                                     </div>
 
                                     {# MOT DE PASSE #}
-                                    <div class="form-floating mb-3">
+                                    <div class="form-floating mb-3 password-field-wrap">
                                         <input type="password"
                                                name="_password"
                                                id="password"
-                                               class="form-control form-control-custom"
+                                               class="form-control form-control-custom password-input"
                                                placeholder="Mot de passe"
                                                autocomplete="current-password"
                                                required>
@@ -96,7 +103,7 @@
 
                                     {# LIEN MOT DE PASSE OUBLIÉ #}
                                     <div class="text-center mb-3">
-                                        <a href="#" class="text-muted text-decoration-none forgot-password">
+                                        <a href="{{ path('app_forgot_password_request') }}" class="text-muted text-decoration-none forgot-password">
                                             <small>Mot de passe oublié ?</small>
                                         </a>
                                     </div>

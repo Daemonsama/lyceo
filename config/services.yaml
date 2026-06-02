@@ -23,3 +23,9 @@ services:
     App\Command\TestAttestationPdfCommand:
         arguments:
             $projectDir: '%kernel.project_dir%'
+
+    App\Service\MailerConfig:
+        arguments:
+            $mailerDsn: '%env(MAILER_DSN)%'
+            $mailerFrom: '%env(MAILER_FROM)%'
+            $mailerFromName: '%env(MAILER_FROM_NAME)%'

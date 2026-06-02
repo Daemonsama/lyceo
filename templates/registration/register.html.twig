@@ -87,12 +87,14 @@
                             <label class="form-label fw-semibold">
                                 <i class="bi bi-lock text-primary me-2"></i>Mot de passe
                             </label>
-                            {{ form_widget(registrationForm.plainPassword, {
-                                'attr': {
-                                    'class': 'form-control form-control-lg',
-                                    'placeholder': '••••••••'
-                                }
-                            }) }}
+                            <div class="password-field-wrap">
+                                {{ form_widget(registrationForm.plainPassword, {
+                                    'attr': {
+                                        'class': 'form-control form-control-lg password-input',
+                                        'placeholder': '••••••••'
+                                    }
+                                }) }}
+                            </div>
                             {{ form_errors(registrationForm.plainPassword) }}
                             <small class="form-text text-muted">
                                 <i class="bi bi-info-circle me-1"></i>

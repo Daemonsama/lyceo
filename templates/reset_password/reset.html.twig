@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouveau mot de passe — SPC Formation{% endblock %}
+
+{% block body %}
+    <div class="login-page">
+        <div class="container">
+            <div class="row justify-content-center align-items-center min-vh-100 py-5">
+                <div class="col-12 col-md-8 col-lg-5">
+                    <div class="card shadow-lg border-0 rounded-4">
+                        <div class="card-body p-5">
+                            <div class="text-center mb-4">
+                                <div class="logo-icon mb-3">
+                                    <i class="bi bi-shield-lock-fill"></i>
+                                </div>
+                                <h2 class="login-title">Nouveau mot de passe</h2>
+                                <p class="text-muted mb-0">Choisissez un mot de passe sécurisé (8 caractères minimum).</p>
+                            </div>
+
+                            {% for flash_error in app.flashes('reset_password_error') %}
+                                <div class="alert alert-danger alert-custom" role="alert">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ flash_error }}
+                                </div>
+                            {% endfor %}
+
+                            {{ form_start(resetForm, { attr: { class: 'login-form' } }) }}
+                                <div class="mb-4">
+                                    {{ form_label(resetForm.plainPassword.first, null, { label_attr: { class: 'form-label fw-semibold' } }) }}
+                                    {{ form_widget(resetForm.plainPassword.first) }}
+                                    {{ form_errors(resetForm.plainPassword.first) }}
+                                </div>
+
+                                <div class="mb-4">
+                                    {{ form_label(resetForm.plainPassword.second, null, { label_attr: { class: 'form-label fw-semibold' } }) }}
+                                    {{ form_widget(resetForm.plainPassword.second) }}
+                                    {{ form_errors(resetForm.plainPassword.second) }}
+                                </div>
+
+                                {{ form_errors(resetForm.plainPassword) }}
+
+                                <button class="btn btn-login w-100 py-3" type="submit">
+                                    <i class="bi bi-check-circle me-2"></i>Enregistrer le mot de passe
+                                </button>
+                            {{ form_end(resetForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

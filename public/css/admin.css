@@ -1,0 +1,70 @@
+/* Barre de navigation administration */
+.navbar-admin {
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+}
+
+.navbar-admin .container-fluid {
+    align-items: center;
+}
+
+.navbar-admin .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    white-space: nowrap;
+    margin-right: 0.5rem;
+}
+
+.navbar-admin .navbar-collapse {
+    align-items: center;
+}
+
+.navbar-admin .navbar-nav {
+    align-items: center;
+    gap: 0.1rem;
+}
+
+.navbar-admin .admin-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    line-height: 1.2;
+    padding: 0.45rem 0.55rem;
+    font-size: 0.875rem;
+}
+
+.navbar-admin .admin-nav-icon {
+    font-size: 1.05rem;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.navbar-admin .admin-nav-label {
+    line-height: 1.2;
+}
+
+.navbar-admin .navbar-nav.ms-auto,
+.navbar-admin .navbar-nav:last-child {
+    margin-left: auto;
+}
+
+@media (min-width: 992px) and (max-width: 1399px) {
+    .navbar-admin .admin-nav-link {
+        font-size: 0.8125rem;
+        padding: 0.45rem 0.4rem;
+        gap: 0.3rem;
+    }
+}
+
+@media (max-width: 991px) {
+    .navbar-admin .navbar-nav {
+        gap: 0;
+    }
+
+    .navbar-admin .admin-nav-link {
+        width: 100%;
+        padding: 0.55rem 0.75rem;
+    }
+}

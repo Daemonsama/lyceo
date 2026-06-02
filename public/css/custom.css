@@ -1175,3 +1175,42 @@
     box-shadow: 0 2px 12px rgba(0,0,0,0.12);
 }
 
+/* Afficher / masquer le mot de passe */
+.password-field-wrap {
+    position: relative;
+}
+
+.password-field-wrap .form-control,
+.password-field-wrap .form-control-lg {
+    padding-right: 2.85rem;
+}
+
+.password-field-wrap .password-toggle-btn {
+    position: absolute;
+    right: 0.65rem;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: #6c757d;
+    cursor: pointer;
+    border-radius: 0.35rem;
+}
+
+.password-field-wrap .password-toggle-btn:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.08);
+}
+
+.password-field-wrap.form-floating > .password-toggle-btn {
+    top: 1.35rem;
+    transform: none;
+}
+
