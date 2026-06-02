@@ -9,8 +9,8 @@
             <div class="container">
                 <div class="row justify-content-center text-center">
                     <div class="col-lg-8">
-                        <h1 class="display-4 fw-bold mb-3">
-                            <i class="bi bi-mortarboard-fill me-3"></i>
+                        <h1 class="display-4 fw-bold d-inline-flex align-items-center justify-content-center flex-wrap hero-banner-title">
+                            <img src="{{ asset('image/logo2-transparent.png') }}" alt="Logo SPC Formation" class="hero-banner-logo">
                             Catalogue de Formations
                         </h1>
                         <p class="lead mb-0">
@@ -74,9 +74,9 @@
                         <div class="formation-card card h-100">
                             <!-- Image avec zoom au hover -->
                             <div style="overflow: hidden; border-radius: 15px 15px 0 0;">
-                                <img src="https://lesentreprises-sengagent.gouv.fr/_next/image?url=https%3A%2F%2Fmedia.graphassets.com%2FX8RdR2oQwGpC1iYZOy8A&w=640&q=75"
+                                <img src="{{ formation_apercu_url(formation) }}"
                                      class="card-img-top"
-                                     alt="{{ formation.titre }}">
+                                     alt="Aperçu — {{ formation.titre }}">
                             </div>
 
                             <div class="card-body">

@@ -1,12 +1,47 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
+{{ form_start(form, { attr: { enctype: 'multipart/form-data' } }) }}
+    {{ form_row(form.titre) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.prix) }}
+    {{ form_row(form.categorie) }}
+
+    <div class="card mb-3">
+        <div class="card-header fw-semibold">Aperçu (catalogue)</div>
+        <div class="card-body">
+            {% if formation is defined and formation.id %}
+                <div class="mb-3">
+                    <p class="text-muted small mb-2">Aperçu actuel :</p>
+                    <img src="{{ formation_apercu_url(formation) }}"
+                         alt="Aperçu {{ formation.titre }}"
+                         class="img-fluid rounded border"
+                         style="max-height: 180px; object-fit: cover;">
+                    {% if formation.hasApercu %}
+                        <p class="small text-success mt-2 mb-0"><i class="bi bi-check-circle"></i> Image personnalisée</p>
+                    {% else %}
+                        <p class="small text-muted mt-2 mb-0"><i class="bi bi-image"></i> Image par défaut du site</p>
+                    {% endif %}
+                </div>
+                {% if formation.hasApercu %}
+                    {{ form_row(form.removeApercu) }}
+                {% endif %}
+            {% else %}
+                <p class="text-muted small">Sans image, l'aperçu par défaut du catalogue sera utilisé.</p>
+            {% endif %}
+            {{ form_row(form.apercuFile) }}
+        </div>
+    </div>
+
+    {{ form_row(form.media) }}
+
     <button class="btn btn-success">{{ button_label|default('Sauvegarder') }}</button>
 {{ form_end(form) }}
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        ClassicEditor
-            .create(document.querySelector('.ckeditor'))
-            .catch(error => console.error(error));
+        const editor = document.querySelector('.ckeditor');
+        if (editor) {
+            ClassicEditor
+                .create(editor)
+                .catch(error => console.error(error));
+        }
     });
 </script>

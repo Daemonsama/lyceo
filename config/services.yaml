@@ -11,6 +11,11 @@ services:
     App\:
         resource: '../src/'
 
+    App\Service\FormationApercuStorage:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+            $uploadsDirectory: '%uploads_directory%'
+
     App\Service\AttestationPdfGenerator:
         arguments:
             $projectDir: '%kernel.project_dir%'

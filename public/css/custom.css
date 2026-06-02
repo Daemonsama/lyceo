@@ -23,8 +23,8 @@
 .hero-section {
     background: var(--gradient-primary);
     color: white;
-    padding: 4rem 0;
-    margin-bottom: 3rem;
+    padding: 1.5rem 0 1.25rem;
+    margin-bottom: 2rem;
     position: relative;
     overflow: hidden;
 }
@@ -43,6 +43,30 @@
 .hero-content {
     position: relative;
     z-index: 1;
+}
+
+.hero-section h1.hero-banner-title {
+    gap: 0;
+    margin-bottom: 0.5rem !important;
+    line-height: 1.15;
+}
+
+.hero-section .lead {
+    font-size: 1.05rem;
+    line-height: 1.45;
+    margin-bottom: 0;
+    max-width: 42rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hero-section h1 .hero-banner-logo {
+    width: 2.5em;
+    height: 2.5em;
+    object-fit: contain;
+    vertical-align: middle;
+    flex-shrink: 0;
+    margin-right: -1.25rem;
 }
 
 /* === SEARCH CONTAINER === */
@@ -304,7 +328,7 @@
 /* === RESPONSIVE === */
 @media (max-width: 768px) {
     .hero-section {
-        padding: 2rem 0;
+        padding: 1.15rem 0 1rem;
     }
 
     .search-container {

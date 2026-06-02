@@ -28,6 +28,10 @@ class Formation
     #[ORM\Column(length: 500, nullable: true)]
     private ?string $media = null;
 
+    /** Image d'aperçu (catalogue) — fichier dans public/uploads/formations/ */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $apercuFilename = null;
+
     #[ORM\ManyToOne(inversedBy: 'formations')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Categorie $categorie = null;
@@ -95,6 +99,23 @@ class Formation
         $this->media = $media !== null && trim($media) !== '' ? trim($media) : null;
 
         return $this;
+    }
+
+    public function getApercuFilename(): ?string
+    {
+        return $this->apercuFilename;
+    }
+
+    public function setApercuFilename(?string $apercuFilename): static
+    {
+        $this->apercuFilename = $apercuFilename !== null && trim($apercuFilename) !== '' ? trim($apercuFilename) : null;
+
+        return $this;
+    }
+
+    public function hasApercu(): bool
+    {
+        return $this->apercuFilename !== null && $this->apercuFilename !== '';
     }
 
     public function getCategorie(): ?Categorie
