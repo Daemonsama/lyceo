@@ -104,15 +104,24 @@
                     <div class="card-body p-4">
                         {% if not app.user.hasFormation(formation) %}
                             <h5 class="mb-3">Commencer cette formation</h5>
-                            <div class="d-grid gap-2">
-                                <a class="btn btn-primary btn-lg"
-                                   href="{{ path('app_formation_buy', {'formation':formation.id}) }}">
+                            <form id="formation-purchase-form" method="post"
+                                  action="{{ path('app_formation_buy', {formation: formation.id}) }}"
+                                  class="d-grid gap-2">
+                                <input type="hidden" name="_token" value="{{ csrf_token('formation_buy') }}">
+                                <label for="promo_code" class="form-label small text-muted mb-0">Code promo (optionnel)</label>
+                                <input type="text" class="form-control" id="promo_code" name="promo_code"
+                                       placeholder="Ex. BIENVENUE10" autocomplete="off"
+                                       value="{{ app.flashes('promo_code')|first|default('') }}">
+                                <button type="submit" class="btn btn-primary btn-lg">
                                     <i class="bi bi-cart-plus"></i> Acheter pour {{ formation.prix }}€
-                                </a>
+                                </button>
                                 <a class="btn btn-outline-secondary" href="{{ path('app_formation') }}">
                                     <i class="bi bi-arrow-left"></i> Retour au catalogue
                                 </a>
-                            </div>
+                            </form>
+                            <p class="small text-muted mt-2 mb-0">
+                                Vous pouvez aussi saisir un code sur la page de paiement Stripe.
+                            </p>
                         {% else %}
                             <h5 class="mb-3">Accès rapide</h5>
                             <div class="d-grid gap-2">
@@ -184,10 +193,10 @@
                         <div class="card-body text-center p-5">
                             <h3 class="mb-3">Prêt à commencer ?</h3>
                             <p class="mb-4 opacity-75">Accédez immédiatement à tous les chapitres</p>
-                            <a href="{{ path('app_formation_buy', {'formation':formation.id}) }}"
-                               class="btn btn-light btn-lg px-5">
+                            <button type="submit" form="formation-purchase-form"
+                                    class="btn btn-light btn-lg px-5">
                                 Acheter pour {{ formation.prix }}€
-                            </a>
+                            </button>
                         </div>
                     </div>
                 </div>

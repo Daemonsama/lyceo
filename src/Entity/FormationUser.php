@@ -51,7 +51,7 @@ class FormationUser
         $this->formation = $formation;
         $this->setMontant($formation->getPrix());
         $this->date_achat = new \DateTime();
-        $this->chapitreEncours = $formation->getChapitres()->first();
+        $this->chapitreEncours = $formation->getChapitres()->first() ?: null;
     }
 
     public function getId(): ?int
