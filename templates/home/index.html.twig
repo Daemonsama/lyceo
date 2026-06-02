@@ -42,6 +42,13 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+        .hero-logo {
+            max-width: 100%;
+            width: min(380px, 90%);
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.15));
+        }
     </style>
 
     {# Hero Section #}
@@ -61,8 +68,8 @@
                     </div>
                 </div>
                 <div class="col-lg-5 text-center mt-5 mt-lg-0">
-                    <div class="p-5">
-                        <i class="bi bi-mortarboard display-1 mb-3" style="font-size: 8rem; opacity: 0.9;"></i>
+                    <div class="p-4">
+                        <img src="{{ asset('image/logo2-transparent.png') }}" alt="SPC Formation" class="hero-logo">
                     </div>
                 </div>
             </div>
@@ -329,13 +336,6 @@
                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
                         </div>
                     {% endfor %}
-                    {% for flash_warning in app.flashes('contact_warning') %}
-                        <div class="alert alert-warning alert-dismissible fade show shadow-sm" role="alert">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i>{{ flash_warning }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
-                        </div>
-                    {% endfor %}
-
                     <div class="card shadow-lg border-0">
                         <div class="card-body p-4 p-md-5">
                             {{ form_start(contactForm, { attr: { class: 'contact-form', novalidate: 'novalidate' } }) }}

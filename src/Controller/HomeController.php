@@ -6,7 +6,6 @@ use App\Entity\ContactMessage;
 use App\Form\ContactType;
 use App\Repository\HomePageContentRepository;
 use App\Repository\HomePromoBlockRepository;
-use App\Service\ContactNotifier;
 use App\Service\PromoVideoDisplayHelper;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -23,7 +22,6 @@ final class HomeController extends AbstractController
         HomePromoBlockRepository $homePromoBlockRepository,
         PromoVideoDisplayHelper $promoVideoDisplayHelper,
         EntityManagerInterface $entityManager,
-        ContactNotifier $contactNotifier,
     ): Response {
         $promo = $homePromoBlockRepository->getSingleton();
 
@@ -36,13 +34,7 @@ final class HomeController extends AbstractController
             $entityManager->persist($contactMessage);
             $entityManager->flush();
 
-            try {
-                $contactNotifier->notify($contactMessage);
-            } catch (\Throwable) {
-                $this->addFlash('contact_warning', 'Votre message a été enregistré, mais l\'envoi de la notification par e-mail a échoué.');
-            }
-
-            $this->addFlash('contact_success', 'Merci ! Votre message a bien été envoyé. Nous vous recontacterons rapidement.');
+            $this->addFlash('contact_success', 'Merci ! Votre message a bien été enregistré. Nous vous recontacterons rapidement.');
 
             return $this->redirect($this->generateUrl('app_home').'#contact');
         }

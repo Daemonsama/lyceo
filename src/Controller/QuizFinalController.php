@@ -36,7 +36,7 @@ final class QuizFinalController extends AbstractController
         }
 
         if ($progression->hasPassedFinalQuiz($user, $formation)) {
-            $this->addFlash('success', 'Vous avez déjà validé le quiz final de cette formation.');
+            $this->addFlash('success', 'Vous avez déjà validé le quiz final. Vous pouvez télécharger votre attestation.');
 
             return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
         }

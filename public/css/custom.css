@@ -320,13 +320,25 @@
 /* ========== NAVBAR BLANCHE ========== */
 .navbar-custom {
     background: #ffffff;
-    padding: 1rem 0;
+    padding: 0.15rem 0;
+    min-height: auto;
     transition: all 0.3s ease;
     border-bottom: 1px solid #e9ecef;
+    overflow: visible;
+}
+
+.navbar-custom > .container-fluid {
+    padding-top: 0.1rem;
+    padding-bottom: 0.1rem;
 }
 
 /* ========== LOGO ET BRAND ========== */
 .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+    margin-top: -0.75rem;
+    margin-bottom: -0.75rem;
     font-weight: 700;
     font-size: 1.5rem;
     letter-spacing: -0.5px;
@@ -338,6 +350,16 @@
     transform: scale(1.05);
 }
 
+.navbar-logo-owl {
+    width: 106px;
+    height: 106px;
+    margin-right: 0.24rem;
+    flex: 0 0 auto;
+    object-fit: contain;
+    filter: brightness(0) saturate(100%) invert(45%) sepia(76%) saturate(1086%) hue-rotate(208deg) brightness(96%) contrast(96%);
+    transform: translateY(1px);
+}
+
 .brand-text {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
@@ -345,12 +367,40 @@
     background-clip: text;
 }
 
+.brand-lyceo {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: translateY(0);
+}
+
+.brand-lyceo-top {
+    font-family: "Arial Black", Arial, sans-serif;
+    font-size: 2.35rem;
+    letter-spacing: 0.07em;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 0.2rem;
+}
+
+.brand-lyceo-bottom {
+    font-family: Arial, sans-serif;
+    font-size: 0.74rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-top: 0.26rem;
+}
+
 /* ========== LIENS DE NAVIGATION ========== */
 .navbar-light .navbar-nav .nav-link {
     color: #4a5568;
     font-weight: 500;
     transition: all 0.3s ease;
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.85rem;
     margin: 0 0.25rem;
     border-radius: 8px;
     position: relative;
@@ -387,6 +437,10 @@
 }
 
 /* ========== DROPDOWN UTILISATEUR ========== */
+.navbar-custom .user-dropdown {
+    padding: 0.3rem 0.85rem;
+}
+
 .user-dropdown {
     padding: 0.5rem 1rem;
     border-radius: 50px;
@@ -470,6 +524,11 @@
 }
 
 /* ========== BOUTON CONNEXION ========== */
+.navbar-custom .btn-login {
+    padding: 0.3rem 1.15rem;
+    font-size: 0.95rem;
+}
+
 .btn-login {
     padding: 0.5rem 1.5rem;
     border-radius: 50px;
@@ -494,6 +553,12 @@
 
 /* ========== RESPONSIVE ========== */
 @media (max-width: 991.98px) {
+    .navbar-logo-owl {
+        width: 78px;
+        height: 78px;
+        margin-right: 0.15rem;
+    }
+
     .navbar-nav {
         padding: 1rem 0;
     }
@@ -510,6 +575,15 @@
     .btn-login {
         width: 100%;
         margin-top: 0.5rem;
+    }
+
+    .brand-lyceo-top {
+        font-size: 1.8rem;
+    }
+
+    .brand-lyceo-bottom {
+        font-size: 0.58rem;
+        letter-spacing: 0.11em;
     }
 }
 

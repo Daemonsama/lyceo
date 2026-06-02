@@ -123,12 +123,18 @@
                             {% endif %}
                             <h5 class="mb-3">Accès rapide</h5>
                             <div class="d-grid gap-2">
+                                {% if formationTerminee %}
+                                    <a class="btn btn-success btn-lg"
+                                       href="{{ path('app_formation_attestation', { formation: formation.id }) }}">
+                                        <i class="bi bi-download"></i> Télécharger l'attestation (PDF)
+                                    </a>
+                                {% endif %}
                                 <a class="btn btn-primary btn-lg"
                                    href="{{ path('app_suivi_formation', {
                                        'chapitre': chapitreEnCours ? chapitreEnCours.id : formation.chapitres[0].id
                                    }) }}">
                                     <i class="bi bi-play-circle"></i>
-                                    {{ chapitreEnCours ? 'Reprendre la formation' : 'Commencer la formation' }}
+                                    {{ formationTerminee ? 'Revoir la formation' : (chapitreEnCours ? 'Reprendre la formation' : 'Commencer la formation') }}
                                 </a>
                                 <a class="btn btn-outline-secondary" href="{{ path('app_formation') }}">
                                     <i class="bi bi-arrow-left"></i> Catalogue des formations

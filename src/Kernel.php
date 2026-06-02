@@ -34,9 +34,37 @@ class Kernel extends BaseKernel
             return rtrim(str_replace(['/', '\\'], \DIRECTORY_SEPARATOR, $custom), \DIRECTORY_SEPARATOR);
         }
 
-        $localAppData = getenv('LOCALAPPDATA') ?: sys_get_temp_dir();
+        return $this->resolveWindowsLocalAppDataDir().\DIRECTORY_SEPARATOR.'Spcformation';
+    }
 
-        return $localAppData.\DIRECTORY_SEPARATOR.'Spcformation';
+    /**
+     * Évite C:\Windows\Spcformation quand LOCALAPPDATA est absent (CLI lancé sans profil utilisateur).
+     */
+    private function resolveWindowsLocalAppDataDir(): string
+    {
+        $localAppData = getenv('LOCALAPPDATA');
+        if (is_string($localAppData) && $localAppData !== '' && !$this->isUnsafeWindowsSystemDir($localAppData)) {
+            return rtrim(str_replace(['/', '\\'], \DIRECTORY_SEPARATOR, $localAppData), \DIRECTORY_SEPARATOR);
+        }
+
+        $userProfile = $_SERVER['USERPROFILE'] ?? $_ENV['USERPROFILE'] ?? getenv('USERPROFILE');
+        if (is_string($userProfile) && $userProfile !== '') {
+            $fromProfile = rtrim(str_replace(['/', '\\'], \DIRECTORY_SEPARATOR, $userProfile), \DIRECTORY_SEPARATOR)
+                .\DIRECTORY_SEPARATOR.'AppData'
+                .\DIRECTORY_SEPARATOR.'Local';
+            if (is_dir($fromProfile) || @mkdir($fromProfile, 0777, true) || is_dir($fromProfile)) {
+                return $fromProfile;
+            }
+        }
+
+        return rtrim(sys_get_temp_dir(), \DIRECTORY_SEPARATOR);
+    }
+
+    private function isUnsafeWindowsSystemDir(string $path): bool
+    {
+        $normalized = strtolower(rtrim(str_replace(['/', '\\'], \DIRECTORY_SEPARATOR, $path), \DIRECTORY_SEPARATOR));
+
+        return in_array($normalized, ['c:'.\DIRECTORY_SEPARATOR.'windows', 'c:'.\DIRECTORY_SEPARATOR.'winnt'], true);
     }
 
     private function ensureWritableDir(string $path): string

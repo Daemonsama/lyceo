@@ -1,0 +1,7 @@
+# En développement : envoi des e-mails immédiat (pas besoin de lancer messenger:consume)
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync

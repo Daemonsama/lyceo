@@ -1,0 +1,7 @@
+# Production (hébergement mutualisé) : envoi immédiat des e-mails sans worker Messenger
+framework:
+    messenger:
+        transports:
+            sync: 'sync://'
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: sync

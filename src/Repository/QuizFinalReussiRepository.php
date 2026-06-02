@@ -23,6 +23,11 @@ class QuizFinalReussiRepository extends ServiceEntityRepository
         return $this->count(['user' => $user, 'formation' => $formation]) > 0;
     }
 
+    public function findOneByUserAndFormation(User $user, Formation $formation): ?QuizFinalReussi
+    {
+        return $this->findOneBy(['user' => $user, 'formation' => $formation]);
+    }
+
     public function save(QuizFinalReussi $quizFinalReussi, bool $flush = true): void
     {
         $this->getEntityManager()->persist($quizFinalReussi);
