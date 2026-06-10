@@ -69,7 +69,7 @@
                 </div>
                 <div class="col-lg-5 text-center mt-5 mt-lg-0">
                     <div class="p-4">
-                        <img src="{{ asset('image/logo2-transparent.png') }}" alt="SPC Formation" class="hero-logo">
+                        <img src="{{ asset('image/logo2-transparent.png') }}" alt="Lyceo Campus" class="hero-logo">
                     </div>
                 </div>
             </div>
@@ -78,23 +78,16 @@
 
     {# Points Clés #}
     <div class="container my-5 py-5">
-        <div class="row g-4">
-            <div class="col-md-3 col-6 text-center">
-                <div class="stats-number">25+</div>
-                <p class="text-muted fw-bold">Années d'expérience</p>
-            </div>
-            <div class="col-md-3 col-6 text-center">
-                <div class="stats-number">100%</div>
-                <p class="text-muted fw-bold">Formations interactives</p>
-            </div>
-            <div class="col-md-3 col-6 text-center">
-                <div class="stats-number"><i class="bi bi-star-fill" style="color: #667eea;"></i></div>
-                <p class="text-muted fw-bold">Coach certifié</p>
-            </div>
-            <div class="col-md-3 col-6 text-center">
-                <div class="stats-number"><i class="bi bi-geo-alt-fill" style="color: #667eea;"></i></div>
-                <p class="text-muted fw-bold">Aurillac (15)</p>
-            </div>
+        <div class="row g-4 justify-content-center">
+            {% for n in 1..4 %}
+                {% if home.isStatSlotFilled(n) %}
+                    {% include 'home/_stat_item.html.twig' with {
+                        value: attribute(home, 'stat' ~ n ~ 'Value'),
+                        icon: attribute(home, 'stat' ~ n ~ 'Icon'),
+                        label: attribute(home, 'stat' ~ n ~ 'Label')
+                    } %}
+                {% endif %}
+            {% endfor %}
         </div>
     </div>
 
@@ -103,32 +96,25 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-6 mb-4 mb-lg-0">
-                    <h2 class="h1 fw-bold mb-4">Notre mission</h2>
-                    <p class="lead mb-4">Vous accompagner dans le développement de votre <strong>AGILITÉ</strong>, votre <strong>CARE</strong>, votre <strong>FLOW</strong> et votre <strong>ENGAGEMENT</strong>.</p>
-                    <p class="text-muted">Nous vous délivrons les outils nécessaires pour repenser et déployer votre mission en tant que <strong>coach manager</strong> ou membre d'équipe. Apprenez à communiquer efficacement, maîtrisez la gestion hybride et créez de la valeur partagée.</p>
+                    <h2 class="h1 fw-bold mb-4">{{ home.missionTitle }}</h2>
+                    <div class="lead mb-4">{{ home.missionLead|raw }}</div>
+                    <div class="text-muted">{{ home.missionBody|raw }}</div>
                 </div>
                 <div class="col-lg-6">
                     <div class="card shadow-sm border-0 p-4">
                         <h3 class="h5 mb-4" style="color: #667eea;">
-                            <i class="bi bi-bullseye"></i> Nos objectifs
+                            <i class="bi bi-bullseye"></i> {{ home.missionCardTitle }}
                         </h3>
                         <ul class="list-unstyled mb-0">
-                            <li class="mb-3 d-flex align-items-start">
-                                <i class="bi bi-check-circle-fill me-3 mt-1" style="color: #28a745; font-size: 1.25rem;"></i>
-                                <span>Développer votre efficacité professionnelle</span>
-                            </li>
-                            <li class="mb-3 d-flex align-items-start">
-                                <i class="bi bi-check-circle-fill me-3 mt-1" style="color: #28a745; font-size: 1.25rem;"></i>
-                                <span>Révéler votre talent unique et votre potentiel</span>
-                            </li>
-                            <li class="mb-3 d-flex align-items-start">
-                                <i class="bi bi-check-circle-fill me-3 mt-1" style="color: #28a745; font-size: 1.25rem;"></i>
-                                <span>Accompagner votre équipe vers l'excellence</span>
-                            </li>
-                            <li class="d-flex align-items-start">
-                                <i class="bi bi-check-circle-fill me-3 mt-1" style="color: #28a745; font-size: 1.25rem;"></i>
-                                <span>Créer de la valeur partagée dans votre entreprise</span>
-                            </li>
+                            {% for rawLine in home.missionListItems|split('\n') %}
+                                {% set line = rawLine|trim %}
+                                {% if line %}
+                                    <li class="mb-3 d-flex align-items-start">
+                                        <i class="bi bi-check-circle-fill me-3 mt-1" style="color: #28a745; font-size: 1.25rem;"></i>
+                                        <span>{{ line|e('html') }}</span>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
                         </ul>
                     </div>
                 </div>
@@ -139,38 +125,42 @@
     {# Pour Qui ? #}
     <div class="container my-5 py-5" id="formations">
         <div class="text-center mb-5">
-            <h2 class="display-5 fw-bold mb-3">Pour qui ?</h2>
-            <p class="lead text-muted">Nos formations s'adressent aux équipes et managers qui veulent progresser</p>
+            <h2 class="display-5 fw-bold mb-3">{{ home.audienceTitle }}</h2>
+            <p class="lead text-muted">{{ home.audienceLead }}</p>
         </div>
 
-        <div class="row g-4">
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 p-4 h-100 feature-card">
-                    <div class="d-flex align-items-start gap-3 mb-3">
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="bi bi-building" style="font-size: 1.75rem;"></i>
-                        </div>
-                        <div>
-                            <h3 class="h5 mb-2">Formation INTRA</h3>
-                            <p class="text-muted mb-0">Pour votre équipe ou vos managers de différents services au sein de votre entreprise.</p>
+        <div class="row g-4 justify-content-center">
+            {% if home.audienceCard1Title|trim != '' %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 p-4 h-100 feature-card">
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-{{ home.audienceCard1Icon }}" style="font-size: 1.75rem;"></i>
+                            </div>
+                            <div>
+                                <h3 class="h5 mb-2">{{ home.audienceCard1Title }}</h3>
+                                <p class="text-muted mb-0">{{ home.audienceCard1Text }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
 
-            <div class="col-md-6">
-                <div class="card shadow-sm border-0 p-4 h-100 feature-card">
-                    <div class="d-flex align-items-start gap-3 mb-3">
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                            <i class="bi bi-people" style="font-size: 1.75rem;"></i>
-                        </div>
-                        <div>
-                            <h3 class="h5 mb-2">Formation INTER</h3>
-                            <p class="text-muted mb-0">Pour managers et équipes de différentes entreprises qui veulent partager leurs expériences.</p>
+            {% if home.audienceCard2Title|trim != '' %}
+                <div class="col-md-6">
+                    <div class="card shadow-sm border-0 p-4 h-100 feature-card">
+                        <div class="d-flex align-items-start gap-3 mb-3">
+                            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <i class="bi bi-{{ home.audienceCard2Icon }}" style="font-size: 1.75rem;"></i>
+                            </div>
+                            <div>
+                                <h3 class="h5 mb-2">{{ home.audienceCard2Title }}</h3>
+                                <p class="text-muted mb-0">{{ home.audienceCard2Text }}</p>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            {% endif %}
         </div>
 
         {% if promoPlayer is not null %}
@@ -229,40 +219,25 @@
     <div class="py-5" style="background: #f8f9fa;">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="display-5 fw-bold mb-3">Nos services</h2>
-                <p class="lead text-muted">Un accompagnement complet pour votre développement</p>
+                <h2 class="display-5 fw-bold mb-3">{{ home.servicesTitle }}</h2>
+                <p class="lead text-muted">{{ home.servicesLead }}</p>
             </div>
 
-            <div class="row g-4">
-                <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 p-4 h-100 feature-card">
-                        <div class="text-center mb-3">
-                            <i class="bi bi-person-check" style="font-size: 3rem; color: #667eea;"></i>
+            <div class="row g-4 justify-content-center">
+                {% for n in 1..3 %}
+                    {% set title = attribute(home, 'service' ~ n ~ 'Title') %}
+                    {% if title|trim != '' %}
+                        <div class="col-lg-4">
+                            <div class="card shadow-sm border-0 p-4 h-100 feature-card">
+                                <div class="text-center mb-3">
+                                    <i class="bi bi-{{ attribute(home, 'service' ~ n ~ 'Icon') }}" style="font-size: 3rem; color: #667eea;"></i>
+                                </div>
+                                <h3 class="h5 text-center mb-3">{{ title }}</h3>
+                                <p class="text-muted text-center">{{ attribute(home, 'service' ~ n ~ 'Text') }}</p>
+                            </div>
                         </div>
-                        <h3 class="h5 text-center mb-3">Coaching Individualisé</h3>
-                        <p class="text-muted text-center">Des séances personnalisées pour identifier et surmonter vos obstacles spécifiques.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 p-4 h-100 feature-card">
-                        <div class="text-center mb-3">
-                            <i class="bi bi-book" style="font-size: 3rem; color: #667eea;"></i>
-                        </div>
-                        <h3 class="h5 text-center mb-3">Formations Pratiques</h3>
-                        <p class="text-muted text-center">Des programmes concrets et interactifs pour acquérir des compétences rapidement.</p>
-                    </div>
-                </div>
-
-                <div class="col-lg-4">
-                    <div class="card shadow-sm border-0 p-4 h-100 feature-card">
-                        <div class="text-center mb-3">
-                            <i class="bi bi-graph-up-arrow" style="font-size: 3rem; color: #667eea;"></i>
-                        </div>
-                        <h3 class="h5 text-center mb-3">Objectifs Mesurables</h3>
-                        <p class="text-muted text-center">Établissement d'objectifs clairs pour suivre vos progrès et célébrer vos réussites.</p>
-                    </div>
-                </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
@@ -312,9 +287,14 @@
                 </div>
 
                 <div class="d-flex gap-2 flex-wrap">
-                    <span class="badge bg-primary p-2"><i class="bi bi-award"></i> {{ home.aboutBadge1 }}</span>
-                    <span class="badge bg-primary p-2"><i class="bi bi-brain"></i> {{ home.aboutBadge2 }}</span>
-                    <span class="badge bg-primary p-2"><i class="bi bi-lightbulb"></i> {{ home.aboutBadge3 }}</span>
+                    {% for badge in home.aboutBadgesForDisplay %}
+                        <span class="badge bg-primary p-2">
+                            {% if badge.icon %}
+                                <i class="bi bi-{{ badge.icon }} me-1"></i>
+                            {% endif %}
+                            {{ badge.text }}
+                        </span>
+                    {% endfor %}
                 </div>
             </div>
         </div>
@@ -326,8 +306,8 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <div class="text-center text-white mb-4">
-                        <h2 class="display-5 fw-bold mb-3">Nous contacter</h2>
-                        <p class="lead mb-0 opacity-90">Une question sur nos formations ? Écrivez-nous, nous vous répondrons dans les meilleurs délais.</p>
+                        <h2 class="display-5 fw-bold mb-3">{{ home.contactTitle }}</h2>
+                        <p class="lead mb-0 opacity-90">{{ home.contactLead }}</p>
                     </div>
 
                     {% for flash_success in app.flashes('contact_success') %}

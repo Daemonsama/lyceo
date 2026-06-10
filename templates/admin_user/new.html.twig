@@ -1,11 +1,26 @@
 {% extends 'base.admin.html.twig' %}
 
-{% block title %}New User{% endblock %}
+{% block title %}Nouvel administrateur{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item"><a href="{{ path('app_admin_user_index') }}">Administrateurs</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Nouveau</li>
+{% endblock %}
 
 {% block body %}
-    <h1>Create new User</h1>
-
-    {{ include('admin_user/_form.html.twig') }}
-
-    <a href="{{ path('app_admin_user_index') }}">back to list</a>
+    <div class="container py-4">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm admin-user-card">
+                    <div class="card-body p-4">
+                        <h1 class="h4 mb-1">Créer un administrateur</h1>
+                        <p class="text-muted mb-4">
+                            Ce compte aura accès à tout le panneau d'administration, sauf la gestion des autres administrateurs.
+                        </p>
+                        {{ include('admin_user/_form.html.twig', { button_label: 'Créer le compte' }) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

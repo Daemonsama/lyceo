@@ -1,0 +1,10 @@
+<div class="col-md-3 col-6 text-center">
+    {% if icon|default('')|trim != '' %}
+        <div class="stats-number">
+            <i class="bi bi-{{ icon|trim }}" style="color: #667eea;"></i>
+        </div>
+    {% else %}
+        <div class="stats-number">{{ value }}</div>
+    {% endif %}
+    <p class="text-muted fw-bold mb-0">{{ label }}</p>
+</div>

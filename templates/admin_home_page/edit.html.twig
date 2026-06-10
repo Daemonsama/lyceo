@@ -1,6 +1,11 @@
 {% extends 'base.admin.html.twig' %}
 
-{% block title %}Modifier la page d'accueil{% endblock %}
+{% block title %}Page d'accueil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/admin-home-page.css') }}">
+{% endblock %}
 
 {% block breadcrumb %}
     <li class="breadcrumb-item active" aria-current="page">Page d'accueil</li>
@@ -16,111 +21,223 @@
 {% endif %}
 
 {% block body %}
-<div class="container py-4">
-    <h1 class="mb-3">Contenu de la page d'accueil</h1>
-
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="admin-home-editor">
+    <div class="container-fluid px-4 py-4">
+        <div class="admin-home-editor-header">
+            <div>
+                <h1 class="h3 mb-1"><i class="bi bi-house-gear text-primary"></i> Page d'accueil</h1>
+                <p class="text-muted mb-0">Personnalisez chaque section affichée sur le site public Lyceo Campus.</p>
             </div>
-        {% endfor %}
-    {% endfor %}
-
-    {{ form_start(form, { attr: { class: 'card shadow-sm border-0', enctype: 'multipart/form-data' } }) }}
-        <div class="card-body">
-            <h2 class="h5 mb-3" style="color: #667eea;">Bandeau principal</h2>
-            {{ form_row(form.heroTitlePrefix) }}
-            {{ form_row(form.heroTitleHighlight) }}
-            {{ form_row(form.heroLead) }}
-
-            <hr class="my-4">
-
-            <div id="photo" class="scroll-anchor-photo">
-                <h2 class="h5 mb-3" style="color: #667eea;">Photo « À propos »</h2>
-                {{ form_row(form.aboutImageFile) }}
-                {% if hp.hasUploadedAboutImage %}
-                    <p class="small text-muted mb-2">Fichier actuel : <code>{{ hp.aboutImageFilename }}</code></p>
-                    {{ form_row(form.removeUploadedAboutImage) }}
-                {% endif %}
-
-                <div class="card border mb-4 bg-light">
-                    <div class="card-body text-center pt-4">
-                        <div id="homeAboutPreviewFrame"
-                             class="mx-auto mb-3 position-relative user-select-none"
-                             style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25); touch-action: none; cursor: grab; background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);">
-                            {% if previewSrc %}
-                                <img id="homeAboutPreviewImg"
-                                     src="{{ previewSrc }}"
-                                     alt=""
-                                     draggable="false"
-                                     class="position-absolute top-0 start-0"
-                                     style="width: 100%; height: 100%; pointer-events: none;">
-                            {% else %}
-                                <div id="homeAboutPreviewPlaceholder" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                                    <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
-                                </div>
-                                <img id="homeAboutPreviewImg"
-                                     src=""
-                                     alt=""
-                                     draggable="false"
-                                     class="d-none position-absolute top-0 start-0"
-                                     style="width: 100%; height: 100%; pointer-events: none;">
-                            {% endif %}
-                        </div>
-                        <p class="small text-muted mb-3">Glissez pour déplacer le cadrage, molette pour zoomer.</p>
-                        <div class="visually-hidden">
-                            {{ form_widget(form.aboutImagePanX) }}
-                            {{ form_widget(form.aboutImagePanY) }}
-                            {{ form_widget(form.aboutImageZoom) }}
-                        </div>
-                    </div>
-                </div>
-
-                {{ form_row(form.aboutImageUrl) }}
-            </div>
-
-            <hr class="my-4">
-
-            <h2 class="h5 mb-3" style="color: #667eea;">Textes « À propos »</h2>
-            {{ form_row(form.aboutName) }}
-            {{ form_row(form.aboutRole) }}
-            {{ form_row(form.aboutHeading) }}
-            {{ form_row(form.aboutParagraph1) }}
-            {{ form_row(form.aboutParagraph2) }}
-            {{ form_row(form.aboutListTitle) }}
-            {{ form_row(form.aboutListItems) }}
-
-            <hr class="my-4">
-
-            <h2 class="h5 mb-3" style="color: #667eea;">Badges sous le texte</h2>
-            <div class="row g-3">
-                <div class="col-md-4">{{ form_row(form.aboutBadge1) }}</div>
-                <div class="col-md-4">{{ form_row(form.aboutBadge2) }}</div>
-                <div class="col-md-4">{{ form_row(form.aboutBadge3) }}</div>
-            </div>
-        </div>
-        <div class="card-footer bg-white border-top">
-            <button type="submit" class="btn btn-primary btn-lg">
-                <i class="bi bi-check-lg"></i> Enregistrer
-            </button>
-            <a href="{{ path('app_home') }}" class="btn btn-outline-secondary ms-2" target="_blank" rel="noopener">
-                <i class="bi bi-box-arrow-up-right"></i> Voir le site
+            <a href="{{ path('app_home') }}" class="btn btn-admin-outline" target="_blank" rel="noopener">
+                <i class="bi bi-box-arrow-up-right me-1"></i> Aperçu du site
             </a>
         </div>
-    {{ form_end(form) }}
-</div>
 
-<style>
-    .scroll-anchor-photo { scroll-margin-top: 5.5rem; }
-</style>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
+        <div class="admin-home-promo-hint">
+            <div>
+                <strong>Vidéo promotionnelle</strong>
+                <div class="small text-muted">La section vidéo (bloc « Pour qui ? ») se modifie dans Média d'accueil.</div>
+            </div>
+            <a href="{{ path('app_admin_home_promo') }}" class="btn btn-sm btn-admin-primary">Média d'accueil</a>
+        </div>
+
+        {{ form_start(form, { attr: { id: 'home-page-form', enctype: 'multipart/form-data' } }) }}
+
+        <div class="admin-home-editor-layout">
+            <nav class="admin-home-nav nav flex-column" role="tablist">
+                <a class="nav-link active" href="#section-hero"><i class="bi bi-stars"></i> Bandeau</a>
+                <a class="nav-link" href="#section-stats"><i class="bi bi-bar-chart"></i> Chiffres clés</a>
+                <a class="nav-link" href="#section-mission"><i class="bi bi-bullseye"></i> Mission</a>
+                <a class="nav-link" href="#section-audience"><i class="bi bi-people"></i> Pour qui ?</a>
+                <a class="nav-link" href="#section-services"><i class="bi bi-grid"></i> Services</a>
+                <a class="nav-link" href="#section-about"><i class="bi bi-person-badge"></i> À propos</a>
+                <a class="nav-link" href="#section-contact"><i class="bi bi-envelope"></i> Contact</a>
+            </nav>
+
+            <div>
+                <section id="section-hero" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-stars"></i> Bandeau principal</h2>
+                    <p class="admin-home-panel-desc">Titre et texte d'introduction en haut de page (logo et boutons fixes).</p>
+                    <div class="row g-3">
+                        <div class="col-md-6">{{ form_row(form.heroTitlePrefix) }}</div>
+                        <div class="col-md-6">{{ form_row(form.heroTitleHighlight) }}</div>
+                        <div class="col-12">{{ form_row(form.heroLead) }}</div>
+                    </div>
+                </section>
+
+                <section id="section-stats" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-bar-chart"></i> Chiffres clés</h2>
+                    <p class="admin-home-panel-desc">Jusqu'à quatre indicateurs. Laissez un bloc entièrement vide pour le masquer.</p>
+                    <div class="admin-home-stat-grid">
+                        {% for n in 1..4 %}
+                            <div class="admin-home-stat-card">
+                                <h3>Indicateur {{ n }}</h3>
+                                {{ form_row(attribute(form, 'stat' ~ n ~ 'Value')) }}
+                                {{ form_row(attribute(form, 'stat' ~ n ~ 'Icon')) }}
+                                {{ form_row(attribute(form, 'stat' ~ n ~ 'Label')) }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section id="section-mission" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-bullseye"></i> Notre mission</h2>
+                    <p class="admin-home-panel-desc">Bloc mission et liste d'objectifs.</p>
+                    {{ form_row(form.missionTitle) }}
+                    {{ form_row(form.missionLead) }}
+                    {{ form_row(form.missionBody) }}
+                    {{ form_row(form.missionCardTitle) }}
+                    {{ form_row(form.missionListItems) }}
+                </section>
+
+                <section id="section-audience" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-people"></i> Pour qui ?</h2>
+                    <p class="admin-home-panel-desc">Titre, sous-titre et deux cartes (INTRA / INTER).</p>
+                    {{ form_row(form.audienceTitle) }}
+                    {{ form_row(form.audienceLead) }}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="admin-home-stat-card h-100">
+                                <h3>Carte 1</h3>
+                                {{ form_row(form.audienceCard1Title) }}
+                                {{ form_row(form.audienceCard1Text) }}
+                                {{ form_row(form.audienceCard1Icon) }}
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="admin-home-stat-card h-100">
+                                <h3>Carte 2</h3>
+                                {{ form_row(form.audienceCard2Title) }}
+                                {{ form_row(form.audienceCard2Text) }}
+                                {{ form_row(form.audienceCard2Icon) }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="section-services" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-grid"></i> Nos services</h2>
+                    <p class="admin-home-panel-desc">Trois cartes de services.</p>
+                    {{ form_row(form.servicesTitle) }}
+                    {{ form_row(form.servicesLead) }}
+                    <div class="row g-3">
+                        {% for n in 1..3 %}
+                            <div class="col-lg-4">
+                                <div class="admin-home-stat-card h-100">
+                                    <h3>Service {{ n }}</h3>
+                                    {{ form_row(attribute(form, 'service' ~ n ~ 'Title')) }}
+                                    {{ form_row(attribute(form, 'service' ~ n ~ 'Text')) }}
+                                    {{ form_row(attribute(form, 'service' ~ n ~ 'Icon')) }}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section id="section-about" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-person-badge"></i> À propos</h2>
+                    <p class="admin-home-panel-desc">Photo, textes de présentation et badges.</p>
+
+                    <div id="photo" class="scroll-anchor-photo mb-4">
+                        {{ form_row(form.aboutImageFile) }}
+                        {% if hp.hasUploadedAboutImage %}
+                            <p class="small text-muted mb-2">Fichier actuel : <code>{{ hp.aboutImageFilename }}</code></p>
+                            {{ form_row(form.removeUploadedAboutImage) }}
+                        {% endif %}
+
+                        <div class="card border mb-3 bg-light">
+                            <div class="card-body text-center pt-4">
+                                <div id="homeAboutPreviewFrame"
+                                     class="mx-auto mb-3 position-relative user-select-none"
+                                     style="width: 200px; height: 200px; border-radius: 50%; overflow: hidden; box-shadow: 0 10px 40px rgba(102, 126, 234, 0.25); touch-action: none; cursor: grab; background: linear-gradient(135deg, #667eea22 0%, #764ba222 100%);">
+                                    {% if previewSrc %}
+                                        <img id="homeAboutPreviewImg" src="{{ previewSrc }}" alt="" draggable="false"
+                                             class="position-absolute top-0 start-0" style="width: 100%; height: 100%; pointer-events: none;">
+                                    {% else %}
+                                        <div id="homeAboutPreviewPlaceholder" class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                            <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
+                                        </div>
+                                        <img id="homeAboutPreviewImg" src="" alt="" draggable="false"
+                                             class="d-none position-absolute top-0 start-0" style="width: 100%; height: 100%; pointer-events: none;">
+                                    {% endif %}
+                                </div>
+                                <p class="small text-muted mb-3">Glissez pour cadrer, molette pour zoomer.</p>
+                                <div class="visually-hidden">
+                                    {{ form_widget(form.aboutImagePanX) }}
+                                    {{ form_widget(form.aboutImagePanY) }}
+                                    {{ form_widget(form.aboutImageZoom) }}
+                                </div>
+                            </div>
+                        </div>
+                        {{ form_row(form.aboutImageUrl) }}
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">{{ form_row(form.aboutName) }}</div>
+                        <div class="col-md-6">{{ form_row(form.aboutRole) }}</div>
+                        <div class="col-12">{{ form_row(form.aboutHeading) }}</div>
+                        <div class="col-12">{{ form_row(form.aboutParagraph1) }}</div>
+                        <div class="col-12">{{ form_row(form.aboutParagraph2) }}</div>
+                        <div class="col-12">{{ form_row(form.aboutListTitle) }}</div>
+                        <div class="col-12">{{ form_row(form.aboutListItems) }}</div>
+                        <div class="col-md-6 col-lg-3">{{ form_row(form.aboutBadge1) }}</div>
+                        <div class="col-md-6 col-lg-3">{{ form_row(form.aboutBadge2) }}</div>
+                        <div class="col-md-6 col-lg-3">{{ form_row(form.aboutBadge3) }}</div>
+                        <div class="col-md-6 col-lg-3">{{ form_row(form.aboutBadge4) }}</div>
+                    </div>
+                </section>
+
+                <section id="section-contact" class="admin-home-panel">
+                    <h2 class="admin-home-panel-title"><i class="bi bi-envelope"></i> Contact</h2>
+                    <p class="admin-home-panel-desc">Textes au-dessus du formulaire de contact (le formulaire reste fonctionnel).</p>
+                    {{ form_row(form.contactTitle) }}
+                    {{ form_row(form.contactLead) }}
+                </section>
+            </div>
+        </div>
+
+        <div class="admin-home-save-bar">
+            <span class="text-muted small d-none d-md-inline">Les modifications sont visibles après enregistrement.</span>
+            <div class="d-flex gap-2 ms-auto">
+                <a href="{{ path('app_home') }}" class="btn btn-admin-outline" target="_blank" rel="noopener">Aperçu</a>
+                <button type="submit" class="btn btn-admin-primary btn-lg">
+                    <i class="bi bi-check-lg me-1"></i> Enregistrer la page
+                </button>
+            </div>
+        </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script>
     (function () {
+        document.querySelectorAll('.admin-home-nav .nav-link').forEach(function (link) {
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+                document.querySelectorAll('.admin-home-nav .nav-link').forEach(function (l) {
+                    l.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
         const frame = document.getElementById('homeAboutPreviewFrame');
         let img = document.getElementById('homeAboutPreviewImg');
         const placeholder = document.getElementById('homeAboutPreviewPlaceholder');
@@ -129,9 +246,9 @@
         const panXEl = document.getElementById('{{ form.aboutImagePanX.vars.id|e('js') }}');
         const panYEl = document.getElementById('{{ form.aboutImagePanY.vars.id|e('js') }}');
         const zoomEl = document.getElementById('{{ form.aboutImageZoom.vars.id|e('js') }}');
+        if (!panXEl) return;
 
         function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
-
         function readState() {
             return {
                 panX: parseInt(panXEl.value, 10) || 50,
@@ -139,14 +256,12 @@
                 zoom: parseInt(zoomEl.value, 10) || 100,
             };
         }
-
         function writeState(panX, panY, zoom) {
             panXEl.value = String(Math.round(clamp(panX, 0, 100)));
             panYEl.value = String(Math.round(clamp(panY, 0, 100)));
             zoomEl.value = String(Math.round(clamp(zoom, 100, 250)));
             applyStyles();
         }
-
         function applyStyles() {
             if (!img || !img.getAttribute('src')) return;
             const st = readState();
@@ -157,7 +272,6 @@
             img.classList.remove('d-none');
             if (placeholder) placeholder.classList.add('d-none');
         }
-
         function showImgFromUrl(url) {
             if (!img) img = document.getElementById('homeAboutPreviewImg');
             if (!img || !url) return;
@@ -166,68 +280,41 @@
             if (img.complete) applyStyles();
         }
 
-        let dragging = false;
-        let lastX = 0;
-        let lastY = 0;
-
-        function onDown(clientX, clientY) {
+        let dragging = false, lastX = 0, lastY = 0;
+        function onDown(x, y) {
             if (!img || !img.getAttribute('src')) return;
-            dragging = true;
-            lastX = clientX;
-            lastY = clientY;
+            dragging = true; lastX = x; lastY = y;
             if (frame) frame.style.cursor = 'grabbing';
         }
-
-        function onMove(clientX, clientY, ev) {
+        function onMove(x, y, ev) {
             if (!dragging || !frame) return;
-            const dx = clientX - lastX;
-            const dy = clientY - lastY;
-            lastX = clientX;
-            lastY = clientY;
-            const w = frame.clientWidth || 200;
-            const h = frame.clientHeight || 200;
-            let st = readState();
-            st.panX -= (dx / w) * 100;
-            st.panY -= (dy / h) * 100;
+            const st = readState();
+            st.panX -= ((x - lastX) / frame.clientWidth) * 100;
+            st.panY -= ((y - lastY) / frame.clientHeight) * 100;
+            lastX = x; lastY = y;
             writeState(st.panX, st.panY, st.zoom);
             if (ev) ev.preventDefault();
         }
-
-        function onUp() {
-            dragging = false;
-            if (frame) frame.style.cursor = 'grab';
-        }
+        function onUp() { dragging = false; if (frame) frame.style.cursor = 'grab'; }
 
         if (frame) {
-            frame.addEventListener('mousedown', function (e) {
-                onDown(e.clientX, e.clientY);
-            });
+            frame.addEventListener('mousedown', function (e) { onDown(e.clientX, e.clientY); });
             frame.addEventListener('wheel', function (e) {
                 if (!img || !img.getAttribute('src')) return;
                 e.preventDefault();
-                let st = readState();
-                st.zoom -= e.deltaY * 0.12;
-                writeState(st.panX, st.panY, st.zoom);
+                const st = readState();
+                writeState(st.panX, st.panY, st.zoom - e.deltaY * 0.12);
             }, { passive: false });
-
             frame.addEventListener('touchstart', function (e) {
-                if (!e.touches.length) return;
-                onDown(e.touches[0].clientX, e.touches[0].clientY);
+                if (e.touches.length) onDown(e.touches[0].clientX, e.touches[0].clientY);
             }, { passive: true });
-
             frame.addEventListener('touchmove', function (e) {
-                if (!dragging || !e.touches.length) return;
-                onMove(e.touches[0].clientX, e.touches[0].clientY, e);
+                if (e.touches.length) onMove(e.touches[0].clientX, e.touches[0].clientY, e);
             }, { passive: false });
-
             frame.addEventListener('touchend', onUp);
             frame.addEventListener('touchcancel', onUp);
         }
-
-        document.addEventListener('mousemove', function (e) {
-            onMove(e.clientX, e.clientY, null);
-        });
-
+        document.addEventListener('mousemove', function (e) { onMove(e.clientX, e.clientY, null); });
         document.addEventListener('mouseup', onUp);
 
         if (fileEl) {
@@ -235,31 +322,19 @@
                 const f = this.files && this.files[0];
                 if (!f) return;
                 const reader = new FileReader();
-                reader.onload = function (e) {
-                    if (e.target && e.target.result) {
-                        showImgFromUrl(e.target.result);
-                    }
-                };
+                reader.onload = function (e) { if (e.target && e.target.result) showImgFromUrl(e.target.result); };
                 reader.readAsDataURL(f);
             });
         }
-
         if (urlEl) {
             let t;
             urlEl.addEventListener('input', function () {
                 clearTimeout(t);
                 const v = (this.value || '').trim();
-                t = setTimeout(function () {
-                    if (v.indexOf('http') === 0) {
-                        showImgFromUrl(v);
-                    }
-                }, 350);
+                t = setTimeout(function () { if (v.indexOf('http') === 0) showImgFromUrl(v); }, 350);
             });
         }
-
-        if (img && img.getAttribute('src')) {
-            applyStyles();
-        }
+        if (img && img.getAttribute('src')) applyStyles();
     })();
     </script>
 {% endblock %}

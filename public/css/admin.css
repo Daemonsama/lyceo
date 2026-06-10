@@ -58,6 +58,127 @@
     }
 }
 
+/* Boutons admin — charte Lyceo Campus */
+.btn-admin-primary {
+    color: #fff;
+    border: none;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-admin-primary:hover {
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.35);
+}
+
+.btn-admin-outline {
+    color: #667eea;
+    border: 1px solid rgba(102, 126, 234, 0.35);
+    background: #fff;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+}
+
+.btn-admin-outline:hover {
+    color: #5568d3;
+    background: rgba(102, 126, 234, 0.06);
+    border-color: #667eea;
+}
+
+.btn-admin-danger {
+    color: #fff;
+    border: none;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 0.5rem 1rem;
+}
+
+.btn-admin-danger:hover {
+    color: #fff;
+    opacity: 0.92;
+}
+
+.bg-admin-super {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.bg-admin-standard {
+    background: rgba(0, 207, 232, 0.15) !important;
+    color: #0097a7 !important;
+}
+
+.admin-user-card {
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.admin-user-table thead th {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: #8b95a5;
+    font-weight: 600;
+    border-bottom-width: 1px;
+    padding: 1rem 1.25rem;
+    background: #fafbfc;
+}
+
+.admin-user-table tbody td {
+    padding: 1rem 1.25rem;
+}
+
+.admin-user-form .form-control {
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    padding: 0.65rem 0.85rem;
+}
+
+.admin-user-form .form-control:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.2);
+}
+
+.admin-formation-thumb {
+    object-fit: cover;
+    border-radius: 12px;
+    background: #eef1f6;
+    flex-shrink: 0;
+}
+
+.admin-formation-thumb--lg {
+    border-radius: 14px;
+}
+
+.admin-formation-excerpt {
+    max-width: 320px;
+    line-height: 1.45;
+}
+
+.admin-rich-content {
+    color: #3d4856;
+    line-height: 1.7;
+}
+
+.admin-rich-content p:last-child {
+    margin-bottom: 0;
+}
+
+.admin-dashboard-price-pill {
+    display: inline-block;
+    background: rgba(255, 159, 67, 0.12);
+    color: #ff9f43;
+    font-weight: 700;
+    font-size: 0.82rem;
+    padding: 0.25rem 0.65rem;
+    border-radius: 8px;
+}
+
 @media (max-width: 991px) {
     .navbar-admin .navbar-nav {
         gap: 0;

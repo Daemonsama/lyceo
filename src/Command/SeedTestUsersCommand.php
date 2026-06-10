@@ -43,7 +43,7 @@ final class SeedTestUsersCommand extends Command
                 'plainPassword' => 'admin123',
                 'nom' => 'Admin',
                 'prenom' => 'Admin',
-                'roles' => ['ROLE_ADMIN'],
+                'roles' => ['ROLE_SUPER_ADMIN'],
             ],
             [
                 'email' => 'user@gmail.com',
@@ -79,7 +79,7 @@ final class SeedTestUsersCommand extends Command
 
         $io->success('Comptes de test prêts.');
         $io->listing([
-            'Admin : admin@gmail.com / admin123 (ROLE_ADMIN)',
+            'Super admin : admin@gmail.com / admin123 (ROLE_SUPER_ADMIN)',
             'Utilisateur : user@gmail.com / user123 (ROLE_USER)',
         ]);
 

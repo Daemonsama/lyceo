@@ -3,11 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
+use App\Entity\FormationPromoCode;
 use App\Form\FormationType;
 use App\Repository\FormationRepository;
 use App\Service\ChapitreMediaDisplayHelper;
 use App\Service\FormationApercuDisplayHelper;
 use App\Service\FormationApercuHandler;
+use App\Service\StripePromoCodeSyncService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,9 +34,13 @@ final class AdminFormationController extends AbstractController
     }
 
     #[Route('/new', name: 'app_admin_formation_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, FormationRepository $formationRepository): Response
-    {
+    public function new(
+        Request $request,
+        FormationRepository $formationRepository,
+        StripePromoCodeSyncService $promoCodeSync,
+    ): Response {
         $formation = new Formation();
+        $formation->addPromoCode(new FormationPromoCode());
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
 
@@ -43,6 +49,7 @@ final class AdminFormationController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->removeEmptyPromoCodes($formation);
             $formationRepository->save($formation);
 
             $error = $this->apercuHandler->applyFromForm($formation, $form);
@@ -60,6 +67,7 @@ final class AdminFormationController extends AbstractController
                 $formationRepository->save($formation);
             }
 
+            $this->syncPromoCodes($promoCodeSync, $formation);
             $this->addFlash('success', 'Formation créée.');
 
             return $this->redirectToRoute('app_admin_formation_index', [], Response::HTTP_SEE_OTHER);
@@ -73,11 +81,12 @@ final class AdminFormationController extends AbstractController
     }
 
     #[Route('/{formation}', name: 'app_admin_formation_show', methods: ['GET'])]
-    public function show(Formation $formation): Response
+    public function show(Formation $formation, ChapitreMediaDisplayHelper $mediaHelper): Response
     {
         return $this->render('admin_formation/show.html.twig', [
             'formation' => $formation,
             'apercuDisplayHelper' => $this->apercuDisplayHelper,
+            'mediaHelper' => $mediaHelper,
         ]);
     }
 
@@ -87,6 +96,7 @@ final class AdminFormationController extends AbstractController
         Formation $formation,
         FormationRepository $formationRepository,
         ChapitreMediaDisplayHelper $mediaHelper,
+        StripePromoCodeSyncService $promoCodeSync,
     ): Response {
         $form = $this->createForm(FormationType::class, $formation);
         $form->handleRequest($request);
@@ -96,6 +106,8 @@ final class AdminFormationController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->removeEmptyPromoCodes($formation);
+
             $error = $this->apercuHandler->applyFromForm($formation, $form);
             if ($error !== null) {
                 $this->addFlash('error', $error);
@@ -109,6 +121,7 @@ final class AdminFormationController extends AbstractController
             }
 
             $formationRepository->save($formation);
+            $this->syncPromoCodes($promoCodeSync, $formation);
             $this->addFlash('success', 'Formation mise à jour.');
 
             return $this->redirectToRoute('app_admin_formation_index', [], Response::HTTP_SEE_OTHER);
@@ -146,6 +159,35 @@ final class AdminFormationController extends AbstractController
     {
         foreach ($form->getErrors(true) as $error) {
             $this->addFlash('error', $error->getMessage());
+        }
+    }
+
+    private function removeEmptyPromoCodes(Formation $formation): void
+    {
+        foreach ($formation->getPromoCodes()->toArray() as $promoCode) {
+            $code = $promoCode->getCode();
+            if ($code === null || trim($code) === '') {
+                $formation->removePromoCode($promoCode);
+            }
+        }
+    }
+
+    private function syncPromoCodes(StripePromoCodeSyncService $promoCodeSync, Formation $formation): void
+    {
+        if ($formation->getPromoCodes()->isEmpty()) {
+            return;
+        }
+
+        $errors = $promoCodeSync->syncFormation($formation);
+
+        if ($errors === []) {
+            $this->addFlash('success', 'Codes promo synchronisés avec Stripe.');
+
+            return;
+        }
+
+        foreach ($errors as $error) {
+            $this->addFlash('warning', $error);
         }
     }
 }
