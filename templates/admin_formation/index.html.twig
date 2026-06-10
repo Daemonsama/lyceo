@@ -1,34 +1,83 @@
 {% extends 'base.admin.html.twig' %}
 
-{% block title %}Liste des formations{% endblock %}
+{% block title %}Formations{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">Formations</li>
+{% endblock %}
 
 {% block body %}
-    <h1>Liste des formations</h1>
+    <div class="container py-4">
+        <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+            <div>
+                <h1 class="h3 mb-1"><i class="bi bi-book text-primary"></i> Formations</h1>
+                <p class="text-muted mb-0">Gérez le catalogue de formations Lyceo Campus.</p>
+            </div>
+            <a href="{{ path('app_admin_formation_new') }}" class="btn btn-admin-primary">
+                <i class="bi bi-plus-lg me-1"></i> Nouvelle formation
+            </a>
+        </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for formation in formations %}
-            <tr>
-                <td>{{ formation.id }}</td>
-                <td>{{ formation.titre }}</td>
-                <td>
-                    <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {'formation': formation.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">Aucune formation crée.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a class="btn btn-success" href="{{ path('app_admin_formation_new') }}">Créer une nouvelle formation</a>
+        <div class="card border-0 shadow-sm admin-user-card">
+            <div class="card-body p-0">
+                {% if formations is not empty %}
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0 admin-user-table">
+                            <thead>
+                                <tr>
+                                    <th>Formation</th>
+                                    <th>Description</th>
+                                    <th>Prix</th>
+                                    <th class="text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {% for formation in formations %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <img src="{{ formation_apercu_url(formation) }}"
+                                                 alt=""
+                                                 class="admin-formation-thumb"
+                                                 width="48"
+                                                 height="48">
+                                            <div>
+                                                <strong>{{ formation.titre }}</strong>
+                                                <div class="small text-muted">#{{ formation.id }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-muted small admin-formation-excerpt">
+                                        {% set desc = formation.description|striptags %}
+                                        {{ desc|length > 100 ? desc|slice(0, 100) ~ '…' : desc }}
+                                    </td>
+                                    <td>
+                                        <span class="admin-dashboard-price-pill">{{ formation.prix|number_format(2, ',', ' ') }} €</span>
+                                    </td>
+                                    <td class="text-end">
+                                        <div class="d-inline-flex flex-wrap gap-2 justify-content-end">
+                                            <a href="{{ path('app_admin_formation_show', { formation: formation.id }) }}"
+                                               class="btn btn-sm btn-admin-outline">
+                                                <i class="bi bi-eye"></i> Voir
+                                            </a>
+                                            <a href="{{ path('app_admin_formation_edit', { formation: formation.id }) }}"
+                                               class="btn btn-sm btn-admin-primary">
+                                                <i class="bi bi-pencil"></i> Modifier
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div class="text-center text-muted py-5">
+                        <i class="bi bi-journal-x fs-2 d-block mb-2"></i>
+                        Aucune formation créée.
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

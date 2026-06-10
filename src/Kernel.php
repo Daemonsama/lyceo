@@ -34,7 +34,11 @@ class Kernel extends BaseKernel
             return rtrim(str_replace(['/', '\\'], \DIRECTORY_SEPARATOR, $custom), \DIRECTORY_SEPARATOR);
         }
 
-        return $this->resolveWindowsLocalAppDataDir().\DIRECTORY_SEPARATOR.'Spcformation';
+        $projectSlug = basename(str_replace('\\', '/', $this->getProjectDir()));
+
+        return $this->resolveWindowsLocalAppDataDir()
+            .\DIRECTORY_SEPARATOR.'Spcformation'
+            .\DIRECTORY_SEPARATOR.$projectSlug;
     }
 
     /**

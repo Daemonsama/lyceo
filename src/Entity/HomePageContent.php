@@ -24,6 +24,135 @@ class HomePageContent
     #[ORM\Column(type: Types::TEXT)]
     private string $heroLead = 'Des formations professionnelles créatives et immersives pour gagner en efficacité et révéler votre plein potentiel.';
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $heroLogoFilename = null;
+
+    #[ORM\Column(length: 128)]
+    private string $heroCtaPrimaryLabel = 'Découvrir les formations';
+
+    #[ORM\Column(length: 255)]
+    private string $heroCtaPrimaryUrl = '/formation';
+
+    #[ORM\Column(length: 128)]
+    private string $heroCtaSecondaryLabel = 'Nous contacter';
+
+    #[ORM\Column(length: 255)]
+    private string $heroCtaSecondaryUrl = '#contact';
+
+    #[ORM\Column(length: 64)]
+    private string $stat1Value = '25+';
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $stat1Icon = null;
+
+    #[ORM\Column(length: 255)]
+    private string $stat1Label = 'Années d\'expérience';
+
+    #[ORM\Column(length: 64)]
+    private string $stat2Value = '100%';
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $stat2Icon = null;
+
+    #[ORM\Column(length: 255)]
+    private string $stat2Label = 'Formations interactives';
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $stat3Value = null;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $stat3Icon = 'star-fill';
+
+    #[ORM\Column(length: 255)]
+    private string $stat3Label = 'Coach certifié';
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $stat4Value = null;
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $stat4Icon = 'geo-alt-fill';
+
+    #[ORM\Column(length: 255)]
+    private string $stat4Label = 'Aurillac (15)';
+
+    #[ORM\Column(length: 255)]
+    private string $missionTitle = 'Notre mission';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $missionLead = 'Vous accompagner dans le développement de votre <strong>AGILITÉ</strong>, votre <strong>CARE</strong>, votre <strong>FLOW</strong> et votre <strong>ENGAGEMENT</strong>.';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $missionBody = 'Nous vous délivrons les outils nécessaires pour repenser et déployer votre mission en tant que <strong>coach manager</strong> ou membre d\'équipe. Apprenez à communiquer efficacement, maîtrisez la gestion hybride et créez de la valeur partagée.';
+
+    #[ORM\Column(length: 255)]
+    private string $missionCardTitle = 'Nos objectifs';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $missionListItems = "Développer votre efficacité professionnelle\nRévéler votre talent unique et votre potentiel\nAccompagner votre équipe vers l'excellence\nCréer de la valeur partagée dans votre entreprise";
+
+    #[ORM\Column(length: 255)]
+    private string $audienceTitle = 'Pour qui ?';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $audienceLead = 'Nos formations s\'adressent aux équipes et managers qui veulent progresser';
+
+    #[ORM\Column(length: 255)]
+    private string $audienceCard1Title = 'Formation INTRA';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $audienceCard1Text = 'Pour votre équipe ou vos managers de différents services au sein de votre entreprise.';
+
+    #[ORM\Column(length: 64)]
+    private string $audienceCard1Icon = 'building';
+
+    #[ORM\Column(length: 255)]
+    private string $audienceCard2Title = 'Formation INTER';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $audienceCard2Text = 'Pour managers et équipes de différentes entreprises qui veulent partager leurs expériences.';
+
+    #[ORM\Column(length: 64)]
+    private string $audienceCard2Icon = 'people';
+
+    #[ORM\Column(length: 255)]
+    private string $servicesTitle = 'Nos services';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $servicesLead = 'Un accompagnement complet pour votre développement';
+
+    #[ORM\Column(length: 255)]
+    private string $service1Title = 'Coaching Individualisé';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $service1Text = 'Des séances personnalisées pour identifier et surmonter vos obstacles spécifiques.';
+
+    #[ORM\Column(length: 64)]
+    private string $service1Icon = 'person-check';
+
+    #[ORM\Column(length: 255)]
+    private string $service2Title = 'Formations Pratiques';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $service2Text = 'Des programmes concrets et interactifs pour acquérir des compétences rapidement.';
+
+    #[ORM\Column(length: 64)]
+    private string $service2Icon = 'book';
+
+    #[ORM\Column(length: 255)]
+    private string $service3Title = 'Objectifs Mesurables';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $service3Text = 'Établissement d\'objectifs clairs pour suivre vos progrès et célébrer vos réussites.';
+
+    #[ORM\Column(length: 64)]
+    private string $service3Icon = 'graph-up-arrow';
+
+    #[ORM\Column(length: 255)]
+    private string $contactTitle = 'Nous contacter';
+
+    #[ORM\Column(type: Types::TEXT)]
+    private string $contactLead = 'Une question sur nos formations ? Écrivez-nous, nous vous répondrons dans les meilleurs délais.';
+
     #[ORM\Column(type: Types::TEXT)]
     private string $aboutImageUrl = 'https://static.wixstatic.com/media/bdddc0_685c5141770c4513b46a6a343cc7d091~mv2.jpg/v1/fill/w_443,h_431,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_2866_JPG.jpg';
 
@@ -75,6 +204,9 @@ class HomePageContent
 
     #[ORM\Column(length: 128)]
     private string $aboutBadge3 = 'Formateur';
+
+    #[ORM\Column(length: 128)]
+    private string $aboutBadge4 = '';
 
     public function getId(): ?int
     {
@@ -302,4 +434,201 @@ class HomePageContent
 
         return $this;
     }
+
+    public function getAboutBadge4(): string
+    {
+        return $this->aboutBadge4;
+    }
+
+    public function setAboutBadge4(?string $aboutBadge4): static
+    {
+        $this->aboutBadge4 = $aboutBadge4 ?? '';
+
+        return $this;
+    }
+
+    public function isStatSlotFilled(int $index): bool
+    {
+        if ($index < 1 || $index > 4) {
+            return false;
+        }
+
+        $label = trim($this->{'getStat'.$index.'Label'}());
+        $value = trim((string) ($this->{'getStat'.$index.'Value'}() ?? ''));
+        $icon = trim((string) ($this->{'getStat'.$index.'Icon'}() ?? ''));
+
+        return $label !== '' || $value !== '' || $icon !== '';
+    }
+
+    /**
+     * @return list<array{text: string, icon: string|null}>
+     */
+    public function getAboutBadgesForDisplay(): array
+    {
+        $defaultIcons = ['award', null, 'lightbulb', 'star-fill'];
+        $badges = [];
+
+        for ($i = 1; $i <= 4; ++$i) {
+            $text = trim($this->{'getAboutBadge'.$i}());
+            if ($text === '') {
+                continue;
+            }
+
+            $badges[] = [
+                'text' => $text,
+                'icon' => $defaultIcons[$i - 1],
+            ];
+        }
+
+        return $badges;
+    }
+
+    public function hasUploadedHeroLogo(): bool
+    {
+        return $this->heroLogoFilename !== null && $this->heroLogoFilename !== '';
+    }
+
+    public function getHeroLogoFilename(): ?string
+    {
+        return $this->heroLogoFilename;
+    }
+
+    public function setHeroLogoFilename(?string $heroLogoFilename): static
+    {
+        $this->heroLogoFilename = $heroLogoFilename;
+
+        return $this;
+    }
+
+    public function getHeroCtaPrimaryLabel(): string
+    {
+        return $this->heroCtaPrimaryLabel;
+    }
+
+    public function setHeroCtaPrimaryLabel(?string $heroCtaPrimaryLabel): static
+    {
+        $this->heroCtaPrimaryLabel = $heroCtaPrimaryLabel ?? '';
+
+        return $this;
+    }
+
+    public function getHeroCtaPrimaryUrl(): string
+    {
+        return $this->heroCtaPrimaryUrl;
+    }
+
+    public function setHeroCtaPrimaryUrl(?string $heroCtaPrimaryUrl): static
+    {
+        $this->heroCtaPrimaryUrl = $heroCtaPrimaryUrl ?? '';
+
+        return $this;
+    }
+
+    public function getHeroCtaSecondaryLabel(): string
+    {
+        return $this->heroCtaSecondaryLabel;
+    }
+
+    public function setHeroCtaSecondaryLabel(?string $heroCtaSecondaryLabel): static
+    {
+        $this->heroCtaSecondaryLabel = $heroCtaSecondaryLabel ?? '';
+
+        return $this;
+    }
+
+    public function getHeroCtaSecondaryUrl(): string
+    {
+        return $this->heroCtaSecondaryUrl;
+    }
+
+    public function setHeroCtaSecondaryUrl(?string $heroCtaSecondaryUrl): static
+    {
+        $this->heroCtaSecondaryUrl = $heroCtaSecondaryUrl ?? '';
+
+        return $this;
+    }
+
+    public function getStat1Value(): string { return $this->stat1Value; }
+    public function setStat1Value(?string $v): static { $this->stat1Value = $v ?? ''; return $this; }
+    public function getStat1Icon(): ?string { return $this->stat1Icon; }
+    public function setStat1Icon(?string $v): static { $this->stat1Icon = $v !== '' ? $v : null; return $this; }
+    public function getStat1Label(): string { return $this->stat1Label; }
+    public function setStat1Label(?string $v): static { $this->stat1Label = $v ?? ''; return $this; }
+
+    public function getStat2Value(): string { return $this->stat2Value; }
+    public function setStat2Value(?string $v): static { $this->stat2Value = $v ?? ''; return $this; }
+    public function getStat2Icon(): ?string { return $this->stat2Icon; }
+    public function setStat2Icon(?string $v): static { $this->stat2Icon = $v !== '' ? $v : null; return $this; }
+    public function getStat2Label(): string { return $this->stat2Label; }
+    public function setStat2Label(?string $v): static { $this->stat2Label = $v ?? ''; return $this; }
+
+    public function getStat3Value(): ?string { return $this->stat3Value; }
+    public function setStat3Value(?string $v): static { $this->stat3Value = $v !== '' ? $v : null; return $this; }
+    public function getStat3Icon(): ?string { return $this->stat3Icon; }
+    public function setStat3Icon(?string $v): static { $this->stat3Icon = $v !== '' ? $v : null; return $this; }
+    public function getStat3Label(): string { return $this->stat3Label; }
+    public function setStat3Label(?string $v): static { $this->stat3Label = $v ?? ''; return $this; }
+
+    public function getStat4Value(): ?string { return $this->stat4Value; }
+    public function setStat4Value(?string $v): static { $this->stat4Value = $v !== '' ? $v : null; return $this; }
+    public function getStat4Icon(): ?string { return $this->stat4Icon; }
+    public function setStat4Icon(?string $v): static { $this->stat4Icon = $v !== '' ? $v : null; return $this; }
+    public function getStat4Label(): string { return $this->stat4Label; }
+    public function setStat4Label(?string $v): static { $this->stat4Label = $v ?? ''; return $this; }
+
+    public function getMissionTitle(): string { return $this->missionTitle; }
+    public function setMissionTitle(?string $v): static { $this->missionTitle = $v ?? ''; return $this; }
+    public function getMissionLead(): string { return $this->missionLead; }
+    public function setMissionLead(?string $v): static { $this->missionLead = $v ?? ''; return $this; }
+    public function getMissionBody(): string { return $this->missionBody; }
+    public function setMissionBody(?string $v): static { $this->missionBody = $v ?? ''; return $this; }
+    public function getMissionCardTitle(): string { return $this->missionCardTitle; }
+    public function setMissionCardTitle(?string $v): static { $this->missionCardTitle = $v ?? ''; return $this; }
+    public function getMissionListItems(): string { return $this->missionListItems; }
+    public function setMissionListItems(?string $v): static { $this->missionListItems = $v ?? ''; return $this; }
+
+    public function getAudienceTitle(): string { return $this->audienceTitle; }
+    public function setAudienceTitle(?string $v): static { $this->audienceTitle = $v ?? ''; return $this; }
+    public function getAudienceLead(): string { return $this->audienceLead; }
+    public function setAudienceLead(?string $v): static { $this->audienceLead = $v ?? ''; return $this; }
+    public function getAudienceCard1Title(): string { return $this->audienceCard1Title; }
+    public function setAudienceCard1Title(?string $v): static { $this->audienceCard1Title = $v ?? ''; return $this; }
+    public function getAudienceCard1Text(): string { return $this->audienceCard1Text; }
+    public function setAudienceCard1Text(?string $v): static { $this->audienceCard1Text = $v ?? ''; return $this; }
+    public function getAudienceCard1Icon(): string { return $this->audienceCard1Icon; }
+    public function setAudienceCard1Icon(?string $v): static { $this->audienceCard1Icon = $v ?? 'building'; return $this; }
+    public function getAudienceCard2Title(): string { return $this->audienceCard2Title; }
+    public function setAudienceCard2Title(?string $v): static { $this->audienceCard2Title = $v ?? ''; return $this; }
+    public function getAudienceCard2Text(): string { return $this->audienceCard2Text; }
+    public function setAudienceCard2Text(?string $v): static { $this->audienceCard2Text = $v ?? ''; return $this; }
+    public function getAudienceCard2Icon(): string { return $this->audienceCard2Icon; }
+    public function setAudienceCard2Icon(?string $v): static { $this->audienceCard2Icon = $v ?? 'people'; return $this; }
+
+    public function getServicesTitle(): string { return $this->servicesTitle; }
+    public function setServicesTitle(?string $v): static { $this->servicesTitle = $v ?? ''; return $this; }
+    public function getServicesLead(): string { return $this->servicesLead; }
+    public function setServicesLead(?string $v): static { $this->servicesLead = $v ?? ''; return $this; }
+    public function getService1Title(): string { return $this->service1Title; }
+    public function setService1Title(?string $v): static { $this->service1Title = $v ?? ''; return $this; }
+    public function getService1Text(): string { return $this->service1Text; }
+    public function setService1Text(?string $v): static { $this->service1Text = $v ?? ''; return $this; }
+    public function getService1Icon(): string { return $this->service1Icon; }
+    public function setService1Icon(?string $v): static { $this->service1Icon = $v ?? 'person-check'; return $this; }
+    public function getService2Title(): string { return $this->service2Title; }
+    public function setService2Title(?string $v): static { $this->service2Title = $v ?? ''; return $this; }
+    public function getService2Text(): string { return $this->service2Text; }
+    public function setService2Text(?string $v): static { $this->service2Text = $v ?? ''; return $this; }
+    public function getService2Icon(): string { return $this->service2Icon; }
+    public function setService2Icon(?string $v): static { $this->service2Icon = $v ?? 'book'; return $this; }
+    public function getService3Title(): string { return $this->service3Title; }
+    public function setService3Title(?string $v): static { $this->service3Title = $v ?? ''; return $this; }
+    public function getService3Text(): string { return $this->service3Text; }
+    public function setService3Text(?string $v): static { $this->service3Text = $v ?? ''; return $this; }
+    public function getService3Icon(): string { return $this->service3Icon; }
+    public function setService3Icon(?string $v): static { $this->service3Icon = $v ?? 'graph-up-arrow'; return $this; }
+
+    public function getContactTitle(): string { return $this->contactTitle; }
+    public function setContactTitle(?string $v): static { $this->contactTitle = $v ?? ''; return $this; }
+    public function getContactLead(): string { return $this->contactLead; }
+    public function setContactLead(?string $v): static { $this->contactLead = $v ?? ''; return $this; }
 }

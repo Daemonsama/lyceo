@@ -19,6 +19,7 @@
                         <span class="admin-nav-label">Dashboard</span>
                     </a>
                 </li>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <li class="nav-item">
                     <a class="nav-link admin-nav-link {{ app.request.attributes.get('_route') == 'app_admin_home_page_edit' ? 'active' : '' }}"
                        href="{{ path('app_admin_home_page_edit') }}">
@@ -33,6 +34,7 @@
                         <span class="admin-nav-label">Média d'accueil</span>
                     </a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
                     <a class="nav-link admin-nav-link {{ app.request.attributes.get('_route') starts with 'app_admin_contact' ? 'active' : '' }}"
                        href="{{ path('app_admin_contact_index') }}">
@@ -54,18 +56,31 @@
                         <span class="admin-nav-label">Formations&nbsp;&amp;&nbsp;Chapitres</span>
                     </a>
                 </li>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
                 <li class="nav-item">
-                    <a class="nav-link admin-nav-link disabled text-muted" href="#" tabindex="-1" aria-disabled="true">
+                    <a class="nav-link admin-nav-link {{ app.request.attributes.get('_route') == 'app_admin_payments' ? 'active' : '' }}"
+                       href="{{ path('app_admin_payments') }}">
                         <i class="bi bi-credit-card admin-nav-icon" aria-hidden="true"></i>
                         <span class="admin-nav-label">Paiements</span>
                     </a>
                 </li>
+                {% endif %}
                 <li class="nav-item">
-                    <a class="nav-link admin-nav-link disabled text-muted" href="#" tabindex="-1" aria-disabled="true">
+                    <a class="nav-link admin-nav-link {{ app.request.attributes.get('_route') == 'app_admin_stats' ? 'active' : '' }}"
+                       href="{{ path('app_admin_stats') }}">
                         <i class="bi bi-graph-up admin-nav-icon" aria-hidden="true"></i>
                         <span class="admin-nav-label">Statistiques</span>
                     </a>
                 </li>
+                {% if is_granted('ROLE_SUPER_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link admin-nav-link {{ app.request.attributes.get('_route') starts with 'app_admin_user' ? 'active' : '' }}"
+                       href="{{ path('app_admin_user_index') }}">
+                        <i class="bi bi-person-gear admin-nav-icon" aria-hidden="true"></i>
+                        <span class="admin-nav-label">Administrateurs</span>
+                    </a>
+                </li>
+                {% endif %}
             </ul>
 
             <ul class="navbar-nav">

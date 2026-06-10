@@ -2,6 +2,9 @@
 
 parameters:
     uploads_directory: '%kernel.project_dir%/public/medias'
+    stripe_secret_key: '%env(STRIPE_SECRET_KEY)%'
+    stripe_public_key: '%env(STRIPE_PUBLIC_KEY)%'
+    stripe_webhook_secret: '%env(STRIPE_WEBHOOK_SECRET)%'
 
 services:
     _defaults:
@@ -29,3 +32,12 @@ services:
             $mailerDsn: '%env(MAILER_DSN)%'
             $mailerFrom: '%env(MAILER_FROM)%'
             $mailerFromName: '%env(MAILER_FROM_NAME)%'
+
+    App\Service\StripePaymentService:
+        arguments:
+            $stripeSecretKey: '%stripe_secret_key%'
+            $stripeWebhookSecret: '%stripe_webhook_secret%'
+
+    App\Service\StripePromoCodeSyncService:
+        arguments:
+            $stripeSecretKey: '%stripe_secret_key%'

@@ -7,6 +7,7 @@ use App\Entity\Formation;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -55,6 +56,15 @@ class FormationType extends AbstractType
             ->add('categorie', EntityType::class, [
                 'class' => Categorie::class,
                 'choice_label' => 'nom',
+            ])
+            ->add('promoCodes', CollectionType::class, [
+                'entry_type' => FormationPromoCodeType::class,
+                'entry_options' => ['label' => false],
+                'allow_add' => true,
+                'allow_delete' => true,
+                'by_reference' => false,
+                'label' => 'Codes promo',
+                'help' => 'Codes réservés à cette formation. Ils sont créés automatiquement dans Stripe à l’enregistrement.',
             ])
         ;
     }

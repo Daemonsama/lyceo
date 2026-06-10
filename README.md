@@ -18,11 +18,15 @@ Projet réalisé dans le cadre de ma formation, en conditions réelles pour une 
 - Inscription et authentification des utilisateurs
 - Consultation du catalogue de formations
 - Visualisation du détail de chaque formation
-- Accès au contenu des formations après achat (paiements fictifs)
+- Achat des formations via **Stripe Checkout** (carte bancaire)
+- Accès au contenu des formations après paiement confirmé
+- Téléchargement d'attestation PDF à la fin de formation
 
 ### Interface d'administration
 - Authentification sécurisée (accès restreint)
 - **CRUD complet** sur les formations (création, lecture, modification, suppression)
+- **Codes promo / coupons** par formation (réduction % ou €, sync Stripe)
+- Tableau de bord **Paiements** et **Statistiques** (dont nombre de codes promo actifs)
 
 ---
 
@@ -32,6 +36,51 @@ Projet réalisé dans le cadre de ma formation, en conditions réelles pour une 
 - **Base de données** : MySQL
 - **Frontend** : Twig, HTML/CSS
 - **Sécurité** : Gestion des rôles et des accès via le composant Security de Symfony
+- **Paiement** : [Stripe](https://stripe.com) (Checkout Session + webhook)
+
+---
+
+## 💳 Configuration Stripe
+
+1. Créez un compte sur [dashboard.stripe.com](https://dashboard.stripe.com) et récupérez vos clés de test.
+2. Ajoutez dans `.env.local` (ou `.env.dev`) :
+
+```env
+STRIPE_SECRET_KEY=sk_test_...
+STRIPE_PUBLIC_KEY=pk_test_...
+STRIPE_WEBHOOK_SECRET=whsec_...
+```
+
+3. En local, pour recevoir les webhooks :
+
+```bash
+stripe listen --forward-to http://127.0.0.1:8000/stripe/webhook
+```
+
+Copiez le secret `whsec_...` affiché par la CLI dans `STRIPE_WEBHOOK_SECRET`.
+
+4. Appliquez la migration des codes promo :
+
+```bash
+php bin/console doctrine:migrations:migrate
+```
+
+5. En production, créez un endpoint webhook dans le dashboard Stripe pointant vers `https://votre-domaine/stripe/webhook` (événement `checkout.session.completed`).
+
+Le flux : l'utilisateur clique sur « Acheter » → redirection Stripe → retour sur `/formation/{id}/payment/success` avec vérification de la session. Le webhook confirme aussi l'achat si l'utilisateur ferme le navigateur avant le retour.
+
+### Codes promo (bons de réduction)
+
+1. Dans l'admin : **Formations → créer / modifier** → section **Codes promo**.
+2. Ajoutez un code (ex. `LYCEO10`), une réduction en **%** ou en **€**, puis enregistrez.
+3. Le coupon est créé automatiquement dans Stripe et ne fonctionne **que pour cette formation**.
+4. L'utilisateur le saisit sur la fiche formation avant d'acheter.
+
+Synchronisation manuelle si besoin :
+
+```bash
+php bin/console app:stripe:sync-promo-codes
+```
 
 ---
 
@@ -47,7 +96,5 @@ Projet réalisé dans le cadre de ma formation, en conditions réelles pour une 
 ## 🔮 Pistes d'évolution
 
 Le projet a été pensé pour être évolutif. Parmi les fonctionnalités envisagées :
-- Intégration d'un module de paiement en ligne (ex: Stripe)
-- Tableau de bord utilisateur avec suivi de progression
 - Gestion des utilisateurs par l'administrateur
 

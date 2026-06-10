@@ -463,6 +463,16 @@
 /* ========== DROPDOWN UTILISATEUR ========== */
 .navbar-custom .user-dropdown {
     padding: 0.3rem 0.85rem;
+    display: inline-flex !important;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 0;
+}
+
+.navbar-custom .user-dropdown.dropdown-toggle::after {
+    margin-left: 0.35rem;
+    vertical-align: middle;
+    align-self: center;
 }
 
 .user-dropdown {

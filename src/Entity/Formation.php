@@ -43,9 +43,16 @@ class Formation
     #[ORM\OrderBy(['ordre' => 'ASC'])]
     private Collection $chapitres;
 
+    /**
+     * @var Collection<int, FormationPromoCode>
+     */
+    #[ORM\OneToMany(targetEntity: FormationPromoCode::class, mappedBy: 'formation', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $promoCodes;
+
     public function __construct()
     {
         $this->chapitres = new ArrayCollection();
+        $this->promoCodes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,6 +161,35 @@ class Formation
             // set the owning side to null (unless already changed)
             if ($chapitre->getFormation() === $this) {
                 $chapitre->setFormation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, FormationPromoCode>
+     */
+    public function getPromoCodes(): Collection
+    {
+        return $this->promoCodes;
+    }
+
+    public function addPromoCode(FormationPromoCode $promoCode): static
+    {
+        if (!$this->promoCodes->contains($promoCode)) {
+            $this->promoCodes->add($promoCode);
+            $promoCode->setFormation($this);
+        }
+
+        return $this;
+    }
+
+    public function removePromoCode(FormationPromoCode $promoCode): static
+    {
+        if ($this->promoCodes->removeElement($promoCode)) {
+            if ($promoCode->getFormation() === $this) {
+                $promoCode->setFormation(null);
             }
         }
 

@@ -3,21 +3,40 @@
 namespace App\Controller;
 
 use App\Entity\Formation;
-use App\Entity\FormationUser;
 use App\Entity\User;
 use App\Form\RechercheType;
 use App\Repository\CategorieRepository;
 use App\Repository\FormationRepository;
 use App\Repository\FormationUserRepository;
 use App\Services\ProgressionFormation;
+use App\Exception\InvalidPromoCodeException;
+use App\Exception\StripePaymentException;
+use App\Service\StripePaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 final class FormationController extends AbstractController
 {
+    #[Route('/formation/successful_payment', name: 'app_formation_successful_payment')]
+    public function app_formation_successful_payment(Request $request): Response
+    {
+        $receipt = $request->getSession()->get('payment_receipt');
+        $request->getSession()->remove('payment_receipt');
+
+        if (!is_array($receipt)) {
+            return $this->redirectToRoute('app_mon_profil');
+        }
+
+        return $this->render('formation/success.html.twig', [
+            'receipt' => $receipt,
+        ]);
+    }
+
     #[Route('/formation', name: 'app_formation')]
     public function app_formation(
         FormationRepository $formationRepository,
@@ -85,29 +104,96 @@ final class FormationController extends AbstractController
         ]);
     }
 
-    #[Route('/formation/{formation}/acheter', name: 'app_formation_buy')]
-    public function app_formation_buy(Formation $formation): Response
-    {
-        return $this->render('formation/buy.html.twig', [
-            'formation' => $formation,
-        ]);
-    }
-    #[Route('/formation/successful_payment', name: 'app_formation_successful_payment')]
-    public function app_formation_successful_payment(): Response
-    {
-        return $this->render('formation/success.html.twig', []);
+    #[Route('/formation/{formation}/acheter', name: 'app_formation_buy', methods: ['POST'])]
+    #[IsGranted('ROLE_USER')]
+    public function app_formation_buy(
+        Formation $formation,
+        Request $request,
+        StripePaymentService $stripePayment,
+    ): Response {
+        if (!$this->isCsrfTokenValid('formation_buy', $request->request->getString('_token'))) {
+            throw $this->createAccessDeniedException();
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->hasFormation($formation)) {
+            $this->addFlash('info', 'Vous possédez déjà cette formation.');
+
+            return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
+        }
+
+        $successUrl = $this->generateUrl(
+            'app_formation_payment_success',
+            ['formation' => $formation->getId()],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+        ) . '?session_id={CHECKOUT_SESSION_ID}';
+
+        $cancelUrl = $this->generateUrl(
+            'app_formation_show',
+            ['formation' => $formation->getId()],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+        );
+
+        $promoCode = trim($request->request->getString('promo_code'));
+        $isStudent = $request->request->getBoolean('is_student');
+
+        try {
+            $session = $stripePayment->createCheckoutSession(
+                $formation,
+                $user,
+                $successUrl,
+                $cancelUrl,
+                $promoCode !== '' ? $promoCode : null,
+                $isStudent,
+            );
+        } catch (InvalidPromoCodeException|StripePaymentException $e) {
+            $this->addFlash('danger', $e->getMessage());
+            if ($promoCode !== '') {
+                $this->addFlash('promo_code', $promoCode);
+            }
+            if ($isStudent) {
+                $this->addFlash('is_student', '1');
+            }
+
+            return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
+        }
+
+        return $this->redirect($session->url);
     }
 
-    #[Route('/formation/{formation}/ipn', name: 'app_formation_ipn')]
-    public function app_formation_ipn(Formation $formation, FormationUserRepository $formationUserRepository): Response
-    {
-        # TRAITEMENT ACHAT FORMATION (METTRE EN SERVICE pitié mvc)
+    #[Route('/formation/{formation}/payment/success', name: 'app_formation_payment_success')]
+    #[IsGranted('ROLE_USER')]
+    public function app_formation_payment_success(
+        Formation $formation,
+        Request $request,
+        StripePaymentService $stripePayment,
+    ): Response {
+        /** @var User $user */
         $user = $this->getUser();
-        $formationUser = new FormationUser($user, $formation);
-        $formationUserRepository->save($formationUser);
-        return $this->redirectToRoute('app_formation_successful_payment', [
-            'formation' => $formation,
-        ]);
+
+        $sessionId = $request->query->getString('session_id');
+        if ($sessionId === '') {
+            $this->addFlash('danger', 'Session de paiement invalide.');
+
+            return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
+        }
+
+        $session = $stripePayment->retrieveCheckoutSession($sessionId, true);
+
+        if (!$stripePayment->fulfillCheckoutSession($session, $user, $formation)) {
+            $this->addFlash('danger', 'Le paiement n\'a pas pu être confirmé.');
+
+            return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
+        }
+
+        $request->getSession()->set(
+            'payment_receipt',
+            $stripePayment->buildReceiptData($session, $formation, $user),
+        );
+
+        return $this->redirectToRoute('app_formation_successful_payment');
     }
 
     private function resolveFormationBadgeAsset(): ?string
