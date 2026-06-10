@@ -40,9 +40,6 @@ security:
     # Note: Only the *first* matching rule is applied
     access_control:
         - { path: ^/admin/user, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin/page-accueil, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin/accueil-media, roles: ROLE_SUPER_ADMIN }
-        - { path: ^/admin/paiements, roles: ROLE_SUPER_ADMIN }
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/suivi-formation, roles: ROLE_USER }
 

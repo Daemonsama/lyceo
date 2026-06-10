@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/admin/paiements')]
-#[IsGranted('ROLE_SUPER_ADMIN')]
+#[IsGranted('ROLE_ADMIN')]
 final class AdminPaymentController extends AbstractController
 {
     #[Route('', name: 'app_admin_payments', methods: ['GET'])]
