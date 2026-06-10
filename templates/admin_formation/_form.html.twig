@@ -78,48 +78,108 @@
 {{ form_end(form) }}
 
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const editor = document.querySelector('.ckeditor');
-        if (editor) {
-            ClassicEditor
-                .create(editor)
-                .catch(error => console.error(error));
-        }
-
-        const list = document.getElementById('promo-codes-list');
-        const addBtn = document.getElementById('add-promo-code');
-        if (!list || !addBtn) {
-            return;
-        }
-
-        const emptyMsg = document.getElementById('no-promo-codes-msg');
-
-        const refreshEmptyState = () => {
-            if (!emptyMsg) {
+    (function () {
+        const initPromoCodesCollection = () => {
+            const list = document.getElementById('promo-codes-list');
+            const addBtn = document.getElementById('add-promo-code');
+            if (!list || !addBtn || list.dataset.promoBound === '1') {
                 return;
             }
-            emptyMsg.style.display = list.querySelectorAll('.promo-code-item').length ? 'none' : 'block';
+            list.dataset.promoBound = '1';
+
+            const emptyMsg = document.getElementById('no-promo-codes-msg');
+            const prototype = list.dataset.prototype || '';
+
+            const refreshEmptyState = () => {
+                if (!emptyMsg) {
+                    return;
+                }
+                emptyMsg.style.display = list.querySelectorAll('.promo-code-item').length ? 'none' : 'block';
+            };
+
+            const reindexPromoCodes = () => {
+                list.querySelectorAll('.promo-code-item').forEach((item, index) => {
+                    item.querySelectorAll('[name]').forEach((field) => {
+                        field.name = field.name.replace(/\[promoCodes\]\[\d+\]/, `[promoCodes][${index}]`);
+                    });
+                    item.querySelectorAll('[id]').forEach((field) => {
+                        if (field.id.includes('promoCodes')) {
+                            field.id = field.id.replace(/_promoCodes_\d+/, `_promoCodes_${index}`);
+                        }
+                    });
+                    item.querySelectorAll('label[for]').forEach((label) => {
+                        label.htmlFor = label.htmlFor.replace(/_promoCodes_\d+/, `_promoCodes_${index}`);
+                    });
+                });
+                list.dataset.index = String(list.querySelectorAll('.promo-code-item').length);
+                refreshEmptyState();
+            };
+
+            const buildPromoRow = (index) => {
+                const item = document.createElement('div');
+                item.className = 'promo-code-item border rounded p-3 mb-3 bg-white';
+                item.innerHTML =
+                    '<div class="row g-2 align-items-end">'
+                    + '<div class="col-md-3 promo-field-code"></div>'
+                    + '<div class="col-md-2 promo-field-percent"></div>'
+                    + '<div class="col-md-3 promo-field-amount"></div>'
+                    + '<div class="col-md-2 promo-field-active"></div>'
+                    + '<div class="col-md-2">'
+                    + '<button type="button" class="btn btn-outline-danger btn-sm w-100 remove-promo-code">'
+                    + '<i class="bi bi-trash"></i> Supprimer'
+                    + '</button>'
+                    + '</div>'
+                    + '</div>';
+
+                const temp = document.createElement('div');
+                temp.innerHTML = prototype.replace(/__name__/g, String(index));
+                const groups = temp.querySelectorAll('.mb-3, .form-check');
+                const slots = [
+                    item.querySelector('.promo-field-code'),
+                    item.querySelector('.promo-field-percent'),
+                    item.querySelector('.promo-field-amount'),
+                    item.querySelector('.promo-field-active'),
+                ];
+                if (groups.length >= 4) {
+                    groups.forEach((group, i) => {
+                        if (slots[i]) {
+                            slots[i].appendChild(group);
+                        }
+                    });
+                } else {
+                    item.innerHTML =
+                        '<div class="row g-2 align-items-end">'
+                        + '<div class="col-12">' + prototype.replace(/__name__/g, String(index)) + '</div>'
+                        + '<div class="col-12">'
+                        + '<button type="button" class="btn btn-outline-danger btn-sm remove-promo-code">'
+                        + '<i class="bi bi-trash"></i> Supprimer'
+                        + '</button>'
+                        + '</div>'
+                        + '</div>';
+                }
+
+                return item;
+            };
+
+            addBtn.addEventListener('click', () => {
+                const index = parseInt(list.dataset.index, 10) || 0;
+                list.appendChild(buildPromoRow(index));
+                list.dataset.index = String(index + 1);
+                refreshEmptyState();
+            });
+
+            list.addEventListener('click', (event) => {
+                const btn = event.target.closest('.remove-promo-code');
+                if (!btn) {
+                    return;
+                }
+                btn.closest('.promo-code-item')?.remove();
+                reindexPromoCodes();
+            });
+
+            reindexPromoCodes();
         };
 
-        addBtn.addEventListener('click', () => {
-            const index = parseInt(list.dataset.index, 10);
-            const item = document.createElement('div');
-            item.className = 'promo-code-item border rounded p-3 mb-3 bg-white';
-            item.innerHTML = list.dataset.prototype.replace(/__name__/g, index)
-                + '<button type="button" class="btn btn-outline-danger btn-sm mt-2 remove-promo-code">'
-                + '<i class="bi bi-trash"></i> Supprimer</button>';
-            list.appendChild(item);
-            list.dataset.index = String(index + 1);
-            refreshEmptyState();
-        });
-
-        list.addEventListener('click', (event) => {
-            const btn = event.target.closest('.remove-promo-code');
-            if (!btn) {
-                return;
-            }
-            btn.closest('.promo-code-item')?.remove();
-            refreshEmptyState();
-        });
-    });
+        document.addEventListener('DOMContentLoaded', initPromoCodesCollection);
+    })();
 </script>
