@@ -31,7 +31,11 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="formation-badge">
-                <i class="bi bi-mortarboard-fill"></i>
+                <span class="formation-badge-logo-wrap" aria-hidden="true">
+                    <img src="{{ asset('image/logo2-transparent.png') }}"
+                         alt=""
+                         class="formation-badge-logo">
+                </span>
                 <span>Formation</span>
             </div>
             <h2>{{ chapitre.formation.titre }}</h2>
@@ -84,15 +88,18 @@
         </div>
     </aside>
 
-    {# TOGGLE SIDEBAR #}
-    <button class="sidebar-toggle" id="sidebarToggle" title="Masquer/Afficher le menu">
-        ☰
-    </button>
-
     {# CONTENU PRINCIPAL #}
     <main class="main-content">
 
         <div class="content-topbar">
+            <div class="content-topbar-start">
+                <button class="sidebar-toggle"
+                        id="sidebarToggle"
+                        type="button"
+                        title="Masquer/Afficher le menu"
+                        aria-label="Masquer ou afficher le menu des chapitres">
+                    <i class="bi bi-layout-sidebar-inset sidebar-toggle-icon" aria-hidden="true"></i>
+                </button>
             <nav class="breadcrumb-nav">
                 <a href="{{ path('app_formation_show', {'formation': chapitre.formation.id}) }}">
                     {{ chapitre.formation.titre }}
@@ -100,6 +107,7 @@
                 <span>›</span>
                 <span>{{ chapitre.titre }}</span>
             </nav>
+            </div>
 
             {% if userFormation.chapitreEncours and chapitre.id == userFormation.chapitreEncours.id %}
                 <span class="current-badge">Chapitre en cours</span>
@@ -108,8 +116,9 @@
 
         <div class="content-area">
 
-            <div class="chapter-number">
-                Chapitre {{ index }} / {{ total }}
+            <div class="chapter-index-badge" aria-label="Chapitre {{ index }} sur {{ total }}">
+                <span class="chapter-index-badge__label">Chapitre</span>
+                <span class="chapter-index-badge__value">{{ index }} / {{ total }}</span>
             </div>
 
             <h1 class="chapter-main-title">
@@ -198,10 +207,16 @@
     const layout = document.getElementById('learningLayout');
 
     if (toggle && sidebar && layout) {
+        const toggleIcon = toggle.querySelector('.sidebar-toggle-icon');
+
         toggle.addEventListener('click', () => {
             sidebar.classList.toggle('hidden');
             layout.classList.toggle('sidebar-hidden');
-            toggle.textContent = sidebar.classList.contains('hidden') ? '▶' : '☰';
+            if (toggleIcon) {
+                toggleIcon.className = sidebar.classList.contains('hidden')
+                    ? 'bi bi-layout-sidebar sidebar-toggle-icon'
+                    : 'bi bi-layout-sidebar-inset sidebar-toggle-icon';
+            }
         });
     }
 </script>
