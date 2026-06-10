@@ -1,0 +1,388 @@
+{% extends 'base.admin.html.twig' %}
+
+{% block title %}Tableau de bord — Statistiques{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('css/admin-dashboard.css') }}">
+{% endblock %}
+
+{% block breadcrumb %}
+    <li class="breadcrumb-item active" aria-current="page">Statistiques</li>
+{% endblock %}
+
+{% block body %}
+    {% set overview = dashboard.overview %}
+    {% set payments = dashboard.payments %}
+
+    <div class="admin-dashboard">
+        <div class="container-fluid px-4">
+
+            {# En-tête #}
+            <div class="admin-dashboard-header">
+                <div>
+                    <h1 class="admin-dashboard-title">Tableau de bord</h1>
+                    <p class="admin-dashboard-subtitle">Vue d'ensemble de la plateforme Lyceo Campus.</p>
+                </div>
+                <div class="admin-dashboard-actions">
+                    <a href="{{ path('app_admin_payments') }}" class="btn btn-outline-dashboard">
+                        <i class="bi bi-credit-card me-1"></i> Paiements
+                    </a>
+                    <a href="{{ path('app_admin_formation_index') }}" class="btn btn-outline-dashboard">
+                        <i class="bi bi-book me-1"></i> Formations
+                    </a>
+                    <a href="{{ path('app_admin_user_index') }}" class="btn btn-outline-dashboard">
+                        <i class="bi bi-people me-1"></i> Utilisateurs
+                    </a>
+                </div>
+            </div>
+
+            {# KPI principaux #}
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-xl-3">
+                    <div class="admin-dashboard-kpi">
+                        <div class="admin-dashboard-kpi-icon admin-dashboard-kpi-icon--orange">
+                            <i class="bi bi-cart-check"></i>
+                        </div>
+                        <div>
+                            <p class="admin-dashboard-kpi-label">Ventes réalisées</p>
+                            <p class="admin-dashboard-kpi-value admin-dashboard-kpi-value--orange">{{ overview.sales }}</p>
+                            <p class="admin-dashboard-kpi-hint">{{ payments.monthCount }} ce mois-ci</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="admin-dashboard-kpi">
+                        <div class="admin-dashboard-kpi-icon admin-dashboard-kpi-icon--purple">
+                            <i class="bi bi-currency-euro"></i>
+                        </div>
+                        <div>
+                            <p class="admin-dashboard-kpi-label">Chiffre d'affaires</p>
+                            <p class="admin-dashboard-kpi-value admin-dashboard-kpi-value--purple">
+                                {{ overview.revenue|number_format(0, ',', ' ') }} €
+                            </p>
+                            <p class="admin-dashboard-kpi-hint">{{ payments.monthRevenue|number_format(2, ',', ' ') }} € ce mois</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="admin-dashboard-kpi">
+                        <div class="admin-dashboard-kpi-icon admin-dashboard-kpi-icon--cyan">
+                            <i class="bi bi-people"></i>
+                        </div>
+                        <div>
+                            <p class="admin-dashboard-kpi-label">Utilisateurs inscrits</p>
+                            <p class="admin-dashboard-kpi-value admin-dashboard-kpi-value--cyan">{{ overview.users }}</p>
+                            <p class="admin-dashboard-kpi-hint">{{ dashboard.buyers }} acheteur(s)</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-xl-3">
+                    <div class="admin-dashboard-kpi">
+                        <div class="admin-dashboard-kpi-icon admin-dashboard-kpi-icon--pink">
+                            <i class="bi bi-mortarboard"></i>
+                        </div>
+                        <div>
+                            <p class="admin-dashboard-kpi-label">Formations publiées</p>
+                            <p class="admin-dashboard-kpi-value admin-dashboard-kpi-value--pink">{{ overview.formations }}</p>
+                            <p class="admin-dashboard-kpi-hint">{{ overview.chapitres }} chapitres au total</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Graphique + activité #}
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="admin-dashboard-card">
+                        <div class="admin-dashboard-card-header">
+                            <h2 class="admin-dashboard-card-title">Chiffre d'affaires</h2>
+                            <p class="admin-dashboard-card-subtitle">Évolution sur les 12 derniers mois</p>
+                            <p class="admin-dashboard-revenue-total">
+                                {{ payments.monthRevenue|number_format(2, ',', ' ') }} €
+                                <span class="text-muted fs-6 fw-normal">ce mois-ci</span>
+                            </p>
+                        </div>
+                        <div class="admin-dashboard-card-body">
+                            <div class="admin-dashboard-chart-wrap">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="admin-dashboard-card">
+                        <div class="admin-dashboard-card-header">
+                            <h2 class="admin-dashboard-card-title">Activité plateforme</h2>
+                            <p class="admin-dashboard-card-subtitle">Indicateurs clés du mois en cours</p>
+                        </div>
+                        <div class="admin-dashboard-card-body">
+                            <div class="admin-dashboard-promo-box">
+                                <div>
+                                    <strong>{{ overview.promoCodes }} code(s) promo actif(s)</strong>
+                                    <span>Gérez les réductions par formation</span>
+                                </div>
+                                <a href="{{ path('app_admin_formation_index') }}" class="btn btn-sm btn-primary">Gérer</a>
+                            </div>
+
+                            <div class="admin-dashboard-metric">
+                                <div class="admin-dashboard-metric-head">
+                                    <span class="admin-dashboard-metric-label">Ventes du mois</span>
+                                    <span class="admin-dashboard-metric-value">{{ dashboard.rates.monthSales }}%</span>
+                                </div>
+                                <div class="admin-dashboard-progress">
+                                    <div class="admin-dashboard-progress-bar admin-dashboard-progress-bar--orange"
+                                         style="width: {{ dashboard.rates.monthSales }}%"></div>
+                                </div>
+                            </div>
+                            <div class="admin-dashboard-metric">
+                                <div class="admin-dashboard-metric-head">
+                                    <span class="admin-dashboard-metric-label">Paiements Stripe</span>
+                                    <span class="admin-dashboard-metric-value">{{ dashboard.rates.stripe }}%</span>
+                                </div>
+                                <div class="admin-dashboard-progress">
+                                    <div class="admin-dashboard-progress-bar admin-dashboard-progress-bar--purple"
+                                         style="width: {{ dashboard.rates.stripe }}%"></div>
+                                </div>
+                            </div>
+                            <div class="admin-dashboard-metric">
+                                <div class="admin-dashboard-metric-head">
+                                    <span class="admin-dashboard-metric-label">Utilisateurs acheteurs</span>
+                                    <span class="admin-dashboard-metric-value">{{ dashboard.rates.buyers }}%</span>
+                                </div>
+                                <div class="admin-dashboard-progress">
+                                    <div class="admin-dashboard-progress-bar admin-dashboard-progress-bar--pink"
+                                         style="width: {{ dashboard.rates.buyers }}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="admin-dashboard-content-grid mt-3">
+                                <div class="admin-dashboard-content-stat">
+                                    <strong>{{ overview.categories }}</strong>
+                                    <span>Catégories</span>
+                                </div>
+                                <div class="admin-dashboard-content-stat">
+                                    <strong>{{ overview.chapitres }}</strong>
+                                    <span>Chapitres</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {# Top formations + utilisateurs #}
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="admin-dashboard-card">
+                        <div class="admin-dashboard-card-header">
+                            <h2 class="admin-dashboard-card-title">Top formations</h2>
+                            <p class="admin-dashboard-card-subtitle">Les formations les plus vendues</p>
+                        </div>
+                        <div class="admin-dashboard-card-body pt-0">
+                            {% if dashboard.topFormations is not empty %}
+                                <div class="table-responsive">
+                                    <table class="admin-dashboard-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Formation</th>
+                                                <th>Ventes</th>
+                                                <th>Prix</th>
+                                                <th>Revenus</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        {% for item in dashboard.topFormations %}
+                                            <tr>
+                                                <td>
+                                                    <div class="admin-dashboard-product">
+                                                        {% if item.apercuFilename %}
+                                                            <img src="{{ asset('medias/formations/' ~ item.apercuFilename) }}"
+                                                                 alt=""
+                                                                 class="admin-dashboard-product-thumb"
+                                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                            <div class="admin-dashboard-product-thumb admin-dashboard-product-thumb--placeholder" style="display:none;">
+                                                                <i class="bi bi-book"></i>
+                                                            </div>
+                                                        {% else %}
+                                                            <div class="admin-dashboard-product-thumb admin-dashboard-product-thumb--placeholder">
+                                                                <i class="bi bi-book"></i>
+                                                            </div>
+                                                        {% endif %}
+                                                        <span class="admin-dashboard-product-name" title="{{ item.titre }}">{{ item.titre }}</span>
+                                                    </div>
+                                                </td>
+                                                <td><strong>{{ item.sales }}</strong></td>
+                                                <td>
+                                                    <span class="admin-dashboard-price-pill">{{ item.prix|number_format(2, ',', ' ') }} €</span>
+                                                </td>
+                                                <td><span class="admin-dashboard-earning">{{ item.revenue|number_format(2, ',', ' ') }} €</span></td>
+                                                <td class="text-end">
+                                                    <a href="{{ path('app_admin_formation_show', { formation: item.id }) }}"
+                                                       class="btn btn-sm btn-link text-muted p-0"
+                                                       title="Voir la formation">
+                                                        <i class="bi bi-three-dots-vertical"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            {% else %}
+                                <div class="admin-dashboard-empty">
+                                    <i class="bi bi-inbox d-block mb-2 fs-3"></i>
+                                    Aucune vente enregistrée pour le moment.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5">
+                    <div class="admin-dashboard-card">
+                        <div class="admin-dashboard-card-header">
+                            <h2 class="admin-dashboard-card-title">Utilisateurs</h2>
+                            <p class="admin-dashboard-card-subtitle">Répartition inscrits / acheteurs</p>
+                        </div>
+                        <div class="admin-dashboard-card-body">
+                            <div class="admin-dashboard-users-layout">
+                                <div class="admin-dashboard-legend">
+                                    <div class="admin-dashboard-legend-item">
+                                        <span class="admin-dashboard-legend-dot admin-dashboard-legend-dot--purple"></span>
+                                        <span>Acheteurs</span>
+                                        <strong>{{ dashboard.buyers }}</strong>
+                                    </div>
+                                    <div class="admin-dashboard-legend-item">
+                                        <span class="admin-dashboard-legend-dot admin-dashboard-legend-dot--pink"></span>
+                                        <span>Sans achat</span>
+                                        <strong>{{ overview.users - dashboard.buyers }}</strong>
+                                    </div>
+                                    <div class="admin-dashboard-legend-item">
+                                        <span class="admin-dashboard-legend-dot admin-dashboard-legend-dot--orange"></span>
+                                        <span>Taux de conversion</span>
+                                        <strong>{{ dashboard.rates.buyers }}%</strong>
+                                    </div>
+                                </div>
+                                <div class="admin-dashboard-donut-wrap">
+                                    <canvas id="usersChart"></canvas>
+                                    <div class="admin-dashboard-donut-center">
+                                        <strong>{{ overview.users }}</strong>
+                                        <span>Total</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof Chart === 'undefined') {
+                return;
+            }
+
+            const revenueCanvas = document.getElementById('revenueChart');
+            if (revenueCanvas) {
+                const revenueData = {{ evolution.revenue|json_encode|raw }};
+                const labels = {{ evolution.labels|json_encode|raw }};
+
+                const gradient = revenueCanvas.getContext('2d').createLinearGradient(0, 0, 0, 280);
+                gradient.addColorStop(0, 'rgba(115, 103, 240, 0.35)');
+                gradient.addColorStop(1, 'rgba(115, 103, 240, 0.02)');
+
+                new Chart(revenueCanvas, {
+                    type: 'line',
+                    data: {
+                        labels,
+                        datasets: [{
+                            label: 'Chiffre d\'affaires (€)',
+                            data: revenueData,
+                            borderColor: '#7367f0',
+                            backgroundColor: gradient,
+                            borderWidth: 3,
+                            pointBackgroundColor: '#7367f0',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            fill: true,
+                            tension: 0.42,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#7367f0',
+                                padding: 12,
+                                cornerRadius: 10,
+                                callbacks: {
+                                    label: (ctx) => ' ' + ctx.parsed.y.toLocaleString('fr-FR', {
+                                        minimumFractionDigits: 2,
+                                        maximumFractionDigits: 2,
+                                    }) + ' €',
+                                },
+                            },
+                        },
+                        scales: {
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#8b95a5', font: { size: 11 } },
+                            },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: 'rgba(139, 149, 165, 0.12)' },
+                                ticks: {
+                                    color: '#8b95a5',
+                                    font: { size: 11 },
+                                    callback: (v) => v + ' €',
+                                },
+                            },
+                        },
+                    },
+                });
+            }
+
+            const usersCanvas = document.getElementById('usersChart');
+            if (usersCanvas) {
+                new Chart(usersCanvas, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Acheteurs', 'Sans achat'],
+                        datasets: [{
+                            data: [{{ dashboard.buyers }}, {{ dashboard.overview.users - dashboard.buyers }}],
+                            backgroundColor: ['#7367f0', '#fce4ec'],
+                            borderColor: ['#7367f0', '#ea5480'],
+                            borderWidth: 0,
+                            hoverOffset: 6,
+                        }],
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '72%',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                backgroundColor: '#1a1d21',
+                                padding: 10,
+                                cornerRadius: 8,
+                            },
+                        },
+                    },
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -1,19 +1,112 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}Paiement réussi — SPC Formation{% endblock %}
 
-    <div class="row">
-        <div class="col-md-12">
-            Merci pour votre achat, rendez-vous dans votre espace client pour commencer votre formation !
-        </div>
-        <div class="col-md-12">
-            <a class="btn btn-primary" href="{{ path('app_mon_profil')}}">Espace client</a>
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/payment-success.css') }}">
+{% endblock %}
+
+{% block body %}
+    <div class="payment-success-page">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-8 col-xl-7">
+
+                    <a href="{{ path('app_mon_profil') }}" class="payment-success-back">
+                        <i class="bi bi-chevron-left"></i>
+                        Retour à mon espace
+                    </a>
+
+                    <div class="payment-success-hero text-center">
+                        <div class="payment-success-icon" aria-hidden="true">
+                            <i class="bi bi-check-lg"></i>
+                        </div>
+                        <h1 class="payment-success-title">Paiement réussi</h1>
+                        <p class="payment-success-subtitle">
+                            Vous avez souscrit avec succès à
+                            <strong>{{ receipt.formation.titre }}</strong>
+                        </p>
+                    </div>
+
+                    <div class="payment-success-card">
+                        <div class="payment-success-plan">
+                            <div class="payment-success-plan-info">
+                                <div class="payment-success-plan-badge">
+                                    <i class="bi bi-mortarboard-fill"></i>
+                                    <span>Formation</span>
+                                </div>
+                                <h2 class="payment-success-plan-name">{{ receipt.formation.titre }}</h2>
+                                <p class="payment-success-plan-period">{{ receipt.accessLabel }}</p>
+                            </div>
+                            <div class="payment-success-plan-check" aria-hidden="true">
+                                <i class="bi bi-check-lg"></i>
+                            </div>
+                        </div>
+
+                        <div class="payment-success-details">
+                            <div class="payment-success-detail">
+                                <span class="payment-success-detail-label">Référence</span>
+                                <span class="payment-success-detail-value">{{ receipt.referenceId }}</span>
+                            </div>
+                            <div class="payment-success-detail">
+                                <span class="payment-success-detail-label">Transaction</span>
+                                <span class="payment-success-detail-value">{{ receipt.transactionId }}</span>
+                            </div>
+                            <div class="payment-success-detail">
+                                <span class="payment-success-detail-label">Facture</span>
+                                <span class="payment-success-detail-value">{{ receipt.invoiceId }}</span>
+                            </div>
+                            <div class="payment-success-detail">
+                                <span class="payment-success-detail-label">Mode de paiement</span>
+                                <span class="payment-success-detail-value">{{ receipt.paymentMethod }}</span>
+                            </div>
+                            <div class="payment-success-detail payment-success-detail--wide">
+                                <span class="payment-success-detail-label">Date du paiement</span>
+                                <span class="payment-success-detail-value">
+                                    {{ receipt.paidAtLabel }}
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="payment-success-footer">
+                            <div class="payment-success-card-info">
+                                <div class="payment-success-card-brand">
+                                    {% if receipt.cardBrand %}
+                                        <i class="bi bi-credit-card-2-front"></i>
+                                        <span>{{ receipt.cardBrand|capitalize }}</span>
+                                    {% else %}
+                                        <i class="bi bi-credit-card-2-front"></i>
+                                        <span>Stripe</span>
+                                    {% endif %}
+                                </div>
+                                <div class="payment-success-card-holder">{{ receipt.customerName }}</div>
+                                {% if receipt.cardLast4 %}
+                                    <div class="payment-success-card-number">**** **** **** {{ receipt.cardLast4 }}</div>
+                                {% else %}
+                                    <div class="payment-success-card-number">Paiement sécurisé par carte</div>
+                                {% endif %}
+                            </div>
+                            <div class="payment-success-total">
+                                <span class="payment-success-total-label">Payé</span>
+                                <span class="payment-success-total-amount">
+                                    {{ receipt.amount|number_format(2, ',', ' ') }}
+                                    {% if receipt.currency == 'EUR' %}€{% else %}{{ receipt.currency }}{% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="payment-success-actions text-center">
+                        <a href="{{ path('app_formation_show', { formation: receipt.formation.id }) }}" class="btn payment-success-btn-primary">
+                            <i class="bi bi-play-circle me-2"></i>Commencer la formation
+                        </a>
+                        <a href="{{ path('app_mon_profil') }}" class="btn payment-success-btn-secondary">
+                            Voir mon espace client
+                        </a>
+                    </div>
+
+                </div>
+            </div>
         </div>
     </div>
-
 {% endblock %}
-
-{% block title %}
-
-{% endblock %}
-

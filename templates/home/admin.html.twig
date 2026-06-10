@@ -6,7 +6,7 @@
 
     <h1>Panneau de configuration</h1>
 
-    <p>Bienvenue dans le panneau de configuration des <strong>administrateurs</strong>. Vous pouvez gérer les catégories, formations, chapitres, la page d’accueil, le média promotionnel et les messages de contact.</p>
+    <p>Bienvenue dans le panneau de configuration des <strong>administrateurs</strong>. Vous pouvez gérer les catégories, formations, chapitres, la page d’accueil, le média promotionnel, les messages de contact, les <strong>paiements</strong> et les statistiques.</p>
 
     <div class="row g-3 mt-2">
         <div class="col-md-6 col-lg-4">
@@ -33,6 +33,32 @@
                 </div>
             </a>
         </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ path('app_admin_payments') }}" class="card h-100 text-decoration-none text-dark border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-credit-card text-primary"></i> Paiements</h2>
+                    <p class="card-text text-muted small mb-0">Historique des achats, chiffre d'affaires et paiements Stripe.</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ path('app_admin_stats') }}" class="card h-100 text-decoration-none text-dark border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-graph-up text-primary"></i> Statistiques</h2>
+                    <p class="card-text text-muted small mb-0">Vue d'ensemble, codes promo actifs et graphique des ventes.</p>
+                </div>
+            </a>
+        </div>
+        {% if is_granted('ROLE_SUPER_ADMIN') %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ path('app_admin_user_index') }}" class="card h-100 text-decoration-none text-dark border-0 shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5"><i class="bi bi-person-gear text-primary"></i> Administrateurs</h2>
+                    <p class="card-text text-muted small mb-0">Créer et gérer les comptes administrateurs de la plateforme.</p>
+                </div>
+            </a>
+        </div>
+        {% endif %}
     </div>
 
 {% endblock %}

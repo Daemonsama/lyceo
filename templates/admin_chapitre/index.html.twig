@@ -1,43 +1,63 @@
-    <h2>Liste des chapitres</h2>
+<div class="mt-5">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <h2 class="h5 mb-0"><i class="bi bi-journal-text text-primary"></i> Chapitres</h2>
+        <a class="btn btn-sm btn-admin-primary" href="{{ path('app_admin_chapitre_new', { formation: formation.id }) }}">
+            <i class="bi bi-plus-lg me-1"></i> Nouveau chapitre
+        </a>
+    </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Titre</th>
-                <th>Media</th>
-                <th>Ordre</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for chapitre in formation.chapitres %}
-            <tr>
-                <td>{{ chapitre.id }}</td>
-                <td>{{ chapitre.titre }}</td>
-                <td>
-                    {% set preview = mediaHelper is defined ? mediaHelper.resolve(chapitre) : null %}
-                    {% if preview %}
-                        {% if preview.kind == 'upload_image' %}
-                            <img src="{{ asset(preview.src) }}" width="120" class="rounded" alt="">
-                        {% else %}
-                            <span class="badge bg-secondary"><i class="bi bi-play-circle"></i> Vidéo</span>
-                        {% endif %}
-                    {% else %}
-                        <span class="text-muted">—</span>
-                    {% endif %}
-                </td>
-                <td>{{ chapitre.ordre }}</td>
-                <td>
-                    <a class="btn btn-secondary" href="{{ path('app_admin_chapitre_edit', {'chapitre': chapitre.id}) }}">Modifier</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">Aucun chapitre crée.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a class="btn btn-success" href="{{ path('app_admin_chapitre_new', {'formation':formation.id}) }}">Créer un nouveau chapitre</a>
+    <div class="card border-0 shadow-sm admin-user-card">
+        <div class="card-body p-0">
+            {% if formation.chapitres is not empty %}
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0 admin-user-table">
+                        <thead>
+                            <tr>
+                                <th>Titre</th>
+                                <th>Média</th>
+                                <th>Ordre</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% for chapitre in formation.chapitres %}
+                            <tr>
+                                <td>
+                                    <strong>{{ chapitre.titre }}</strong>
+                                    <div class="small text-muted admin-formation-excerpt">
+                                        {% set excerpt = chapitre.contenu|striptags %}
+                                        {{ excerpt|length > 60 ? excerpt|slice(0, 60) ~ '…' : excerpt }}
+                                    </div>
+                                </td>
+                                <td>
+                                    {% set preview = mediaHelper is defined ? mediaHelper.resolve(chapitre) : null %}
+                                    {% if preview %}
+                                        {% if preview.kind == 'upload_image' %}
+                                            <img src="{{ asset(preview.src) }}" width="80" class="rounded" alt="">
+                                        {% else %}
+                                            <span class="badge bg-admin-standard"><i class="bi bi-play-circle"></i> Vidéo</span>
+                                        {% endif %}
+                                    {% else %}
+                                        <span class="text-muted">—</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ chapitre.ordre }}</td>
+                                <td class="text-end">
+                                    <a class="btn btn-sm btn-admin-primary"
+                                       href="{{ path('app_admin_chapitre_edit', { chapitre: chapitre.id }) }}">
+                                        <i class="bi bi-pencil"></i> Modifier
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center text-muted py-4">
+                    Aucun chapitre créé.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
