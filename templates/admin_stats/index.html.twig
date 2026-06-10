@@ -25,6 +25,17 @@
                     <p class="admin-dashboard-subtitle">Vue d'ensemble de la plateforme Lyceo Campus.</p>
                 </div>
                 <div class="admin-dashboard-actions">
+<<<<<<<<< Temporary merge branch 1
+                    <a href="{{ path('app_admin_payments') }}" class="btn btn-outline-dashboard">
+                        <i class="bi bi-credit-card me-1"></i> Paiements
+                    </a>
+                    <a href="{{ path('app_admin_formation_index') }}" class="btn btn-outline-dashboard">
+                        <i class="bi bi-book me-1"></i> Formations
+                    </a>
+                    <a href="{{ path('app_admin_user_index') }}" class="btn btn-outline-dashboard">
+                        <i class="bi bi-people me-1"></i> Utilisateurs
+                    </a>
+=========
                     {% if is_granted('ROLE_SUPER_ADMIN') %}
                     <a href="{{ path('app_admin_payments') }}" class="btn btn-outline-dashboard">
                         <i class="bi bi-credit-card me-1"></i> Paiements
@@ -36,6 +47,7 @@
                     <a href="{{ path('app_admin_formation_index') }}" class="btn btn-outline-dashboard">
                         <i class="bi bi-book me-1"></i> Formations
                     </a>
+>>>>>>>>> Temporary merge branch 2
                 </div>
             </div>
 
