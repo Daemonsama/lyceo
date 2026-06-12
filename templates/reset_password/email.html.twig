@@ -1,20 +1,68 @@
-<h1>Bonjour,</h1>
-
-<p>Vous avez demandé la réinitialisation de votre mot de passe sur SPC Formation.</p>
-
-<p>Pour choisir un nouveau mot de passe, cliquez sur le lien ci-dessous :</p>
-
-<p>
-    <a href="{{ url('app_reset_password', { token: resetToken.token }) }}">
-        Réinitialiser mon mot de passe
-    </a>
-</p>
-
-<p>
-    Ce lien expire dans
-    {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
-</p>
-
-<p>Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>
-
-<p>— L'équipe SPC Formation</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Réinitialisation de mot de passe</title>
+</head>
+<body style="margin:0;padding:0;background-color:#f0f2f8;font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%;">
+{% set resetUrl = url('app_reset_password', { token: resetToken.token }) %}
+{% set expiration = resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle', 'fr') %}
+{% set logoWidth = 72 %}
+{% set logoHeight = (logoWidth * 617 / 1198)|round %}
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f0f2f8;padding:32px 16px;">
+    <tr>
+        <td align="center">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;">
+                <tr>
+                    <td style="background-color:#667eea;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);padding:14px 20px;">
+                        <table role="presentation" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td valign="middle" style="padding-right:10px;">
+                                    <img src="cid:lyceo_logo" alt="Lyceo Campus Numérique" width="{{ logoWidth }}" height="{{ logoHeight }}" style="display:block;border:0;width:{{ logoWidth }}px;height:auto;max-width:100%;">
+                                </td>
+                                <td valign="middle">
+                                    <p style="margin:0;font-family:'Arial Black',Arial,sans-serif;font-size:17px;font-weight:900;color:#ffffff;letter-spacing:0.06em;line-height:1;border-bottom:2px solid rgba(255,255,255,0.85);padding-bottom:2px;display:inline-block;">LYCEO</p>
+                                    <p style="margin:3px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:9px;font-weight:700;color:#ffffff;letter-spacing:0.13em;line-height:1;">CAMPUS NUMERIQUE</p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:32px 32px 24px;">
+                        <p style="margin:0 0 16px;font-size:16px;color:#1f2937;font-weight:bold;">Bonjour,</p>
+                        <p style="margin:0 0 16px;font-size:15px;color:#4b5563;line-height:1.6;">
+                            Vous avez demandé la réinitialisation de votre mot de passe sur <strong style="color:#1f2937;">Lyceo Campus</strong>.
+                        </p>
+                        <p style="margin:0 0 24px;font-size:15px;color:#4b5563;line-height:1.6;">
+                            Pour choisir un nouveau mot de passe, cliquez sur le bouton ci-dessous&nbsp;:
+                        </p>
+                        <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 0 24px;">
+                            <tr>
+                                <td style="background-color:#667eea;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:8px;">
+                                    <a href="{{ resetUrl }}" style="display:inline-block;padding:14px 28px;color:#ffffff;font-size:15px;font-weight:bold;text-decoration:none;">
+                                        Réinitialiser mon mot de passe
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+                        <p style="margin:0 0 16px;font-size:13px;color:#6b7280;line-height:1.5;">
+                            Ce lien expire dans {{ expiration }}.
+                        </p>
+                        <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">
+                            Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:20px 32px;background-color:#f8f9fc;border-top:1px solid #e8eaf6;text-align:center;">
+                        <p style="margin:0;font-size:12px;color:#9ca3af;">— L'équipe Lyceo Campus</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

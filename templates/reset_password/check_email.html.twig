@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Email envoyé — SPC Formation{% endblock %}
+{% block title %}Email envoyé — Lyceo Campus{% endblock %}
 
 {% block body %}
     <div class="login-page">
@@ -19,7 +19,7 @@
                             </p>
                             <p class="text-muted">
                                 Ce lien expire dans
-                                {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+                                {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle', 'fr') }}.
                             </p>
                             <p class="text-muted small">
                                 Pensez à vérifier vos spams ou

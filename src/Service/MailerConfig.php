@@ -7,7 +7,7 @@ final class MailerConfig
     public function __construct(
         private string $mailerDsn,
         private string $mailerFrom,
-        private string $mailerFromName = 'SPC Formation',
+        private string $mailerFromName = 'Lyceo Campus',
     ) {
     }
 

@@ -1,0 +1,12 @@
+Bonjour,
+
+Vous avez demandé la réinitialisation de votre mot de passe sur Lyceo Campus.
+
+Pour choisir un nouveau mot de passe, ouvrez ce lien :
+{{ url('app_reset_password', { token: resetToken.token }) }}
+
+Ce lien expire dans {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle', 'fr') }}.
+
+Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.
+
+— L'équipe Lyceo Campus

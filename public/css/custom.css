@@ -679,6 +679,13 @@ html {
     overflow: hidden;
 }
 
+.logo-icon > i {
+    font-size: 2.25rem;
+    color: #fff;
+    line-height: 1;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.25));
+}
+
 .login-logo-img {
     width: 80px;
     height: 80px;
@@ -891,6 +898,10 @@ html {
     .logo-icon {
         width: 60px;
         height: 60px;
+    }
+
+    .logo-icon > i {
+        font-size: 1.75rem;
     }
 
     .login-logo-img {

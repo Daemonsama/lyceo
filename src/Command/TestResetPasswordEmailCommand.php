@@ -50,14 +50,21 @@ class TestResetPasswordEmailCommand extends Command
 
         $resetToken = $this->resetPasswordHelper->generateResetToken($user);
 
-        $this->mailer->send(
-            (new TemplatedEmail())
-                ->from(new Address($this->mailerConfig->getFromEmail(), $this->mailerConfig->getFromName()))
-                ->to($email)
-                ->subject('Réinitialisation de votre mot de passe — SPC Formation')
-                ->htmlTemplate('reset_password/email.html.twig')
-                ->context(['resetToken' => $resetToken])
-        );
+        $emailMessage = (new TemplatedEmail())
+            ->from(new Address($this->mailerConfig->getFromEmail(), $this->mailerConfig->getFromName()))
+            ->to($email)
+            ->subject('Réinitialisation de votre mot de passe — Lyceo Campus')
+            ->locale('fr')
+            ->htmlTemplate('reset_password/email.html.twig')
+            ->textTemplate('reset_password/email.txt.twig')
+            ->context(['resetToken' => $resetToken]);
+
+        $logoPath = dirname(__DIR__, 2).'/public/image/logo2-transparent.png';
+        if (is_readable($logoPath)) {
+            $emailMessage->embedFromPath($logoPath, 'lyceo_logo', 'image/png');
+        }
+
+        $this->mailer->send($emailMessage);
 
         $io->success('Email de réinitialisation envoyé à '.$email);
 

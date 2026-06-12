@@ -149,14 +149,7 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        $emailMessage = (new TemplatedEmail())
-            ->from(new Address($this->mailerConfig->getFromEmail(), $this->mailerConfig->getFromName()))
-            ->to((string) $user->getEmail())
-            ->subject('Réinitialisation de votre mot de passe — SPC Formation')
-            ->htmlTemplate('reset_password/email.html.twig')
-            ->context([
-                'resetToken' => $resetToken,
-            ]);
+        $emailMessage = $this->buildResetPasswordEmail($user, $resetToken);
 
         try {
             $this->mailer->send($emailMessage);
@@ -170,5 +163,26 @@ class ResetPasswordController extends AbstractController
         $this->setTokenObjectInSession($resetToken);
 
         return $this->redirectToRoute('app_check_email');
+    }
+
+    private function buildResetPasswordEmail(User $user, object $resetToken): TemplatedEmail
+    {
+        $emailMessage = (new TemplatedEmail())
+            ->from(new Address($this->mailerConfig->getFromEmail(), $this->mailerConfig->getFromName()))
+            ->to((string) $user->getEmail())
+            ->subject('Réinitialisation de votre mot de passe — Lyceo Campus')
+            ->locale('fr')
+            ->htmlTemplate('reset_password/email.html.twig')
+            ->textTemplate('reset_password/email.txt.twig')
+            ->context([
+                'resetToken' => $resetToken,
+            ]);
+
+        $logoPath = $this->getParameter('kernel.project_dir').'/public/image/logo2-transparent.png';
+        if (is_readable($logoPath)) {
+            $emailMessage->embedFromPath($logoPath, 'lyceo_logo', 'image/png');
+        }
+
+        return $emailMessage;
     }
 }
