@@ -15,7 +15,8 @@ class EmailVerifier
     public function __construct(
         private VerifyEmailHelperInterface $verifyEmailHelper,
         private MailerInterface $mailer,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private string $projectDir,
     ) {
     }
 
@@ -32,7 +33,18 @@ class EmailVerifier
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
-        $email->context($context);
+        $email
+            ->context($context)
+            ->locale('fr');
+
+        if ($email->getHtmlTemplate() !== null && $email->getTextTemplate() === null) {
+            $email->textTemplate('registration/confirmation_email.txt.twig');
+        }
+
+        $logoPath = $this->projectDir.'/public/image/logo2-transparent.png';
+        if (is_readable($logoPath)) {
+            $email->embedFromPath($logoPath, 'lyceo_logo', 'image/png');
+        }
 
         $this->mailer->send($email);
     }

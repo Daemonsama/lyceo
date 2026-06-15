@@ -2,7 +2,7 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Mon Profil - SPC Formation{% endblock %}
+{% block title %}Mon Profil — Lyceo Campus{% endblock %}
 
 {% block body %}
     <style>
@@ -32,6 +32,15 @@
 
     {# Contenu principal #}
     <div class="container my-5">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label == 'error' ? 'danger' : label }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <div class="row">
             {# Colonne principale #}
             <div class="col-lg-8">
@@ -115,16 +124,27 @@
                             <i class="bi bi-person-circle" style="color: #667eea;"></i>
                             Mes informations
                         </h3>
-                        <div class="mb-3">
-                            <small class="text-muted d-block mb-1">Email</small>
-                            <strong>{{ user.email }}</strong>
-                        </div>
-                        {% if user.prenom %}
+
+                        {{ form_start(profileForm, { attr: { class: 'profile-form' } }) }}
                             <div class="mb-3">
-                                <small class="text-muted d-block mb-1">Prénom</small>
-                                <strong>{{ user.prenom }}</strong>
+                                {{ form_label(profileForm.nom, null, { label_attr: { class: 'form-label small text-muted mb-1' } }) }}
+                                {{ form_widget(profileForm.nom) }}
+                                {{ form_errors(profileForm.nom) }}
                             </div>
-                        {% endif %}
+                            <div class="mb-3">
+                                {{ form_label(profileForm.prenom, null, { label_attr: { class: 'form-label small text-muted mb-1' } }) }}
+                                {{ form_widget(profileForm.prenom) }}
+                                {{ form_errors(profileForm.prenom) }}
+                            </div>
+                            <div class="mb-3">
+                                {{ form_label(profileForm.email, null, { label_attr: { class: 'form-label small text-muted mb-1' } }) }}
+                                {{ form_widget(profileForm.email) }}
+                                {{ form_errors(profileForm.email) }}
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">
+                                <i class="bi bi-check-lg me-1"></i> Enregistrer les modifications
+                            </button>
+                        {{ form_end(profileForm) }}
                     </div>
 
                     <div class="card shadow-sm border-0 p-4" style="background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);">

@@ -76,6 +76,15 @@
         </div>
     </div>
 
+    {% for message in app.flashes('success') %}
+        <div class="container mt-4">
+            <div class="alert alert-success alert-dismissible fade show mb-0" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>{{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        </div>
+    {% endfor %}
+
     {# Points Clés #}
     <div class="container my-5 py-5">
         <div class="row g-4 justify-content-center">

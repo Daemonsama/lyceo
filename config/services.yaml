@@ -41,3 +41,7 @@ services:
     App\Service\StripePromoCodeSyncService:
         arguments:
             $stripeSecretKey: '%stripe_secret_key%'
+
+    App\Security\EmailVerifier:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
