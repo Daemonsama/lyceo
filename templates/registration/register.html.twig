@@ -117,8 +117,12 @@
                                 {{ form_widget(registrationForm.agreeTerms, {
                                     'attr': {'class': 'form-check-input'}
                                 }) }}
-                                <label class="form-check-label">
-                                    {{ form_label(registrationForm.agreeTerms) }}
+                                <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                                    J'accepte les
+                                    <a href="{{ path('app_cgu') }}" target="_blank" rel="noopener noreferrer" class="fw-semibold">
+                                        conditions générales d'utilisation
+                                    </a>
+                                    de Lyceo Campus Numérique.
                                 </label>
                             </div>
                             {{ form_errors(registrationForm.agreeTerms) }}

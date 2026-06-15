@@ -1009,6 +1009,37 @@ html {
 }
 
 /* ========================================
+   PAGES LÉGALES (CGU)
+======================================== */
+
+.legal-content h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #667eea;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+}
+
+.legal-content h2:first-of-type {
+    margin-top: 0;
+}
+
+.legal-content p,
+.legal-content li {
+    color: #4a5568;
+    line-height: 1.7;
+}
+
+.legal-content ul {
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.legal-content a {
+    color: #667eea;
+}
+
+/* ========================================
    PAGES D'AUTHENTIFICATION (LOGIN/REGISTER)
 ======================================== */
 

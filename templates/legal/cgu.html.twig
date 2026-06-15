@@ -1,0 +1,192 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions générales d'utilisation — Lyceo Campus Numérique{% endblock %}
+
+{% block body %}
+    <div class="auth-header-fullwidth">
+        <div class="container">
+            <div class="auth-header-lockup">
+                <div class="auth-header-logo-wrap">
+                    <img src="{{ asset('image/logo2-transparent.png') }}"
+                         alt="Lyceo Campus Numérique"
+                         class="auth-header-logo">
+                </div>
+                <div class="auth-header-text">
+                    <h1 class="auth-header-title">Conditions générales d'utilisation</h1>
+                    <p class="auth-header-subtitle mb-0">
+                        Lyceo Campus Numérique - plateforme de formations professionnelles en ligne.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card auth-card shadow-sm border-0">
+                    <div class="card-body p-4 p-md-5 legal-content">
+                        <p class="text-muted small mb-4">Dernière mise à jour : {{ "now"|date('d/m/Y') }}</p>
+
+                        <h2>1. Objet</h2>
+                        <p>
+                            Les présentes Conditions Générales d'Utilisation (ci-après « CGU ») ont pour objet de définir
+                            les modalités et conditions d'accès et d'utilisation du site <strong>Lyceo Campus Numérique</strong>
+                            (ci-après « la Plateforme »), accessible à l'adresse du site, ainsi que les droits et obligations
+                            des utilisateurs et de l'éditeur.
+                        </p>
+                        <p>
+                            L'utilisation de la Plateforme implique l'acceptation pleine et entière des présentes CGU.
+                            Lors de la création d'un compte, l'utilisateur confirme avoir pris connaissance des CGU et les accepter
+                            sans réserve.
+                        </p>
+
+                        <h2>2. Éditeur de la Plateforme</h2>
+                        <p>
+                            La Plateforme est éditée par <strong>Lyceo Campus Numérique</strong>, organisme proposant des
+                            formations professionnelles créatives et immersives à distance.
+                        </p>
+                        <p>
+                            Pour toute question relative aux présentes CGU ou à l'utilisation de la Plateforme, vous pouvez
+                            nous contacter via le <a href="{{ path('app_home') }}#contact">formulaire de contact</a> disponible
+                            sur le site.
+                        </p>
+
+                        <h2>3. Description des services</h2>
+                        <p>La Plateforme permet notamment :</p>
+                        <ul>
+                            <li>de consulter le catalogue de formations proposées ;</li>
+                            <li>de créer un compte personnel et de gérer son profil ;</li>
+                            <li>d'accéder aux contenus pédagogiques (chapitres, supports, quiz) des formations auxquelles l'utilisateur est inscrit ;</li>
+                            <li>de suivre sa progression au sein des parcours de formation ;</li>
+                            <li>de procéder à l'achat de formations en ligne, le cas échéant ;</li>
+                            <li>d'obtenir une attestation de suivi ou de réussite, selon les conditions prévues pour chaque formation.</li>
+                        </ul>
+                        <p>
+                            Lyceo Campus Numérique se réserve le droit de faire évoluer, modifier ou suspendre tout ou partie
+                            des services, sans préavis, dans le respect des droits des utilisateurs déjà inscrits à une formation.
+                        </p>
+
+                        <h2>4. Inscription et compte utilisateur</h2>
+                        <p>
+                            L'accès à certaines fonctionnalités de la Plateforme nécessite la création d'un compte.
+                            L'utilisateur s'engage à fournir des informations exactes, complètes et à jour lors de son inscription
+                            (nom, prénom, adresse email, mot de passe).
+                        </p>
+                        <p>
+                            L'utilisateur est seul responsable de la confidentialité de ses identifiants de connexion et de toute
+                            activité réalisée depuis son compte. En cas de suspicion d'utilisation frauduleuse, il doit en informer
+                            Lyceo Campus Numérique dans les meilleurs délais.
+                        </p>
+                        <p>
+                            Lyceo Campus Numérique se réserve le droit de suspendre ou supprimer un compte en cas de violation
+                            des présentes CGU, d'utilisation abusive de la Plateforme ou de fourniture d'informations manifestement
+                            inexactes.
+                        </p>
+
+                        <h2>5. Accès aux formations</h2>
+                        <p>
+                            L'accès aux contenus d'une formation est réservé aux utilisateurs ayant satisfait aux conditions
+                            d'inscription applicables (inscription gratuite ou achat validé, selon le cas).
+                        </p>
+                        <p>
+                            Les contenus pédagogiques sont mis à disposition pour un usage strictement personnel et non commercial.
+                            L'utilisateur s'engage à ne pas reproduire, diffuser, revendre ou mettre à disposition de tiers les
+                            contenus accessibles sur la Plateforme, sauf autorisation écrite préalable.
+                        </p>
+                        <p>
+                            Les quiz, évaluations et attestations sont soumis aux règles propres à chaque formation.
+                            Toute tentative de fraude (partage de réponses, usurpation d'identité, contournement des contrôles)
+                            pourra entraîner la suspension de l'accès sans remboursement.
+                        </p>
+
+                        <h2>6. Paiements</h2>
+                        <p>
+                            Lorsque une formation est proposée à titre payant, le prix et les modalités sont indiqués avant
+                            la validation de la commande. Le paiement est effectué via un prestataire de paiement sécurisé
+                            (notamment Stripe). Lyceo Campus Numérique ne conserve pas les données bancaires complètes de
+                            l'utilisateur.
+                        </p>
+                        <p>
+                            La validation du paiement ouvre l'accès à la formation concernée, selon les conditions affichées
+                            au moment de l'achat. Toute demande relative à un paiement peut être adressée via le formulaire
+                            de contact.
+                        </p>
+
+                        <h2>7. Propriété intellectuelle</h2>
+                        <p>
+                            L'ensemble des éléments composant la Plateforme (textes, visuels, vidéos, logos, structure,
+                            bases de données, contenus pédagogiques, etc.) est protégé par le droit de la propriété
+                            intellectuelle et reste la propriété exclusive de Lyceo Campus Numérique ou de ses partenaires.
+                        </p>
+                        <p>
+                            Toute reproduction, représentation, modification ou exploitation non autorisée est interdite et
+                            susceptible de constituer une contrefaçon.
+                        </p>
+
+                        <h2>8. Données personnelles</h2>
+                        <p>
+                            Dans le cadre de l'utilisation de la Plateforme, des données personnelles sont collectées et
+                            traitées conformément à la réglementation applicable, notamment le Règlement Général sur la
+                            Protection des Données (RGPD).
+                        </p>
+                        <p>
+                            Les données collectées (identité, coordonnées, données de connexion, progression de formation,
+                            etc.) sont utilisées pour la gestion des comptes, l'accès aux formations, le suivi pédagogique,
+                            la facturation le cas échéant, et la communication avec l'utilisateur.
+                        </p>
+                        <p>
+                            L'utilisateur dispose d'un droit d'accès, de rectification, d'effacement, de limitation et
+                            d'opposition concernant ses données, qu'il peut exercer en nous contactant via le formulaire
+                            prévu à cet effet.
+                        </p>
+
+                        <h2>9. Responsabilité</h2>
+                        <p>
+                            Lyceo Campus Numérique s'efforce d'assurer la disponibilité et la fiabilité de la Plateforme.
+                            Toutefois, l'éditeur ne saurait être tenu responsable des interruptions temporaires de service,
+                            des dysfonctionnements liés au réseau Internet, à l'équipement de l'utilisateur ou à un cas de force majeure.
+                        </p>
+                        <p>
+                            Les informations et contenus proposés sur la Plateforme le sont à titre informatif et pédagogique.
+                            L'utilisateur reste seul responsable de l'usage qu'il fait des connaissances acquises et de la
+                            mise en pratique des compétences développées.
+                        </p>
+
+                        <h2>10. Comportement des utilisateurs</h2>
+                        <p>Il est strictement interdit de :</p>
+                        <ul>
+                            <li>porter atteinte au bon fonctionnement ou à la sécurité de la Plateforme ;</li>
+                            <li>tenter d'accéder de manière non autorisée à des données ou à des espaces réservés ;</li>
+                            <li>publier ou transmettre des contenus illicites, diffamatoires, injurieux ou contraires à l'ordre public ;</li>
+                            <li>usurper l'identité d'un tiers ou créer de faux comptes.</li>
+                        </ul>
+
+                        <h2>11. Modification des CGU</h2>
+                        <p>
+                            Lyceo Campus Numérique se réserve le droit de modifier les présentes CGU à tout moment.
+                            Les utilisateurs seront informés de toute modification substantielle. La poursuite de l'utilisation
+                            de la Plateforme après mise à jour vaut acceptation des nouvelles conditions.
+                        </p>
+
+                        <h2>12. Droit applicable et litiges</h2>
+                        <p>
+                            Les présentes CGU sont soumises au droit français. En cas de litige, et après tentative de
+                            résolution amiable, les tribunaux français seront seuls compétents, sous réserve des règles
+                            d'ordre public applicables.
+                        </p>
+
+                        <div class="text-center mt-5 pt-4 border-top">
+                            <a href="{{ path('app_register') }}" class="btn btn-outline-primary me-2">
+                                <i class="bi bi-arrow-left me-1"></i> Retour à l'inscription
+                            </a>
+                            <a href="{{ path('app_home') }}" class="btn btn-primary">
+                                <i class="bi bi-house-door me-1"></i> Accueil
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
