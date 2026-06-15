@@ -137,7 +137,6 @@ final class FormationController extends AbstractController
         );
 
         $promoCode = trim($request->request->getString('promo_code'));
-        $isStudent = $request->request->getBoolean('is_student');
 
         try {
             $session = $stripePayment->createCheckoutSession(
@@ -146,15 +145,11 @@ final class FormationController extends AbstractController
                 $successUrl,
                 $cancelUrl,
                 $promoCode !== '' ? $promoCode : null,
-                $isStudent,
             );
         } catch (InvalidPromoCodeException|StripePaymentException $e) {
             $this->addFlash('danger', $e->getMessage());
             if ($promoCode !== '') {
                 $this->addFlash('promo_code', $promoCode);
-            }
-            if ($isStudent) {
-                $this->addFlash('is_student', '1');
             }
 
             return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);

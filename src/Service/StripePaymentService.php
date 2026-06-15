@@ -20,8 +20,6 @@ use UnexpectedValueException;
 
 final class StripePaymentService
 {
-    public const STUDENT_DISCOUNT_PERCENT = 10;
-
     public function __construct(
         private readonly string $stripeSecretKey,
         private readonly string $stripeWebhookSecret,
@@ -38,21 +36,17 @@ final class StripePaymentService
         string $successUrl,
         string $cancelUrl,
         ?string $promoCode = null,
-        bool $applyStudentDiscount = false,
     ): Session {
         $this->assertStripeConfigured();
 
-        $unitAmount = $this->computeUnitAmountCents($formation->getPrix(), $applyStudentDiscount);
+        $unitAmount = (int) round($formation->getPrix() * 100);
         if ($unitAmount < 50) {
             throw new StripePaymentException(
-                'Le montant après réduction doit être d\'au moins 0,50 € pour un paiement Stripe.'
+                'Le montant doit être d\'au moins 0,50 € pour un paiement Stripe.'
             );
         }
 
         $productName = $formation->getTitre();
-        if ($applyStudentDiscount) {
-            $productName .= sprintf(' (tarif étudiant -%d %%)', self::STUDENT_DISCOUNT_PERCENT);
-        }
 
         $params = [
             'payment_method_types' => ['card'],
@@ -75,10 +69,6 @@ final class StripePaymentService
             ],
             'customer_email' => $user->getEmail(),
         ];
-
-        if ($applyStudentDiscount) {
-            $params['metadata']['student_discount'] = '1';
-        }
 
         $promoCode = $promoCode !== null ? trim($promoCode) : '';
         if ($promoCode !== '') {
@@ -258,20 +248,6 @@ final class StripePaymentService
         }
 
         $this->fulfillCheckoutSession($session, $user, $formation);
-    }
-
-    public static function computeDiscountedPrice(float $priceEuros, bool $applyStudentDiscount): float
-    {
-        if (!$applyStudentDiscount) {
-            return $priceEuros;
-        }
-
-        return round($priceEuros * (1 - self::STUDENT_DISCOUNT_PERCENT / 100), 2);
-    }
-
-    private function computeUnitAmountCents(float $priceEuros, bool $applyStudentDiscount): int
-    {
-        return (int) round(self::computeDiscountedPrice($priceEuros, $applyStudentDiscount) * 100);
     }
 
     private function assertStripeConfigured(): void

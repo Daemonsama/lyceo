@@ -19,7 +19,7 @@ class FormationPromoCodeRepository extends ServiceEntityRepository
 
     public function findActiveByFormationAndCode(Formation $formation, string $code): ?FormationPromoCode
     {
-        return $this->createQueryBuilder('p')
+        $promoCode = $this->createQueryBuilder('p')
             ->andWhere('p.formation = :formation')
             ->andWhere('UPPER(p.code) = :code')
             ->andWhere('p.active = true')
@@ -27,5 +27,29 @@ class FormationPromoCodeRepository extends ServiceEntityRepository
             ->setParameter('code', strtoupper(trim($code)))
             ->getQuery()
             ->getOneOrNullResult();
+
+        if ($promoCode instanceof FormationPromoCode && $promoCode->isExpired()) {
+            return null;
+        }
+
+        return $promoCode;
+    }
+
+    public function findExpiredByFormationAndCode(Formation $formation, string $code): ?FormationPromoCode
+    {
+        $promoCode = $this->createQueryBuilder('p')
+            ->andWhere('p.formation = :formation')
+            ->andWhere('UPPER(p.code) = :code')
+            ->andWhere('p.active = true')
+            ->setParameter('formation', $formation)
+            ->setParameter('code', strtoupper(trim($code)))
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        if ($promoCode instanceof FormationPromoCode && $promoCode->isExpired()) {
+            return $promoCode;
+        }
+
+        return null;
     }
 }

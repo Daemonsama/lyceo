@@ -39,6 +39,12 @@ class FormationPromoCodeType extends AbstractType
             ->add('active', CheckboxType::class, [
                 'label' => 'Actif',
                 'required' => false,
+            ])
+            ->add('validityDays', IntegerType::class, [
+                'label' => 'Durée (jours)',
+                'required' => false,
+                'help' => 'Nombre de jours de validité à partir de la création. Laissez vide pour un code sans expiration.',
+                'attr' => ['min' => 1, 'placeholder' => '30'],
             ]);
     }
 

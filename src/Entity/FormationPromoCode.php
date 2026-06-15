@@ -11,6 +11,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ORM\Entity(repositoryClass: FormationPromoCodeRepository::class)]
 #[ORM\Table(name: 'formation_promo_code')]
 #[ORM\UniqueConstraint(name: 'uniq_formation_promo_code', fields: ['formation', 'code'])]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['formation', 'code'], message: 'Ce code promo existe déjà pour cette formation.')]
 class FormationPromoCode
 {
@@ -48,6 +49,21 @@ class FormationPromoCode
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $stripeCouponId = null;
+
+    #[ORM\Column(nullable: true)]
+    #[Assert\Positive(message: 'La durée de validité doit être d\'au moins 1 jour.')]
+    private ?int $validityDays = null;
+
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
+
+    #[ORM\PrePersist]
+    public function initializeCreatedAt(): void
+    {
+        if ($this->createdAt === null) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+    }
 
     #[Assert\Callback]
     public function validateDiscount(ExecutionContextInterface $context): void
@@ -155,6 +171,57 @@ class FormationPromoCode
         $this->stripeCouponId = $stripeCouponId;
 
         return $this;
+    }
+
+    public function getValidityDays(): ?int
+    {
+        return $this->validityDays;
+    }
+
+    public function setValidityDays(?int $validityDays): static
+    {
+        $this->validityDays = $validityDays;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function getExpiresAt(): ?\DateTimeImmutable
+    {
+        if ($this->validityDays === null || $this->createdAt === null) {
+            return null;
+        }
+
+        return $this->createdAt->modify(sprintf('+%d days', $this->validityDays));
+    }
+
+    public function isExpired(): bool
+    {
+        $expiresAt = $this->getExpiresAt();
+
+        return $expiresAt !== null && $expiresAt <= new \DateTimeImmutable();
+    }
+
+    public function getValidityLabel(): string
+    {
+        if ($this->validityDays === null) {
+            return 'Sans limite';
+        }
+
+        $expiresAt = $this->getExpiresAt();
+        if ($expiresAt === null) {
+            return sprintf('%d jour(s)', $this->validityDays);
+        }
+
+        if ($this->isExpired()) {
+            return sprintf('Expiré le %s', $expiresAt->format('d/m/Y'));
+        }
+
+        return sprintf('Expire le %s', $expiresAt->format('d/m/Y'));
     }
 
     public function getDiscountLabel(): string

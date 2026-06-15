@@ -45,6 +45,7 @@
             <p class="small text-muted mb-3">
                 Ajoutez des codes réservés à cette formation (ex. <code>LYCEO10</code>).
                 Renseignez <strong>soit</strong> un pourcentage <strong>soit</strong> un montant en euros.
+                La <strong>durée</strong> indique le nombre de jours de validité à partir de la création du code (laissez vide pour un code sans expiration).
                 Ils seront créés dans Stripe à l'enregistrement.
             </p>
 
@@ -54,9 +55,10 @@
                 {% for promoForm in form.promoCodes %}
                     <div class="promo-code-item border rounded p-3 mb-3 bg-white">
                         <div class="row g-2 align-items-end">
-                            <div class="col-md-3">{{ form_row(promoForm.code) }}</div>
+                            <div class="col-md-2">{{ form_row(promoForm.code) }}</div>
                             <div class="col-md-2">{{ form_row(promoForm.discountPercent) }}</div>
-                            <div class="col-md-3">{{ form_row(promoForm.discountAmount) }}</div>
+                            <div class="col-md-2">{{ form_row(promoForm.discountAmount) }}</div>
+                            <div class="col-md-2">{{ form_row(promoForm.validityDays) }}</div>
                             <div class="col-md-2">{{ form_row(promoForm.active) }}</div>
                             <div class="col-md-2">
                                 <button type="button" class="btn btn-outline-danger btn-sm w-100 remove-promo-code">
@@ -120,9 +122,10 @@
                 item.className = 'promo-code-item border rounded p-3 mb-3 bg-white';
                 item.innerHTML =
                     '<div class="row g-2 align-items-end">'
-                    + '<div class="col-md-3 promo-field-code"></div>'
+                    + '<div class="col-md-2 promo-field-code"></div>'
                     + '<div class="col-md-2 promo-field-percent"></div>'
-                    + '<div class="col-md-3 promo-field-amount"></div>'
+                    + '<div class="col-md-2 promo-field-amount"></div>'
+                    + '<div class="col-md-2 promo-field-validity"></div>'
                     + '<div class="col-md-2 promo-field-active"></div>'
                     + '<div class="col-md-2">'
                     + '<button type="button" class="btn btn-outline-danger btn-sm w-100 remove-promo-code">'
@@ -138,9 +141,10 @@
                     item.querySelector('.promo-field-code'),
                     item.querySelector('.promo-field-percent'),
                     item.querySelector('.promo-field-amount'),
+                    item.querySelector('.promo-field-validity'),
                     item.querySelector('.promo-field-active'),
                 ];
-                if (groups.length >= 4) {
+                if (groups.length >= 5) {
                     groups.forEach((group, i) => {
                         if (slots[i]) {
                             slots[i].appendChild(group);

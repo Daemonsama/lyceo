@@ -51,7 +51,13 @@ final class StripePromoCodeSyncService
         $this->assertStripeConfigured();
 
         if ($promoCode->getStripePromotionCodeId() !== null) {
-            return;
+            if ($this->stripePromotionMatches($promoCode)) {
+                return;
+            }
+
+            $this->deactivateStripePromotion($promoCode);
+            $promoCode->setStripePromotionCodeId(null);
+            $promoCode->setStripeCouponId(null);
         }
 
         $couponParams = [
@@ -70,15 +76,26 @@ final class StripePromoCodeSyncService
             $couponParams['currency'] = 'eur';
         }
 
+        $expiresAt = $promoCode->getExpiresAt();
+        if ($expiresAt !== null) {
+            $couponParams['redeem_by'] = $expiresAt->getTimestamp();
+        }
+
         try {
             $coupon = Coupon::create($couponParams);
-            $promotionCode = PromotionCode::create([
+            $promotionCodeParams = [
                 'promotion' => [
                     'type' => 'coupon',
                     'coupon' => $coupon->id,
                 ],
                 'code' => $promoCode->getCode(),
-            ]);
+            ];
+
+            if ($expiresAt !== null) {
+                $promotionCodeParams['expires_at'] = $expiresAt->getTimestamp();
+            }
+
+            $promotionCode = PromotionCode::create($promotionCodeParams);
         } catch (ApiErrorException $e) {
             if ($this->linkExistingStripePromotionCode($promoCode)) {
                 return;
@@ -108,10 +125,25 @@ final class StripePromoCodeSyncService
                 );
             }
 
+            $expired = $this->promoCodeRepository->findExpiredByFormationAndCode($formation, $normalizedCode);
+            if ($expired !== null) {
+                throw new InvalidPromoCodeException(
+                    $normalizedCode,
+                    sprintf('Ce code promo a expiré le %s.', $expired->getExpiresAt()?->format('d/m/Y') ?? ''),
+                );
+            }
+
             return null;
         }
 
-        if ($promoCode->getStripePromotionCodeId() === null) {
+        if ($promoCode->isExpired()) {
+            throw new InvalidPromoCodeException(
+                $normalizedCode,
+                sprintf('Ce code promo a expiré le %s.', $promoCode->getExpiresAt()?->format('d/m/Y') ?? ''),
+            );
+        }
+
+        if ($promoCode->getStripePromotionCodeId() === null || !$this->stripePromotionMatches($promoCode)) {
             try {
                 $this->syncPromoCode($promoCode);
                 $this->entityManager->flush();
@@ -124,6 +156,81 @@ final class StripePromoCodeSyncService
         }
 
         return $promoCode->getStripePromotionCodeId();
+    }
+
+    private function stripePromotionMatches(FormationPromoCode $promoCode): bool
+    {
+        $promotionCodeId = $promoCode->getStripePromotionCodeId();
+        if ($promotionCodeId === null) {
+            return false;
+        }
+
+        try {
+            $promotionCode = PromotionCode::retrieve($promotionCodeId, [
+                'expand' => ['promotion.coupon'],
+            ]);
+        } catch (ApiErrorException) {
+            return false;
+        }
+
+        if (!$promotionCode->active) {
+            return false;
+        }
+
+        return $this->promotionCodeMatchesLocal($promoCode, $promotionCode);
+    }
+
+    private function promotionCodeMatchesLocal(FormationPromoCode $promoCode, PromotionCode $promotionCode): bool
+    {
+        $coupon = $promotionCode->promotion->coupon ?? null;
+        if (is_string($coupon)) {
+            try {
+                $coupon = Coupon::retrieve($coupon);
+            } catch (ApiErrorException) {
+                return false;
+            }
+        }
+
+        if (!$coupon instanceof Coupon) {
+            return false;
+        }
+
+        if ($promoCode->getDiscountPercent() !== null) {
+            if ((int) $coupon->percent_off !== $promoCode->getDiscountPercent()) {
+                return false;
+            }
+        } elseif ($promoCode->getDiscountAmount() !== null) {
+            $expectedAmount = (int) round($promoCode->getDiscountAmount() * 100);
+            if ((int) $coupon->amount_off !== $expectedAmount) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+
+        $expectedExpiresAt = $promoCode->getExpiresAt()?->getTimestamp();
+        $stripeExpiresAt = isset($promotionCode->expires_at) ? (int) $promotionCode->expires_at : null;
+        $stripeRedeemBy = isset($coupon->redeem_by) ? (int) $coupon->redeem_by : null;
+
+        if ($expectedExpiresAt !== null) {
+            return $stripeExpiresAt === $expectedExpiresAt || $stripeRedeemBy === $expectedExpiresAt;
+        }
+
+        return $stripeExpiresAt === null && $stripeRedeemBy === null;
+    }
+
+    private function deactivateStripePromotion(FormationPromoCode $promoCode): void
+    {
+        $promotionCodeId = $promoCode->getStripePromotionCodeId();
+        if ($promotionCodeId === null) {
+            return;
+        }
+
+        try {
+            PromotionCode::update($promotionCodeId, ['active' => false]);
+        } catch (ApiErrorException) {
+            // Ancien code déjà supprimé ou inactif côté Stripe.
+        }
     }
 
     private function linkExistingStripePromotionCode(FormationPromoCode $promoCode): bool
@@ -143,6 +250,10 @@ final class StripePromoCodeSyncService
         }
 
         $promotionCode = $existing->data[0];
+        if (!$this->promotionCodeMatchesLocal($promoCode, $promotionCode)) {
+            return false;
+        }
+
         $promoCode->setStripePromotionCodeId($promotionCode->id);
 
         if (isset($promotionCode->promotion->coupon)) {

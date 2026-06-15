@@ -112,30 +112,16 @@
                 <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
                     <div class="card-body p-4">
                         {% if not app.user.hasFormation(formation) %}
-                            {% set isStudentChecked = app.flashes('is_student')|first|default('') == '1' %}
                             <h5 class="mb-3">Commencer cette formation</h5>
                             <form id="formation-purchase-form" method="post"
                                   action="{{ path('app_formation_buy', {formation: formation.id}) }}"
                                   class="d-grid gap-2">
                                 <input type="hidden" name="_token" value="{{ csrf_token('formation_buy') }}">
 
-                                <div class="form-check mb-1">
-                                    <input class="form-check-input" type="checkbox" id="is_student" name="is_student" value="1"
-                                           {{ isStudentChecked ? 'checked' : '' }}>
-                                    <label class="form-check-label" for="is_student">
-                                        Je suis étudiant <span class="text-muted">(−10&nbsp;%)</span>
-                                    </label>
-                                </div>
-
-                                <div class="text-center py-2 mb-1 border rounded bg-light">
+                                <div class="text-center py-2 mb-2 border rounded bg-light">
                                     <p class="text-muted small mb-1">Prix de la formation</p>
                                     <p class="h3 mb-0 fw-bold text-primary">
-                                        <span id="formation-price-display"
-                                              data-base-price="{{ formation.prix }}"
-                                              data-student-discount="10">{{ formation.prix|number_format(2, ',', ' ') }}</span>&nbsp;€
-                                    </p>
-                                    <p class="small text-success mb-0 d-none" id="formation-student-hint">
-                                        <i class="bi bi-mortarboard"></i> Tarif étudiant appliqué
+                                        {{ formation.prix|number_format(2, ',', ' ') }}&nbsp;€
                                     </p>
                                 </div>
 
@@ -145,14 +131,14 @@
                                        value="{{ app.flashes('promo_code')|first|default('') }}">
                                 <button type="submit" class="btn btn-primary btn-lg" id="formation-buy-btn">
                                     <i class="bi bi-cart-plus"></i>
-                                    Acheter pour <span id="formation-buy-price">{{ formation.prix|number_format(2, ',', ' ') }}</span>&nbsp;€
+                                    Acheter pour {{ formation.prix|number_format(2, ',', ' ') }}&nbsp;€
                                 </button>
                                 <a class="btn btn-outline-secondary" href="{{ path('app_formation') }}">
                                     <i class="bi bi-arrow-left"></i> Retour au catalogue
                                 </a>
                             </form>
                             <p class="small text-muted mt-2 mb-0">
-                                Paiement sécurisé par Stripe. Cochez «&nbsp;Je suis étudiant&nbsp;» pour −10&nbsp;%.
+                                Paiement sécurisé par Stripe.
                             </p>
                         {% else %}
                             {% if formationTerminee and formationBadgeAsset %}
@@ -240,7 +226,7 @@
                             <p class="mb-4 opacity-75">Accédez immédiatement à tous les chapitres</p>
                             <button type="submit" form="formation-purchase-form"
                                     class="btn btn-light btn-lg px-5" id="formation-cta-buy-btn">
-                                Acheter pour <span id="formation-cta-buy-price">{{ formation.prix|number_format(2, ',', ' ') }}</span>&nbsp;€
+                                Acheter pour {{ formation.prix|number_format(2, ',', ' ') }}&nbsp;€
                             </button>
                         </div>
                     </div>
@@ -250,57 +236,4 @@
 
     </div>
 
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    {% if not app.user.hasFormation(formation) %}
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const studentCheckbox = document.getElementById('is_student');
-                const priceDisplay = document.getElementById('formation-price-display');
-                const buyPrice = document.getElementById('formation-buy-price');
-                const ctaBuyPrice = document.getElementById('formation-cta-buy-price');
-                const studentHint = document.getElementById('formation-student-hint');
-                const headerPriceBadge = document.querySelector('.formation-header-fullwidth .price-badge');
-
-                if (!studentCheckbox || !priceDisplay) {
-                    return;
-                }
-
-                const basePrice = parseFloat(priceDisplay.dataset.basePrice);
-                const discountPercent = parseInt(priceDisplay.dataset.studentDiscount || '10', 10);
-
-                const formatPrice = (value) => value.toLocaleString('fr-FR', {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                });
-
-                const updatePrices = () => {
-                    const isStudent = studentCheckbox.checked;
-                    const finalPrice = isStudent
-                        ? Math.round(basePrice * (1 - discountPercent / 100) * 100) / 100
-                        : basePrice;
-                    const formatted = formatPrice(finalPrice);
-
-                    priceDisplay.textContent = formatted;
-                    if (buyPrice) {
-                        buyPrice.textContent = formatted;
-                    }
-                    if (ctaBuyPrice) {
-                        ctaBuyPrice.textContent = formatted;
-                    }
-                    if (headerPriceBadge) {
-                        headerPriceBadge.textContent = formatted + '€';
-                    }
-                    if (studentHint) {
-                        studentHint.classList.toggle('d-none', !isStudent);
-                    }
-                };
-
-                studentCheckbox.addEventListener('change', updatePrices);
-                updatePrices();
-            });
-        </script>
-    {% endif %}
 {% endblock %}
