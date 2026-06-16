@@ -1,11 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('input[type="password"]').forEach((input) => {
-        const container = input.closest('.form-floating') ?? input.parentElement;
+        const container = ensurePasswordToggleContainer(input);
         if (!container || container.querySelector('.password-toggle-btn')) {
             return;
         }
-
-        container.classList.add('password-field-wrap');
 
         const button = document.createElement('button');
         button.type = 'button';
@@ -23,3 +21,39 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(button);
     });
 });
+
+function ensurePasswordToggleContainer(input) {
+    const floating = input.closest('.form-floating');
+    if (floating) {
+        floating.classList.add('password-field-wrap');
+
+        return floating;
+    }
+
+    const parent = input.parentElement;
+    if (!parent) {
+        return null;
+    }
+
+    if (parent.classList.contains('password-input-wrap')) {
+        parent.classList.add('password-field-wrap');
+
+        return parent;
+    }
+
+    const isInputOnlyContainer = parent.children.length === 1
+        && parent.querySelector(':scope > input[type="password"]') === input;
+
+    if (isInputOnlyContainer) {
+        parent.classList.add('password-field-wrap', 'password-input-wrap');
+
+        return parent;
+    }
+
+    const wrap = document.createElement('div');
+    wrap.className = 'password-input-wrap password-field-wrap';
+    parent.insertBefore(wrap, input);
+    wrap.appendChild(input);
+
+    return wrap;
+}

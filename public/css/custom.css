@@ -389,6 +389,14 @@ html {
     filter: brightness(0) saturate(100%) invert(45%) sepia(76%) saturate(1086%) hue-rotate(208deg) brightness(96%) contrast(96%);
 }
 
+.lyceo-logo--navbar {
+    display: block;
+    width: min(210px, 46vw);
+    max-height: 56px;
+    height: auto;
+    object-fit: contain;
+}
+
 .brand-text {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
@@ -597,6 +605,11 @@ html {
     .navbar-logo-owl {
         width: 62px;
         height: 62px;
+    }
+
+    .lyceo-logo--navbar {
+        width: min(180px, 54vw);
+        max-height: 48px;
     }
 
     .navbar-nav {
@@ -1343,22 +1356,29 @@ html {
 }
 
 /* Afficher / masquer le mot de passe */
-.password-field-wrap {
+.password-field-wrap,
+.password-input-wrap {
     position: relative;
 }
 
 .password-field-wrap .form-control,
-.password-field-wrap .form-control-lg {
+.password-field-wrap .form-control-lg,
+.password-field-wrap .form-control-custom,
+.password-input-wrap .form-control,
+.password-input-wrap .form-control-lg,
+.password-input-wrap .form-control-custom,
+.password-input-wrap input[type="password"] {
     padding-right: 2.85rem;
 }
 
-.password-field-wrap .password-toggle-btn {
+.password-field-wrap > .password-toggle-btn,
+.password-input-wrap > .password-toggle-btn {
     position: absolute;
     right: 0.65rem;
     top: 50%;
     transform: translateY(-50%);
     z-index: 5;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 2rem;
@@ -1369,15 +1389,18 @@ html {
     color: #6c757d;
     cursor: pointer;
     border-radius: 0.35rem;
+    line-height: 0;
 }
 
-.password-field-wrap .password-toggle-btn:hover {
+.password-field-wrap > .password-toggle-btn i,
+.password-input-wrap > .password-toggle-btn i {
+    font-size: 1.1rem;
+    line-height: 1;
+}
+
+.password-field-wrap > .password-toggle-btn:hover,
+.password-input-wrap > .password-toggle-btn:hover {
     color: #667eea;
     background: rgba(102, 126, 234, 0.08);
-}
-
-.password-field-wrap.form-floating > .password-toggle-btn {
-    top: 1.35rem;
-    transform: none;
 }
 

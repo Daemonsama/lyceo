@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ProfilePasswordFormType;
 use App\Form\UserProfileFormType;
 use App\Security\EmailVerifier;
 use App\Service\MailerConfig;
@@ -13,6 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -26,18 +28,52 @@ final class MonProfilController extends AbstractController
 
     #[Route('/profil', name: 'app_mon_profil', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_USER')]
-    public function index(Request $request, EntityManagerInterface $entityManager, Security $security): Response
-    {
+    public function index(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Security $security,
+        UserPasswordHasherInterface $passwordHasher,
+    ): Response {
         $user = $this->getUser();
         if (!$user instanceof User) {
             throw $this->createAccessDeniedException();
         }
 
         $previousEmail = $user->getEmail();
-        $form = $this->createForm(UserProfileFormType::class, $user);
-        $form->handleRequest($request);
+        $profileForm = $this->createForm(UserProfileFormType::class, $user, [], 'profile');
+        $passwordForm = $this->createForm(ProfilePasswordFormType::class, null, [], 'password');
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $profileForm->handleRequest($request);
+        $passwordForm->handleRequest($request);
+
+        if ($passwordForm->isSubmitted()) {
+            if ($passwordForm->isValid()) {
+                /** @var string $currentPassword */
+                $currentPassword = $passwordForm->get('currentPassword')->getData();
+                if (!$passwordHasher->isPasswordValid($user, $currentPassword)) {
+                    $this->addFlash('danger', 'Le mot de passe actuel est incorrect.');
+
+                    return $this->redirectToRoute('app_mon_profil');
+                }
+
+                /** @var string $plainPassword */
+                $plainPassword = $passwordForm->get('plainPassword')->getData();
+                $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
+                $entityManager->flush();
+
+                $this->addFlash('success', 'Votre mot de passe a été modifié.');
+
+                return $this->redirectToRoute('app_mon_profil');
+            }
+
+            return $this->render('mon_profil/index.html.twig', [
+                'user' => $user,
+                'profileForm' => $profileForm,
+                'passwordForm' => $passwordForm,
+            ]);
+        }
+
+        if ($profileForm->isSubmitted() && $profileForm->isValid()) {
             $emailChanged = $previousEmail !== $user->getEmail();
             $user->setIsVerified(true);
 
@@ -76,7 +112,8 @@ final class MonProfilController extends AbstractController
 
         return $this->render('mon_profil/index.html.twig', [
             'user' => $user,
-            'profileForm' => $form,
+            'profileForm' => $profileForm,
+            'passwordForm' => $passwordForm,
         ]);
     }
 }
