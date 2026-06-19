@@ -11,6 +11,7 @@ use App\Repository\FormationUserRepository;
 use App\Services\ProgressionFormation;
 use App\Exception\InvalidPromoCodeException;
 use App\Exception\StripePaymentException;
+use App\Service\ChapitreMediaDisplayHelper;
 use App\Service\StripePaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +72,7 @@ final class FormationController extends AbstractController
         Formation $formation,
         FormationUserRepository $formationUserRepository,
         ProgressionFormation $progression,
+        ChapitreMediaDisplayHelper $mediaDisplayHelper,
     ): Response {
         /** @var User $user */
         $user = $this->getUser();
@@ -101,6 +103,7 @@ final class FormationController extends AbstractController
             'formationTerminee' => $formationTerminee,
             'quizFinalEnAttente' => $quizFinalEnAttente,
             'formationBadgeAsset' => $this->resolveFormationBadgeAsset(),
+            'presentationMediaDisplay' => $mediaDisplayHelper->resolveMediaReference($formation->getMedia()),
         ]);
     }
 

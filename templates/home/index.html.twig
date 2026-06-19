@@ -201,12 +201,13 @@
                                     <i class="bi bi-box-arrow-up-right"></i> Voir sur LinkedIn
                                 </a>
                             </div>
-                        {% elseif promoPlayer.kind == 'youtube' or promoPlayer.kind == 'vimeo' %}
+                        {% elseif promoPlayer.kind == 'youtube' or promoPlayer.kind == 'vimeo' or promoPlayer.kind == 'drive' %}
                             <iframe src="{{ promoPlayer.src }}"
                                     title="{{ promo.sectionTitle|e('html_attr') }}"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen
                                     loading="lazy"
+                                    referrerpolicy="strict-origin-when-cross-origin"
                                     class="w-100 h-100 rounded border-0"></iframe>
                         {% elseif promoPlayer.kind == 'direct' %}
                             <video controls playsinline preload="metadata" class="w-100 h-100 rounded bg-dark" style="object-fit: contain;" src="{{ promoPlayer.src }}"></video>
@@ -218,6 +219,11 @@
                                     class="w-100 h-100 rounded border-0"></iframe>
                         {% endif %}
                     </div>
+                    {% if promoPlayer.kind == 'drive' %}
+                        <p class="small text-muted mt-2 mb-0">
+                            <i class="bi bi-google"></i> Vidéo hébergée sur Google Drive
+                        </p>
+                    {% endif %}
                 </div>
             </div>
         </div>

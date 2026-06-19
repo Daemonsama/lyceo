@@ -12,6 +12,55 @@ final class ChapitreMediaDisplayHelper
     private const VIDEO_EXTENSIONS = ['mp4', 'webm', 'ogg', 'mov', 'm4v'];
 
     /**
+     * Résout un média stocké comme URL externe ou nom de fichier local (formations, etc.).
+     *
+     * @return array{kind: string, src?: string, href?: string}|null
+     */
+    public function resolveMediaReference(?string $reference): ?array
+    {
+        $value = trim((string) $reference);
+        if ($value === '') {
+            return null;
+        }
+
+        if ($this->isExternalMediaReference($value)) {
+            if (str_starts_with($value, '//')) {
+                $value = 'https:'.$value;
+            } elseif (!preg_match('~^https?://~i', $value)) {
+                $value = 'https://'.$value;
+            }
+
+            return $this->resolveExternalUrl($value);
+        }
+
+        $path = 'medias/'.$value;
+        if ($this->isVideoFilename($value)) {
+            return [
+                'kind' => 'upload_video',
+                'src' => $path,
+            ];
+        }
+
+        return [
+            'kind' => 'upload_image',
+            'src' => $path,
+        ];
+    }
+
+    private function isExternalMediaReference(string $value): bool
+    {
+        if (preg_match('~^https?://~i', $value) || str_starts_with($value, '//')) {
+            return true;
+        }
+
+        if ($this->parseGoogleDriveEmbedUrl($value) !== null) {
+            return true;
+        }
+
+        return (bool) preg_match('~(?:youtube\.com|youtu\.be|vimeo\.com|drive\.google\.com|docs\.google\.com)~i', $value);
+    }
+
+    /**
      * @return array{kind: string, src?: string, href?: string}|null
      */
     public function resolve(Chapitre $chapitre): ?array

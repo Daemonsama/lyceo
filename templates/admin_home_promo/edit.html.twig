@@ -28,7 +28,14 @@
             {{ form_row(form.sectionLead) }}
             {{ form_row(form.videoFile) }}
             {% if bl.hasUploadedVideo %}
-                <p class="small text-muted">Fichier actuel : <code>{{ bl.videoFilename }}</code></p>
+                {% if promoVideoDisplayHelper is defined and promoVideoDisplayHelper.uploadedFileExists(bl.videoFilename) %}
+                    <p class="small text-muted">Fichier actuel : <code>{{ bl.videoFilename }}</code></p>
+                {% else %}
+                    <div class="alert alert-warning py-2 small mb-2">
+                        Le fichier <code>{{ bl.videoFilename }}</code> est référencé en base mais absent du dossier
+                        <code>public/uploads/promo/</code>. Le lien ci-dessous sera utilisé à la place, ou uploadez à nouveau la vidéo.
+                    </div>
+                {% endif %}
                 {{ form_row(form.removeUploadedVideo) }}
             {% endif %}
             {{ form_row(form.videoUrl) }}

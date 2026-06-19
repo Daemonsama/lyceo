@@ -23,6 +23,10 @@ services:
         arguments:
             $projectDir: '%kernel.project_dir%'
 
+    App\Service\PromoVideoDisplayHelper:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+
     App\Command\TestAttestationPdfCommand:
         arguments:
             $projectDir: '%kernel.project_dir%'

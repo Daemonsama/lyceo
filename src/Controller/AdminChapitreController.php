@@ -42,7 +42,24 @@ final class AdminChapitreController extends AbstractController
         $form = $this->createForm(ChapitreType::class, $chapitre);
         $form->handleRequest($request);
 
+        $uploadError = null;
+        if ($form->isSubmitted()) {
+            $uploadError = $this->chapitreMediaHandler->resolveUploadFailure($request, $form);
+            if ($uploadError !== null) {
+                $this->addFlash('error', $uploadError);
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($uploadError !== null) {
+                return $this->render('admin_chapitre/new.html.twig', [
+                    'formation' => $formation,
+                    'form' => $form,
+                    'chapitre' => $chapitre,
+                    'mediaDisplay' => $this->chapitreMediaDisplayHelper->resolve($chapitre),
+                ]);
+            }
+
             $contentError = $this->chapitreMediaHandler->validateHasContent($chapitre, $form);
             if ($contentError !== null) {
                 $this->addFlash('error', $contentError);
@@ -99,7 +116,23 @@ final class AdminChapitreController extends AbstractController
         $form = $this->createForm(ChapitreType::class, $chapitre);
         $form->handleRequest($request);
 
+        $uploadError = null;
+        if ($form->isSubmitted()) {
+            $uploadError = $this->chapitreMediaHandler->resolveUploadFailure($request, $form);
+            if ($uploadError !== null) {
+                $this->addFlash('error', $uploadError);
+            }
+        }
+
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($uploadError !== null) {
+                return $this->render('admin_chapitre/edit.html.twig', [
+                    'chapitre' => $chapitre,
+                    'form' => $form,
+                    'mediaDisplay' => $this->chapitreMediaDisplayHelper->resolve($chapitre),
+                ]);
+            }
+
             $contentError = $this->chapitreMediaHandler->validateHasContent($chapitre, $form);
             if ($contentError !== null) {
                 $this->addFlash('error', $contentError);

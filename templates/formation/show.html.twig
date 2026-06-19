@@ -46,52 +46,46 @@
             <div class="col-lg-8">
 
                 {# Vidéo de présentation #}
-                {% if formation.media %}
-                    {% set mediaRaw = formation.media|trim %}
-                    {% set mediaLower = mediaRaw|lower %}
+                {% if presentationMediaDisplay %}
+                    <div class="formation-video-wrapper mb-4">
+                        <div class="formation-video-badge">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M15 10L19.553 7.724A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Vidéo de la formation
+                        </div>
+                        <h3 class="formation-video-title">Présentation de la formation</h3>
 
-                    {% if 'youtube.com' in mediaLower or 'youtu.be' in mediaLower %}
-                        {% set youtubeId = '' %}
-                        {% if 'watch?v=' in mediaRaw %}
-                            {% set youtubeId = mediaRaw|split('watch?v=')|last|split('&')|first %}
-                        {% elseif 'youtu.be/' in mediaRaw %}
-                            {% set youtubeId = mediaRaw|split('youtu.be/')|last|split('?')|first %}
-                        {% elseif 'youtube.com/embed/' in mediaRaw %}
-                            {% set youtubeId = mediaRaw|split('youtube.com/embed/')|last|split('?')|first %}
-                        {% endif %}
-                        <div class="formation-video-wrapper mb-4">
-                            <div class="formation-video-badge">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 10L19.553 7.724A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Vidéo de la formation
-                            </div>
-                            <h3 class="formation-video-title">Présentation de la formation</h3>
+                        {% if presentationMediaDisplay.kind == 'upload_image' %}
+                            <img
+                                src="{{ asset(presentationMediaDisplay.src) }}"
+                                class="img-fluid rounded formation-video-player"
+                                alt="Présentation de la formation"
+                            >
+                        {% elseif presentationMediaDisplay.kind in ['upload_video', 'direct'] %}
+                            <video controls class="formation-video-player" playsinline preload="metadata">
+                                <source src="{{ presentationMediaDisplay.kind == 'upload_video' ? asset(presentationMediaDisplay.src) : presentationMediaDisplay.src }}">
+                                Votre navigateur ne supporte pas la vidéo.
+                            </video>
+                        {% elseif presentationMediaDisplay.kind in ['drive', 'youtube', 'vimeo', 'iframe'] %}
                             <div class="formation-youtube-wrapper">
                                 <iframe
-                                    src="https://www.youtube.com/embed/{{ youtubeId }}"
+                                    src="{{ presentationMediaDisplay.src }}"
                                     title="Vidéo de la formation"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                    allowfullscreen>
+                                    allowfullscreen
+                                    loading="lazy"
+                                    referrerpolicy="strict-origin-when-cross-origin">
                                 </iframe>
                             </div>
-                        </div>
-                    {% elseif mediaLower ends with '.mp4' or mediaLower ends with '.webm' or mediaLower ends with '.ogg' %}
-                        <div class="formation-video-wrapper mb-4">
-                            <div class="formation-video-badge">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M15 10L19.553 7.724A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                </svg>
-                                Vidéo de la formation
-                            </div>
-                            <h3 class="formation-video-title">Présentation de la formation</h3>
-                            <video controls class="formation-video-player">
-                                <source src="{{ asset('medias/' ~ mediaRaw) }}">
-                                Votre navigateur ne supporte pas la vidéo.
-                            </video>
-                        </div>
-                    {% endif %}
+                            {% if presentationMediaDisplay.kind == 'drive' %}
+                                <p class="small text-muted mt-2 mb-0">
+                                    <i class="bi bi-google"></i> Vidéo hébergée sur Google Drive
+                                </p>
+                            {% endif %}
+                        {% endif %}
+                    </div>
                 {% endif %}
 
                 {# Description #}
@@ -141,11 +135,15 @@
                                 Paiement sécurisé par Stripe.
                             </p>
                         {% else %}
-                            {% if formationTerminee and formationBadgeAsset %}
-                                <div class="text-center mb-3">
-                                    <img src="{{ asset(formationBadgeAsset) }}"
-                                         alt="Badge de fin de formation"
-                                         style="max-width: 180px; width: 100%; height: auto;">
+                            {% if formationTerminee %}
+                                <div class="formation-completion-badge-wrap text-center mb-3">
+                                    {% include 'formation/_completion_badge.html.twig' with {
+                                        uid: formation.id,
+                                        formationTitle: formation.titre
+                                    } %}
+                                    <p class="formation-completion-badge-caption">
+                                        <i class="bi bi-patch-check-fill"></i> Formation terminée et validée
+                                    </p>
                                 </div>
                             {% endif %}
                             <h5 class="mb-3">Accès rapide</h5>

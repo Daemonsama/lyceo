@@ -5,47 +5,35 @@ namespace App\Service;
 use App\Entity\HomePromoBlock;
 
 /**
- * Détermine comment afficher le média sur l’accueil (fichier, YouTube, Vimeo, LinkedIn, URL directe).
+ * Détermine comment afficher le média sur l’accueil (fichier, YouTube, Vimeo, Google Drive, LinkedIn…).
  *
- * LinkedIn : pas d’iframe — la plateforme bloque souvent l’affichage intégré (frame-ancestors). On renvoie un lien à ouvrir dans un nouvel onglet.
+ * LinkedIn : pas d’iframe — la plateforme bloque souvent l’affichage intégré (frame-ancestors).
  */
 final class PromoVideoDisplayHelper
 {
+    public function __construct(
+        private string $projectDir,
+        private ChapitreMediaDisplayHelper $mediaDisplayHelper,
+    ) {}
+
     /**
      * @return array<string, string>|null
      */
     public function resolve(HomePromoBlock $block): ?array
     {
         if ($block->hasUploadedVideo()) {
-            return [
-                'kind' => 'upload',
-                'src' => 'uploads/promo/'.$block->getVideoFilename(),
-            ];
+            $filename = $block->getVideoFilename();
+            if ($filename !== null && $this->uploadedFileExists($filename)) {
+                return [
+                    'kind' => 'upload',
+                    'src' => 'uploads/promo/'.$filename,
+                ];
+            }
         }
 
         $url = trim($block->getVideoUrl());
         if ($url === '') {
             return null;
-        }
-
-        if (str_starts_with($url, '//')) {
-            $url = 'https:'.$url;
-        }
-
-        $id = $this->parseYouTubeId($url);
-        if ($id !== null) {
-            return [
-                'kind' => 'youtube',
-                'src' => 'https://www.youtube-nocookie.com/embed/'.$id,
-            ];
-        }
-
-        $id = $this->parseVimeoId($url);
-        if ($id !== null) {
-            return [
-                'kind' => 'vimeo',
-                'src' => 'https://player.vimeo.com/video/'.$id,
-            ];
         }
 
         if (preg_match('~linkedin\.com~i', $url)) {
@@ -55,44 +43,34 @@ final class PromoVideoDisplayHelper
             ];
         }
 
-        if (preg_match('~\.(mp4|webm|ogg)(\?[^\s]*)?$~i', $url)) {
+        $resolved = $this->mediaDisplayHelper->resolveMediaReference($url);
+        if ($resolved === null) {
+            return null;
+        }
+
+        if ($resolved['kind'] === 'upload_video' && isset($resolved['src'])) {
             return [
-                'kind' => 'direct',
-                'src' => $url,
+                'kind' => 'upload',
+                'src' => $resolved['src'],
             ];
         }
 
-        return [
-            'kind' => 'iframe',
-            'src' => $url,
-        ];
+        return $resolved;
     }
 
-    private function parseYouTubeId(string $url): ?string
+    public function uploadedFileExists(string $filename): bool
     {
-        if (preg_match('~[?&]v=([a-zA-Z0-9_-]{11})\b~', $url, $m)) {
-            return $m[1];
-        }
-        if (preg_match('~youtu\.be/([a-zA-Z0-9_-]{11})~', $url, $m)) {
-            return $m[1];
-        }
-        if (preg_match('~youtube\.com/embed/([a-zA-Z0-9_-]{11})~', $url, $m)) {
-            return $m[1];
-        }
-        if (preg_match('~youtube\.com/shorts/([a-zA-Z0-9_-]{11})~', $url, $m)) {
-            return $m[1];
+        $filename = trim($filename);
+        if ($filename === '' || str_contains($filename, '/') || str_contains($filename, '\\')) {
+            return false;
         }
 
-        return null;
+        return is_file($this->promoUploadDir().'/'.$filename);
     }
 
-    private function parseVimeoId(string $url): ?string
+    public function promoUploadDir(): string
     {
-        if (preg_match('~vimeo\.com/(?:video/)?(\d+)~', $url, $m)) {
-            return $m[1];
-        }
-
-        return null;
+        return $this->projectDir.'/public/uploads/promo';
     }
 
     /** URL ouverte dans un nouvel onglet (évite le blocage iframe). */

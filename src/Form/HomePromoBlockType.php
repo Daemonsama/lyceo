@@ -44,11 +44,12 @@ class HomePromoBlockType extends AbstractType
                 'mapped' => false,
             ])
             ->add('videoUrl', TextareaType::class, [
-                'label' => 'Lien vers une vidéo (YouTube, Vimeo, ou adresse .mp4 / .webm)',
+                'label' => 'Lien vers une vidéo (YouTube, Google Drive, Vimeo, ou adresse .mp4 / .webm)',
                 'attr' => ['rows' => 3],
                 'required' => false,
-                'help' => 'YouTube / Vimeo : collez l’URL de la barre d’adresse. '
-                    .'LinkedIn : collez le lien du post ; sur le site, un bouton ouvre la vidéo sur LinkedIn (pas de lecture intégrée, limitation LinkedIn).',
+                'help' => 'YouTube / Vimeo / Google Drive : collez l’URL de partage (Drive : accès « Toute personne disposant du lien »). '
+                    .'LinkedIn : collez le lien du post ; sur le site, un bouton ouvre la vidéo sur LinkedIn (pas de lecture intégrée). '
+                    .'Utilisé si aucun fichier local valide n’est enregistré.',
                 'empty_data' => self::EMPTY,
             ])
         ;

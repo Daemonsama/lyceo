@@ -1021,6 +1021,108 @@ html {
     }
 }
 
+/* Badge fin de formation (sidebar fiche formation) */
+.formation-completion-badge-wrap {
+    padding: 0.25rem 0 0.5rem;
+}
+
+.lyceo-completion-badge {
+    position: relative;
+    width: 100%;
+    max-width: 220px;
+    margin: 0 auto;
+}
+
+.lyceo-completion-badge__body {
+    position: relative;
+    z-index: 1;
+    padding: 1.35rem 1.1rem 1.15rem;
+    border-radius: 18px;
+    background: linear-gradient(145deg, #667eea 0%, #764ba2 100%);
+    box-shadow:
+        0 14px 36px rgba(102, 126, 234, 0.32),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    text-align: center;
+    overflow: hidden;
+}
+
+.lyceo-completion-badge__shine {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: linear-gradient(
+        115deg,
+        rgba(255, 255, 255, 0.28) 0%,
+        rgba(255, 255, 255, 0) 42%
+    );
+    border-radius: 18px;
+    pointer-events: none;
+}
+
+.lyceo-completion-badge__logo {
+    display: block;
+    width: 100%;
+    max-width: 168px;
+    height: auto;
+    margin: 0 auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.12));
+}
+
+.lyceo-completion-badge__divider {
+    width: 2.5rem;
+    height: 2px;
+    margin: 0.85rem auto 0.75rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.45);
+}
+
+.lyceo-completion-badge__status {
+    margin: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.95);
+    line-height: 1.3;
+}
+
+.lyceo-completion-badge__status i {
+    display: block;
+    font-size: 1.15rem;
+    margin-bottom: 0.35rem;
+    color: #00cfe8;
+}
+
+.lyceo-completion-badge__tail {
+    position: relative;
+    z-index: 0;
+    width: 3.2rem;
+    height: 1.1rem;
+    margin: -2px auto 0;
+    background: linear-gradient(180deg, #6b5bb8 0%, #5a4899 100%);
+    clip-path: polygon(0 0, 100% 0, 100% 35%, 50% 100%, 0 35%);
+    opacity: 0.85;
+}
+
+.formation-completion-badge-caption {
+    margin: 0.85rem 0 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #28a745;
+}
+
+.formation-completion-badge-caption i {
+    margin-right: 0.25rem;
+}
+
+/* PDF attestation seal */
+.seal-svg {
+    width: 32mm;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
 /* ========================================
    PAGES LÉGALES (CGU)
 ======================================== */

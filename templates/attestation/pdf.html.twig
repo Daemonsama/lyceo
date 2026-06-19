@@ -2,337 +2,370 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Certificat – {{ formation.titre }}</title>
+    <title>Certificat – {{ formationTitre }}</title>
     <style>
         @page { margin: 0; size: A4 landscape; }
 
+        @font-face {
+            font-family: 'Radley';
+            font-style: normal;
+            font-weight: normal;
+            src: url('{{ fontRegular }}') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'Radley';
+            font-style: italic;
+            font-weight: normal;
+            src: url('{{ fontItalic }}') format('truetype');
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        body {
-            font-family: DejaVu Serif, Times, serif;
-            color: #1a1a1a;
-            background: #ffffff;
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: radley, serif;
+            color: #3d3d56;
+            background: #faf7f0;
         }
 
-        .cert {
-            position: relative;
-            width: 297mm;
-            height: 210mm;
+        .cert-sheet {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 842pt;
+            height: 595pt;
+            padding: 16pt;
+            background: #faf7f0;
             overflow: hidden;
-            background: #ffffff;
         }
 
-        /* Coins décoratifs (style référence) */
+        .cert-outer {
+            position: relative;
+            width: 810pt;
+            height: 563pt;
+            border: 1.5pt solid #667eea;
+            background: #faf7f0;
+        }
+
+        /* Inset égal sur 4 côtés — évite le bug Dompdf du padding vertical sur table */
+        .cert-inner {
+            position: absolute;
+            top: 12pt;
+            left: 12pt;
+            right: 12pt;
+            bottom: 12pt;
+            border: 2.5pt solid #764ba2;
+            background: #faf7f0;
+        }
+
+        .cert-frame {
+            position: relative;
+            height: 100%;
+            padding: 18pt 28pt 12pt;
+            overflow: hidden;
+        }
+
         .corner {
             position: absolute;
-            width: 0;
-            height: 0;
-            border-style: solid;
+            width: 52pt;
+            height: 52pt;
             z-index: 1;
         }
-        .corner-tl-a { top: 0; left: 0; border-width: 0 0 72px 72px; border-color: transparent transparent #8b1e3f transparent; }
-        .corner-tl-b { top: 0; left: 0; border-width: 0 0 52px 52px; border-color: transparent transparent #c9a227 transparent; }
-        .corner-tr-a { top: 0; right: 0; border-width: 72px 0 0 72px; border-color: #8b1e3f transparent transparent transparent; }
-        .corner-tr-b { top: 0; right: 0; border-width: 52px 0 0 52px; border-color: #c9a227 transparent transparent transparent; }
-        .corner-bl-a { bottom: 0; left: 0; border-width: 0 72px 72px 0; border-color: transparent transparent #8b1e3f transparent; }
-        .corner-bl-b { bottom: 0; left: 0; border-width: 0 52px 52px 0; border-color: transparent transparent #c9a227 transparent; }
-        .corner-br-a { bottom: 0; right: 0; border-width: 0 0 72px 72px; border-color: transparent transparent #8b1e3f transparent; }
-        .corner-br-b { bottom: 0; right: 0; border-width: 0 0 52px 52px; border-color: transparent transparent #c9a227 transparent; }
 
-        .frame {
-            position: absolute;
-            top: 14mm;
-            left: 14mm;
-            right: 14mm;
-            bottom: 14mm;
-            border: 2px solid rgb(44, 15, 209)
+        .corner-tl { top: 0; left: 0; }
+        .corner-tr { top: 0; right: 0; }
+        .corner-bl { bottom: 0; left: 0; }
+        .corner-br { bottom: 0; right: 0; }
+
+        .cert-header {
+            position: relative;
+            z-index: 2;
+            margin-bottom: 6pt;
+        }
+
+        table.cert-header-row {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.cert-header-row td {
+            vertical-align: top;
+        }
+
+        td.header-left { text-align: left; width: 55%; }
+        td.header-right { text-align: right; width: 45%; }
+
+        .header-brand-logo {
+            width: 132pt;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            background: transparent;
+        }
+
+        .header-platform {
+            font-size: 7.5pt;
+            color: #8888a0;
+            letter-spacing: 0.5px;
+        }
+
+        .header-brand {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #5568d3;
+            line-height: 1.2;
+        }
+
+        .header-tagline {
+            font-size: 7.5pt;
+            color: #8888a0;
+            font-style: italic;
+        }
+
+        table.layout {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            position: relative;
             z-index: 2;
         }
 
-        .inner {
-            position: absolute;
-            top: 20mm;
-            left: 20mm;
-            right: 20mm;
-            bottom: 20mm;
-            z-index: 3;
+        table.layout td {
+            vertical-align: top;
+            text-align: center;
         }
 
-        table.layout { width: 100%; height: 100%; border-collapse: collapse; }
-        table.layout td { vertical-align: top; padding: 0; }
-
-        /* En-tête */
-        .header-row td { vertical-align: top; }
-        .logo-cell { width: 38%; padding-top: 2mm; }
-        .title-cell { width: 62%; text-align: center; padding-top: 4mm; }
-
-        .logo-wrap {
-            display: inline-block;
-            text-align: left;
+        td.footer-cell {
+            vertical-align: bottom;
+            height: 1px;
+            padding-top: 8pt;
         }
-        .logo-img {
-            max-width: 42mm;
-            max-height: 22mm;
-        }
-        .logo-text {
-            font-family: DejaVu Sans, Arial, sans-serif;
-            font-size: 11pt;
+
+        .title-block { margin-top: 2pt; }
+
+        .title-main {
+            font-size: 30pt;
             font-weight: bold;
-            color: #1e4d8c;
-            letter-spacing: 0.5px;
-            margin-top: 2mm;
-        }
-        .logo-sub {
-            font-family: DejaVu Sans, Arial, sans-serif;
-            font-size: 8pt;
-            color: #5a6a7a;
-        }
-
-        .cert-title-main {
-            font-size: 36pt;
-            font-weight: bold;
-            letter-spacing: 6px;
-            color: #111111;
+            letter-spacing: 4px;
+            color: #3d3d56;
             line-height: 1;
         }
-        .cert-title-sub {
-            font-size: 20pt;
-            font-style: italic;
-            color: #333333;
-            margin-top: 2mm;
-        }
-        .title-ornament {
-            margin: 5mm auto 0;
-            width: 55mm;
-            height: 1px;
-            background: #c9a227;
-            position: relative;
-        }
-        .title-ornament span {
-            display: block;
-            width: 8mm;
-            height: 8mm;
-            border: 1px solid #c9a227;
-            border-radius: 50%;
-            margin: -4mm auto 0;
-            background: #fff;
-        }
 
-        /* Corps */
-        .body-cell {
-            text-align: center;
-            vertical-align: middle;
-            padding: 6mm 12mm 0;
-        }
-        .intro {
-            font-size: 11pt;
-            line-height: 1.65;
-            color: #2a2a2a;
-            margin-bottom: 5mm;
-        }
-        .intro strong {
-            font-weight: bold;
-        }
-        .recipient {
-            font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
-            font-size: 17pt;
-            font-weight: bold;
-            color: #1565c0;
-            letter-spacing: 0.5px;
-            margin: 4mm 0;
-            padding-bottom: 2mm;
-            border-bottom: 1px dotted #9aa5b1;
-            display: inline-block;
-            min-width: 70%;
-        }
-        .body-text {
-            font-size: 11pt;
-            line-height: 1.7;
-            color: #2a2a2a;
-            margin: 4mm 0;
-        }
-        .filiere-label {
-            font-size: 11pt;
-            margin-top: 3mm;
-        }
-        .formation-name {
-            font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
-            font-size: 14pt;
-            font-weight: bold;
-            color: #1565c0;
-            letter-spacing: 0.8px;
-            margin: 3mm 0 5mm;
-            text-transform: uppercase;
-        }
-        .closing {
-            font-size: 9.5pt;
-            line-height: 1.55;
-            color: #444444;
-            margin-top: 4mm;
-            padding: 0 8mm;
-        }
-        .score-note {
-            font-size: 9pt;
-            color: #666666;
-            margin-top: 3mm;
-        }
-
-        /* Pied de page */
-        .footer-row td { vertical-align: bottom; }
-        .footer-left {
-            width: 33%;
-            font-size: 10pt;
-            line-height: 1.5;
-            padding-bottom: 2mm;
-        }
-        .footer-center {
-            width: 34%;
-            text-align: center;
-            padding-bottom: 0;
-        }
-        .footer-right {
-            width: 33%;
-            text-align: right;
-            padding-bottom: 2mm;
-        }
-        .date-red {
-            color: #c62828;
-            font-weight: bold;
-            font-size: 11pt;
-            letter-spacing: 0.5px;
-        }
-        .seal-img {
-            width: 28mm;
-            height: 28mm;
-        }
-        .seal-svg {
-            width: 28mm;
-            height: 28mm;
-        }
-        .signature-name {
-            font-family: DejaVu Serif, Times, serif;
+        .title-sub {
             font-size: 16pt;
             font-style: italic;
-            color: #1a1a1a;
-            margin-bottom: 1mm;
+            color: #5568d3;
+            margin-top: 4pt;
         }
-        .signature-role {
-            font-size: 10pt;
-            color: #333333;
+
+        .title-deco {
+            display: block;
+            margin: 6pt auto 10pt;
         }
-        .ref-line {
-            font-size: 7.5pt;
-            color: #888888;
-            margin-top: 2mm;
+
+        .intro-line {
+            font-size: 9pt;
+            color: #4a4a68;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8pt;
+        }
+
+        .recipient {
+            font-size: 23pt;
+            font-weight: bold;
+            color: #5568d3;
+            line-height: 1.15;
+            padding: 4pt 0 6pt;
+            letter-spacing: 1px;
+        }
+
+        .name-divider {
+            width: 55%;
+            margin: 0 auto 10pt;
+            border-top: 1pt dotted #b8c0f0;
+        }
+
+        .body-text {
+            font-size: 13pt;
+            line-height: 1.5;
+            color: #444460;
+            padding: 0 20pt;
+            margin: 0 auto;
+            max-width: 520pt;
+        }
+
+        .body-text strong { color: #5568d3; }
+
+        .fine-print {
+            font-size: 11.5pt;
+            line-height: 1.4;
+            color: #8888a0;
+            padding: 10pt 24pt 0;
+            max-width: 520pt;
+            margin: 0 auto;
+        }
+
+        table.footer-row {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.footer-row td {
+            width: 33%;
+            vertical-align: bottom;
+            text-align: center;
+            padding: 0 8pt;
+        }
+
+        td.footer-left { text-align: left; }
+        td.footer-right { text-align: right; }
+
+        td.footer-center {
+            vertical-align: top;
+            text-align: center;
+        }
+
+        td.footer-labels-line {
+            vertical-align: bottom;
+            padding-top: 36pt;
+        }
+
+        .footer-date-label,
+        .footer-delivered {
+            font-size: 11pt;
+            color: #666680;
+            line-height: 1.2;
+        }
+
+        .footer-date-label {
+            display: inline;
+        }
+
+        .footer-date-value {
+            display: inline;
+            font-size: 14pt;
+            font-weight: bold;
+            color: #1b294b;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            margin-left: 5pt;
+        }
+
+        .footer-seal-block {
+            text-align: center;
+        }
+
+        .validated-badge-img {
+            width: 100pt;
+            height: auto;
+            display: block;
+            margin: 2pt auto 0;
+            background: transparent;
+        }
+
+        .seal-svg {
+            width: 66pt;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .brand-logo-img {
+            width: 175pt;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            background: transparent;
         }
     </style>
 </head>
 <body>
-{% set mois = ['JAN', 'FÉV', 'MAR', 'AVR', 'MAI', 'JUN', 'JUL', 'AOÛ', 'SEP', 'OCT', 'NOV', 'DÉC'] %}
-{% set dateObj = quizFinalReussi.dateReussite %}
-{% set dateCertificat = dateObj|date('d') ~ ' ' ~ mois[dateObj|date('n') - 1] ~ ' ' ~ dateObj|date('Y') %}
-{% set nomComplet = (user.nom ~ ' ' ~ user.prenom)|upper %}
-{% set filiere = formation.categorie ? formation.categorie.nom : 'Formation professionnelle' %}
+<div class="cert-sheet">
+    <div class="cert-outer">
+        <div class="cert-inner">
+            <div class="cert-frame">
+                {% include 'attestation/_corner_accents.html.twig' %}
 
-<div class="cert">
-    <div class="corner corner-tl-a"></div>
-    <div class="corner corner-tl-b"></div>
-    <div class="corner corner-tr-a"></div>
-    <div class="corner corner-tr-b"></div>
-    <div class="corner corner-bl-a"></div>
-    <div class="corner corner-bl-b"></div>
-    <div class="corner corner-br-a"></div>
-    <div class="corner corner-br-b"></div>
-
-    <div class="frame"></div>
-
-    <div class="inner">
-        <table class="layout">
-            <tr class="header-row">
-                <td class="logo-cell">
-                    <div class="logo-wrap">
-                        {% if logoDataUri %}
-                            <img src="{{ logoDataUri }}" alt="Logo" class="logo-img">
-                        {% else %}
-                            <svg width="120" height="48" viewBox="0 0 120 48" xmlns="http://www.w3.org/2000/svg">
-                                <rect x="2" y="4" width="40" height="40" rx="6" fill="#1e4d8c"/>
-                                <text x="22" y="32" text-anchor="middle" fill="#ffffff" font-family="DejaVu Sans, Arial, sans-serif" font-size="22" font-weight="bold">S</text>
-                                <text x="52" y="22" fill="#1e4d8c" font-family="DejaVu Sans, Arial, sans-serif" font-size="14" font-weight="bold">SPC</text>
-                                <text x="52" y="38" fill="#5a6a7a" font-family="DejaVu Sans, Arial, sans-serif" font-size="9">Formation</text>
-                            </svg>
-                        {% endif %}
-                        <div class="logo-text">{{ companyName }}</div>
-                        <div class="logo-sub">Stéphane Palmier Consulting</div>
-                    </div>
-                </td>
-                <td class="title-cell">
-                    <div class="cert-title-main">CERTIFICAT</div>
-                    <div class="cert-title-sub">de Formation</div>
-                    <div class="title-ornament"><span></span></div>
-                </td>
-            </tr>
-
-            <tr>
-                <td colspan="2" class="body-cell">
-                    <p class="intro">
-                        L'entreprise <strong>{{ companyName }}</strong>, dans le cadre de ses activités de formation
-                        professionnelle et en ligne, atteste que&nbsp;:
-                    </p>
-
-                    <div class="recipient">{{ nomComplet }}</div>
-
-                    <p class="body-text">
-                        a validé avec succès la formation dispensée sur la plateforme
-                        <strong>SPC Formation</strong>, conformément au programme pédagogique établi,
-                        et a obtenu les compétences visées par le parcours suivant.
-                    </p>
-
-                    <p class="filiere-label">dans la filière&nbsp;:</p>
-                    <div class="formation-name">{{ formation.titre|upper }}</div>
-
-                    <p class="closing">
-                        Ce certificat est délivré en reconnaissance de la réussite au quiz final d'évaluation.
-                        Il atteste de la participation active du bénéficiaire et de l'acquisition des acquis
-                        de la formation <em>{{ filiere }}</em>.
-                    </p>
-
-                    <p class="score-note">
-                        Score au quiz final&nbsp;: <strong>{{ quizFinalReussi.score }}&nbsp;%</strong>
-                        — Référence&nbsp;: {{ reference }}
-                    </p>
-                </td>
-            </tr>
-
-            <tr class="footer-row">
-                <td colspan="2" style="vertical-align: bottom; padding-top: 4mm;">
-                    <table width="100%" style="border-collapse: collapse;">
+                <div class="cert-header">
+                    <table class="cert-header-row">
                         <tr>
-                            <td class="footer-left" width="33%">
-                                Fait à {{ lieu }}, le<br>
-                                <span class="date-red">{{ dateCertificat }}</span>
+                            <td class="header-left">
+                                <div class="header-platform">{{ platformName }}</div>
+                                <div class="header-brand">Lyceo Campus Numérique</div>
+                                <div class="header-tagline">Formation professionnelle en ligne</div>
                             </td>
-                            <td class="footer-center" width="34%">
-                                {% if badgeDataUri %}
-                                    <img src="{{ badgeDataUri }}" alt="Sceau" class="seal-img">
-                                {% else %}
-                                    <svg class="seal-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                                        <circle cx="50" cy="50" r="46" fill="none" stroke="#c9a227" stroke-width="3"/>
-                                        <circle cx="50" cy="50" r="38" fill="none" stroke="#c9a227" stroke-width="1.5"/>
-                                        <text x="50" y="44" text-anchor="middle" fill="#8b1e3f" font-family="DejaVu Sans, Arial, sans-serif" font-size="8" font-weight="bold">QUALITÉ</text>
-                                        <text x="50" y="56" text-anchor="middle" fill="#8b1e3f" font-family="DejaVu Sans, Arial, sans-serif" font-size="7">CERTIFIÉE</text>
-                                        <text x="50" y="68" text-anchor="middle" fill="#c9a227" font-family="DejaVu Serif, serif" font-size="6">SPC</text>
-                                    </svg>
+                            <td class="header-right">
+                                {% if lyceoBrandLogoPath %}
+                                    <img src="{{ lyceoBrandLogoPath }}" class="header-brand-logo" alt="Lyceo Campus Numérique">
                                 {% endif %}
-                            </td>
-                            <td class="footer-right" width="33%">
-                                <div class="signature-name">{{ home.aboutName }}</div>
-                                <div class="signature-role">{{ home.aboutRole }}</div>
                             </td>
                         </tr>
                     </table>
-                </td>
-            </tr>
-        </table>
+                </div>
+
+                <table class="layout">
+                    <tr>
+                        <td>
+                            <div class="title-block">
+                                <div class="title-main">CERTIFICAT</div>
+                                <div class="title-sub">de Réussite</div>
+                            </div>
+
+                            {% include 'attestation/_title_decoration.html.twig' %}
+
+                            <div class="intro-line">Nous certifions que</div>
+
+                            <div class="recipient">{{ nomComplet }}</div>
+                            <div class="name-divider"></div>
+
+                            <p class="body-text">
+                                a validé avec succès son parcours d'apprentissage, dispensé sur la plateforme
+                                <strong>Lyceo Campus Numérique</strong>, conformément au programme établi dans la catégorie
+                                <strong>{{ filiere }}</strong>.
+                                Ce parcours comprend {{ nbChapitres }} chapitre{{ nbChapitres > 1 ? 's' : '' }}
+                                et a été complété par la réussite du quiz final d'évaluation.
+                            </p>
+
+                            <p class="fine-print">
+                                Ce certificat est délivré en reconnaissance de la réussite au quiz final
+                                d'évaluation.
+                                Félicitation pour votre réussite, nous vous attendons sur d'autres formations.
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="footer-cell">
+                            <table class="footer-row">
+                                <tr>
+                                    <td class="footer-left footer-labels-line">
+                                        <span class="footer-date-label">Délivré le</span>
+                                        <span class="footer-date-value">{{ dateCertificatFr }}</span>
+                                    </td>
+                                    <td rowspan="2" class="footer-center">
+                                        <div class="footer-seal-block">
+                                            {% include 'attestation/_seal_badge.html.twig' with { certYear: certYear, badgeAnneePath: badgeAnneePath } %}
+                                            {% include 'attestation/_formation_validated_badge.html.twig' %}
+                                        </div>
+                                    </td>
+                                    <td class="footer-right footer-labels-line">
+                                        <span class="footer-delivered">Module validé</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="footer-left"></td>
+                                    <td class="footer-right">
+                                        {% include 'attestation/_lyceo_brand_pdf.html.twig' %}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 </body>

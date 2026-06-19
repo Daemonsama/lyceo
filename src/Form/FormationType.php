@@ -47,9 +47,9 @@ class FormationType extends AbstractType
             ->add('media', TextType::class, [
                 'required' => false,
                 'label' => 'Vidéo de présentation',
-                'help' => 'Collez un lien YouTube/URL vidéo (https://...) ou un nom de fichier local (ex: intro.mp4).',
+                'help' => 'Lien Google Drive (partage « Toute personne disposant du lien »), YouTube, Vimeo, URL vidéo directe, ou nom de fichier local (ex. intro.mp4).',
                 'attr' => [
-                    'placeholder' => 'https://www.youtube.com/watch?v=... ou intro.mp4',
+                    'placeholder' => 'https://drive.google.com/file/d/…/view ou https://www.youtube.com/watch?v=…',
                 ],
                 'empty_data' => '',
             ])
