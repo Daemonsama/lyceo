@@ -98,3 +98,14 @@ php bin/console app:stripe:sync-promo-codes
 Le projet a été pensé pour être évolutif. Parmi les fonctionnalités envisagées :
 - Gestion des utilisateurs par l'administrateur
 
+### mot de passe utilisateur lyceo de la base lyceo.db : "Consulting15@"
+
+Paramètre	Valeur
+Hôte
+127.0.0.1
+Base
+lyceo
+Utilisateur
+lyceo
+Mot de passe
+(celui choisi à l’étape 2)
