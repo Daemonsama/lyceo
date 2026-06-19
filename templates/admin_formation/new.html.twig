@@ -1,13 +1,13 @@
 {% extends 'base.admin.html.twig' %}
 
-{% block title %}New Formation{% endblock %}
+{% block title %}Nouveau module{% endblock %}
 
 {% block body %}
-    <h1>Create new Formation</h1>
+    <h1>Créer un nouveau module</h1>
 
     {{ include('admin_formation/_form.html.twig') }}
 
     <a class="btn btn-admin-outline mt-3" href="{{ path('app_admin_formation_index') }}">
-        <i class="bi bi-arrow-left me-1"></i> Retour aux formations
+        <i class="bi bi-arrow-left me-1"></i> Retour aux modules
     </a>
 {% endblock %}

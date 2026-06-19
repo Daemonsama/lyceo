@@ -25,7 +25,7 @@ final class AttestationPdfGenerator
         );
         $formationTitre = Utf8Sanitizer::clean($formation->getTitre() ?? '');
         $filiere = Utf8Sanitizer::clean(
-            $formation->getCategorie()?->getNom() ?? 'Formation professionnelle'
+            $formation->getCategorie()?->getNom() ?? 'Module professionnel'
         );
         $dateReussite = $quizFinalReussi->getDateReussite();
 

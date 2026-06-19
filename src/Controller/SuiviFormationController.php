@@ -77,7 +77,7 @@ final class SuiviFormationController extends AbstractController
 
         if ($chapSuivant === null) {
             if ($progression->needsFinalQuiz($user, $formation)) {
-                $this->addFlash('info', 'Bravo ! Passez maintenant le quiz final pour valider la formation.');
+                $this->addFlash('info', 'Bravo ! Passez maintenant le quiz final pour valider le module.');
 
                 return $this->redirectToRoute('app_quiz_final', [
                     'formation' => $formation->getId(),
@@ -85,7 +85,7 @@ final class SuiviFormationController extends AbstractController
             }
 
             if ($progression->hasCompletedFormation($user, $formation)) {
-                $this->addFlash('success', 'Félicitations ! Vous avez terminé la formation.');
+                $this->addFlash('success', 'Félicitations ! Vous avez terminé le module.');
             }
 
             return $this->redirectToRoute('app_formation_show', [

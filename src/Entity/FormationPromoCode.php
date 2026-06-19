@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 #[ORM\Table(name: 'formation_promo_code')]
 #[ORM\UniqueConstraint(name: 'uniq_formation_promo_code', fields: ['formation', 'code'])]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity(fields: ['formation', 'code'], message: 'Ce code promo existe déjà pour cette formation.')]
+#[UniqueEntity(fields: ['formation', 'code'], message: 'Ce code promo existe déjà pour ce module.')]
 class FormationPromoCode
 {
     #[ORM\Id]

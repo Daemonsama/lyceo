@@ -3,7 +3,7 @@
 {% block title %}{{ formation.titre }}{% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item"><a href="{{ path('app_admin_formation_index') }}">Formations</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('app_admin_formation_index') }}">Modules</a></li>
     <li class="breadcrumb-item active" aria-current="page">{{ formation.titre }}</li>
 {% endblock %}
 
@@ -18,7 +18,7 @@
                      height="72">
                 <div>
                     <h1 class="h3 mb-1">{{ formation.titre }}</h1>
-                    <p class="text-muted mb-0">Formation #{{ formation.id }}</p>
+                    <p class="text-muted mb-0">Module #{{ formation.id }}</p>
                 </div>
             </div>
             <div class="d-flex flex-wrap gap-2">
@@ -64,7 +64,7 @@
                 <div class="d-flex flex-wrap justify-content-between align-items-center gap-2">
                     <div>
                         <h2 class="h5 mb-1">Chapitres</h2>
-                        <p class="text-muted small mb-0">Contenu de la formation</p>
+                        <p class="text-muted small mb-0">Contenu du module</p>
                     </div>
                     <a href="{{ path('app_admin_chapitre_new', { formation: formation.id }) }}" class="btn btn-sm btn-admin-primary">
                         <i class="bi bi-plus-lg me-1"></i> Nouveau chapitre
@@ -122,7 +122,7 @@
                     </div>
                 {% else %}
                     <div class="text-center text-muted py-5">
-                        Aucun chapitre pour cette formation.
+                        Aucun chapitre pour ce module.
                     </div>
                 {% endif %}
             </div>

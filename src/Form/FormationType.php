@@ -32,7 +32,7 @@ class FormationType extends AbstractType
             ->add('apercuFile', FileType::class, [
                 'mapped' => false,
                 'required' => false,
-                'label' => 'Aperçu de la formation (image)',
+                'label' => 'Aperçu du module (image)',
                 'help' => 'JPEG, PNG, WebP ou GIF — max. 5 Mo. Sans image, l\'aperçu par défaut du catalogue est utilisé.',
                 'attr' => [
                     'accept' => 'image/jpeg,image/png,image/webp,image/gif',
@@ -64,7 +64,7 @@ class FormationType extends AbstractType
                 'allow_delete' => true,
                 'by_reference' => false,
                 'label' => 'Codes promo',
-                'help' => 'Codes réservés à cette formation. Ils sont créés automatiquement dans Stripe à l’enregistrement.',
+                'help' => 'Codes réservés à ce module. Ils sont créés automatiquement dans Stripe à l’enregistrement.',
             ])
         ;
     }

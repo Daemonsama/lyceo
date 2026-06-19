@@ -1,20 +1,20 @@
 {% extends 'base.admin.html.twig' %}
 
-{% block title %}Formations{% endblock %}
+{% block title %}Modules{% endblock %}
 
 {% block breadcrumb %}
-    <li class="breadcrumb-item active" aria-current="page">Formations</li>
+    <li class="breadcrumb-item active" aria-current="page">Modules</li>
 {% endblock %}
 
 {% block body %}
     <div class="container py-4">
         <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
             <div>
-                <h1 class="h3 mb-1"><i class="bi bi-book text-primary"></i> Formations</h1>
-                <p class="text-muted mb-0">Gérez le catalogue de formations Lyceo Campus.</p>
+                <h1 class="h3 mb-1"><i class="bi bi-book text-primary"></i> Modules</h1>
+                <p class="text-muted mb-0">Gérez le catalogue de modules Lyceo Campus.</p>
             </div>
             <a href="{{ path('app_admin_formation_new') }}" class="btn btn-admin-primary">
-                <i class="bi bi-plus-lg me-1"></i> Nouvelle formation
+                <i class="bi bi-plus-lg me-1"></i> Nouveau module
             </a>
         </div>
 
@@ -25,7 +25,7 @@
                         <table class="table table-hover align-middle mb-0 admin-user-table">
                             <thead>
                                 <tr>
-                                    <th>Formation</th>
+                                    <th>Module</th>
                                     <th>Description</th>
                                     <th>Prix</th>
                                     <th class="text-end">Actions</th>
@@ -74,7 +74,7 @@
                 {% else %}
                     <div class="text-center text-muted py-5">
                         <i class="bi bi-journal-x fs-2 d-block mb-2"></i>
-                        Aucune formation créée.
+                        Aucun module créé.
                     </div>
                 {% endif %}
             </div>

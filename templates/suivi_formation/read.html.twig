@@ -36,7 +36,7 @@
                          alt=""
                          class="formation-badge-logo">
                 </span>
-                <span>Formation</span>
+                <span>Module</span>
             </div>
             <h2>{{ chapitre.formation.titre }}</h2>
         </div>
@@ -183,7 +183,7 @@
                             </span>
                             <span>
                                 {% if isLastChapter %}
-                                    Fin de la formation
+                                    Fin du module
                                 {% else %}
                                     {% for chap in chapitres %}
                                         {% if loop.index == index + 1 %}

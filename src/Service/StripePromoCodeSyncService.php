@@ -63,7 +63,7 @@ final class StripePromoCodeSyncService
         $couponParams = [
             'duration' => 'once',
             'name' => sprintf(
-                'Formation #%d – %s',
+                'Module #%d – %s',
                 $promoCode->getFormation()?->getId(),
                 $promoCode->getCode(),
             ),
@@ -119,7 +119,7 @@ final class StripePromoCodeSyncService
                 throw new InvalidPromoCodeException(
                     $normalizedCode,
                     sprintf(
-                        'Ce code est valide pour la formation « %s » uniquement.',
+                        'Ce code est valide pour le module « %s » uniquement.',
                         $other->getFormation()?->getTitre() ?? 'autre',
                     ),
                 );

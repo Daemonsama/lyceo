@@ -7,5 +7,5 @@
 
     {{ include('admin_chapitre/_form.html.twig', {chapitre: chapitre, mediaDisplay: mediaDisplay|default(null)}) }}
 
-    <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {'formation': formation.id}) }}">Retourner à la formation</a>
+    <a class="btn btn-secondary" href="{{ path('app_admin_formation_edit', {'formation': formation.id}) }}">Retourner au module</a>
 {% endblock %}

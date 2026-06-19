@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Catalogue des Formations{% endblock %}
+{% block title %}Catalogue des Modules{% endblock %}
 
 {% block body %}
     <!-- Hero Section -->
@@ -11,10 +11,10 @@
                     <div class="col-lg-8">
                         <h1 class="display-4 fw-bold d-inline-flex align-items-center justify-content-center flex-wrap hero-banner-title">
                             <img src="{{ asset('image/logo2-transparent.png') }}" alt="Logo Lyceo Campus" class="hero-banner-logo">
-                            Catalogue de Formations
+                            Catalogue de Modules
                         </h1>
                         <p class="lead mb-0">
-                            Découvrez nos formations en ligne pour développer vos compétences professionnelles
+                            Découvrez nos modules en ligne pour développer vos compétences professionnelles
                         </p>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
             <div class="col-12 mb-3">
                 <h5 class="mb-0">
                     <i class="bi bi-funnel-fill me-2 text-primary"></i>
-                    Filtrer les formations
+                    Filtrer les modules
                 </h5>
             </div>
 
@@ -59,14 +59,14 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h4 mb-0">
                 <i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i>
-                Toutes les formations
+                Tous les modules
             </h2>
             <span class="badge bg-primary rounded-pill px-3 py-2">
-            {{ formations|length }} formation{{ formations|length > 1 ? 's' : '' }}
+            {{ formations|length }} module{{ formations|length > 1 ? 's' : '' }}
         </span>
         </div>
 
-        <!-- Grille de formations -->
+        <!-- Grille de modules -->
         {% if formations|length > 0 %}
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4 mb-5">
                 {% for formation in formations %}
@@ -114,9 +114,9 @@
             <!-- État vide -->
             <div class="empty-state">
                 <i class="bi bi-inbox"></i>
-                <h3>Aucune formation trouvée</h3>
+                <h3>Aucun module trouvé</h3>
                 <p class="text-muted mb-4">
-                    Aucune formation ne correspond à vos critères de recherche.
+                    Aucun module ne correspond à vos critères de recherche.
                 </p>
                 <a href="{{ path('app_formation') }}" class="btn btn-primary btn-lg">
                     <i class="bi bi-arrow-left me-2"></i>

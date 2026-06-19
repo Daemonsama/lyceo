@@ -83,7 +83,7 @@ final class AdminCategorieController extends AbstractController
             $categorieRepository->delete($categorie);
             $message = 'Catégorie supprimée.';
             if ($count > 0) {
-                $message .= sprintf(' %d formation(s) associée(s) ont également été supprimée(s).', $count);
+                $message .= sprintf(' %d module(s) associé(s) ont également été supprimé(s).', $count);
             }
             $this->addFlash('success', $message);
         } catch (\Throwable $e) {

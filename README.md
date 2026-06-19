@@ -1,14 +1,14 @@
-# SPCFormation - Plateforme de formations en ligne
+# SPCFormation - Plateforme de modules en ligne
 
 ## 🎯 Contexte du projet
 
-Projet réalisé dans le cadre de ma formation, en conditions réelles pour une entreprise cliente. L'objectif était de concevoir et développer une plateforme web complète permettant la vente et la consultation de formations en ligne.
+Projet réalisé dans le cadre de ma formation, en conditions réelles pour une entreprise cliente. L'objectif était de concevoir et développer une plateforme web complète permettant la vente et la consultation de modules en ligne.
 
 ---
 
 ## 🔍 Présentation
 
-**SPCFormation** est une application web full-stack développée avec **Symfony** permettant à une entreprise de proposer son catalogue de formations en ligne. Le projet couvre aussi bien l'expérience utilisateur (consultation, inscription) que la gestion back-office via une interface d'administration dédiée.
+**SPCFormation** est une application web full-stack développée avec **Symfony** permettant à une entreprise de proposer son catalogue de modules en ligne. Le projet couvre aussi bien l'expérience utilisateur (consultation, inscription) que la gestion back-office via une interface d'administration dédiée.
 
 ---
 
@@ -16,16 +16,16 @@ Projet réalisé dans le cadre de ma formation, en conditions réelles pour une 
 
 ### Interface utilisateur
 - Inscription et authentification des utilisateurs
-- Consultation du catalogue de formations
-- Visualisation du détail de chaque formation
-- Achat des formations via **Stripe Checkout** (carte bancaire)
-- Accès au contenu des formations après paiement confirmé
-- Téléchargement d'attestation PDF à la fin de formation
+- Consultation du catalogue de modules
+- Visualisation du détail de chaque module
+- Achat des modules via **Stripe Checkout** (carte bancaire)
+- Accès au contenu des modules après paiement confirmé
+- Téléchargement d'attestation PDF à la fin de module
 
 ### Interface d'administration
 - Authentification sécurisée (accès restreint)
-- **CRUD complet** sur les formations (création, lecture, modification, suppression)
-- **Codes promo / coupons** par formation (réduction % ou €, sync Stripe)
+- **CRUD complet** sur les modules (création, lecture, modification, suppression)
+- **Codes promo / coupons** par module (réduction % ou €, sync Stripe)
 - Tableau de bord **Paiements** et **Statistiques** (dont nombre de codes promo actifs)
 
 ---
@@ -71,10 +71,10 @@ Le flux : l'utilisateur clique sur « Acheter » → redirection Stripe → reto
 
 ### Codes promo (bons de réduction)
 
-1. Dans l'admin : **Formations → créer / modifier** → section **Codes promo**.
+1. Dans l'admin : **Modules → créer / modifier** → section **Codes promo**.
 2. Ajoutez un code (ex. `LYCEO10`), une réduction en **%** ou en **€**, puis enregistrez.
-3. Le coupon est créé automatiquement dans Stripe et ne fonctionne **que pour cette formation**.
-4. L'utilisateur le saisit sur la fiche formation avant d'acheter.
+3. Le coupon est créé automatiquement dans Stripe et ne fonctionne **que pour ce module**.
+4. L'utilisateur le saisit sur la fiche module avant d'acheter.
 
 Synchronisation manuelle si besoin :
 

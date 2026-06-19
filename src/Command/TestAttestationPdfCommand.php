@@ -34,7 +34,7 @@ final class TestAttestationPdfCommand extends Command
 
         $reussi = $this->quizFinalReussiRepository->findOneBy([], ['dateReussite' => 'DESC']);
         if (!$reussi instanceof QuizFinalReussi) {
-            $io->error('Aucun quiz final réussi en base. Validez d\'abord une formation.');
+            $io->error('Aucun quiz final réussi en base. Validez d\'abord un module.');
 
             return Command::FAILURE;
         }

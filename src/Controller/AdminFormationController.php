@@ -68,7 +68,7 @@ final class AdminFormationController extends AbstractController
             }
 
             $this->syncPromoCodes($promoCodeSync, $formation);
-            $this->addFlash('success', 'Formation créée.');
+            $this->addFlash('success', 'Module créé.');
 
             return $this->redirectToRoute('app_admin_formation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -122,7 +122,7 @@ final class AdminFormationController extends AbstractController
 
             $formationRepository->save($formation);
             $this->syncPromoCodes($promoCodeSync, $formation);
-            $this->addFlash('success', 'Formation mise à jour.');
+            $this->addFlash('success', 'Module mis à jour.');
 
             return $this->redirectToRoute('app_admin_formation_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -147,9 +147,9 @@ final class AdminFormationController extends AbstractController
         try {
             $this->apercuHandler->deleteFile($formation);
             $formationRepository->delete($formation);
-            $this->addFlash('success', 'Formation supprimée.');
+            $this->addFlash('success', 'Module supprimé.');
         } catch (\Throwable $e) {
-            $this->addFlash('error', 'Impossible de supprimer la formation : '.$e->getMessage());
+            $this->addFlash('error', 'Impossible de supprimer le module : '.$e->getMessage());
         }
 
         return $this->redirectToRoute('app_admin_formation_index', [], Response::HTTP_SEE_OTHER);

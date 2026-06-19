@@ -122,7 +122,7 @@ final class FormationController extends AbstractController
         $user = $this->getUser();
 
         if ($user->hasFormation($formation)) {
-            $this->addFlash('info', 'Vous possédez déjà cette formation.');
+            $this->addFlash('info', 'Vous possédez déjà ce module.');
 
             return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
         }

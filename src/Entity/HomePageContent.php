@@ -22,13 +22,13 @@ class HomePageContent
     private string $heroTitleHighlight = 'talent unique';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $heroLead = 'Des formations professionnelles créatives et immersives pour gagner en efficacité et révéler votre plein potentiel.';
+    private string $heroLead = 'Des modules professionnels créatifs et immersifs pour gagner en efficacité et révéler votre plein potentiel.';
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $heroLogoFilename = null;
 
     #[ORM\Column(length: 128)]
-    private string $heroCtaPrimaryLabel = 'Découvrir les formations';
+    private string $heroCtaPrimaryLabel = 'Découvrir les modules';
 
     #[ORM\Column(length: 255)]
     private string $heroCtaPrimaryUrl = '/formation';
@@ -55,7 +55,7 @@ class HomePageContent
     private ?string $stat2Icon = null;
 
     #[ORM\Column(length: 255)]
-    private string $stat2Label = 'Formations interactives';
+    private string $stat2Label = 'Modules interactifs';
 
     #[ORM\Column(length: 64, nullable: true)]
     private ?string $stat3Value = null;
@@ -94,10 +94,10 @@ class HomePageContent
     private string $audienceTitle = 'Pour qui ?';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $audienceLead = 'Nos formations s\'adressent aux équipes et managers qui veulent progresser';
+    private string $audienceLead = 'Nos modules s\'adressent aux équipes et managers qui veulent progresser';
 
     #[ORM\Column(length: 255)]
-    private string $audienceCard1Title = 'Formation INTRA';
+    private string $audienceCard1Title = 'Module INTRA';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $audienceCard1Text = 'Pour votre équipe ou vos managers de différents services au sein de votre entreprise.';
@@ -106,7 +106,7 @@ class HomePageContent
     private string $audienceCard1Icon = 'building';
 
     #[ORM\Column(length: 255)]
-    private string $audienceCard2Title = 'Formation INTER';
+    private string $audienceCard2Title = 'Module INTER';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $audienceCard2Text = 'Pour managers et équipes de différentes entreprises qui veulent partager leurs expériences.';
@@ -130,7 +130,7 @@ class HomePageContent
     private string $service1Icon = 'person-check';
 
     #[ORM\Column(length: 255)]
-    private string $service2Title = 'Formations Pratiques';
+    private string $service2Title = 'Modules Pratiques';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $service2Text = 'Des programmes concrets et interactifs pour acquérir des compétences rapidement.';
@@ -151,7 +151,7 @@ class HomePageContent
     private string $contactTitle = 'Nous contacter';
 
     #[ORM\Column(type: Types::TEXT)]
-    private string $contactLead = 'Une question sur nos formations ? Écrivez-nous, nous vous répondrons dans les meilleurs délais.';
+    private string $contactLead = 'Une question sur nos modules ? Écrivez-nous, nous vous répondrons dans les meilleurs délais.';
 
     #[ORM\Column(type: Types::TEXT)]
     private string $aboutImageUrl = 'https://static.wixstatic.com/media/bdddc0_685c5141770c4513b46a6a343cc7d091~mv2.jpg/v1/fill/w_443,h_431,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_2866_JPG.jpg';

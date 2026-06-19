@@ -22,7 +22,7 @@
             <div class="alert {{ passed ? 'alert-success' : 'alert-danger' }} text-center mb-4" role="alert">
                 {% if passed %}
                     <strong>Félicitations !</strong> Quiz final réussi avec {{ score }}%.
-                    <br><span class="small">Vous avez terminé la formation.</span>
+                    <br><span class="small">Vous avez terminé le module.</span>
                     <div class="mt-3 formation-completion-badge-wrap">
                         {% include 'formation/_completion_badge.html.twig' with {
                             uid: formation.id,
@@ -83,7 +83,7 @@
 
             <div class="card-footer d-flex justify-content-between align-items-center flex-wrap gap-2 bg-white">
                 <a href="{{ path('app_formation_show', {formation: formation.id}) }}" class="btn btn-outline-secondary">
-                    ← Retour à la formation
+                    ← Retour au module
                 </a>
 
                 {% if quizSubmitted %}
@@ -92,7 +92,7 @@
                             <i class="bi bi-download me-1"></i> Attestation PDF
                         </a>
                         <a href="{{ path('app_formation_show', {formation: formation.id}) }}" class="btn btn-outline-success btn-lg">
-                            Formation terminée <i class="bi bi-trophy ms-1"></i>
+                            Module terminé <i class="bi bi-trophy ms-1"></i>
                         </a>
                     {% else %}
                         <a href="{{ path('app_quiz_final', {formation: formation.id}) }}" class="btn btn-primary btn-lg">

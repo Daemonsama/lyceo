@@ -26,7 +26,7 @@
     <div class="py-5 text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
         <div class="container">
             <h1 class="display-4 fw-bold mb-2">Bonjour {{ user.prenom ?: user.email }} 👋</h1>
-            <p class="lead mb-0">Bienvenue sur votre espace de formation</p>
+            <p class="lead mb-0">Bienvenue sur votre espace modules</p>
         </div>
     </div>
 
@@ -44,13 +44,13 @@
         <div class="row">
             {# Colonne principale #}
             <div class="col-lg-8">
-                <h2 class="h4 mb-4">Mes formations</h2>
+                <h2 class="h4 mb-4">Mes modules</h2>
 
                 {% if user.formationUsers is empty %}
                     <div class="card shadow-sm border-0 p-5">
                         <div class="text-center">
                             <i class="bi bi-inbox display-1 text-muted mb-3"></i>
-                            <p class="text-muted mb-0">Tu n'as pas encore de formation enregistrée.</p>
+                            <p class="text-muted mb-0">Tu n'as pas encore de module enregistré.</p>
                         </div>
                     </div>
                 {% else %}
@@ -103,7 +103,7 @@
                                                     <a class="btn {% if isEnCours %}btn-primary{% else %}btn-outline-primary{% endif %}"
                                                        href="{{ path('app_formation_show', {'formation': formation.id}) }}">
                                                         <i class="bi bi-play-circle"></i>
-                                                        {{ isEnCours ? 'Continuer la formation' : 'Voir la formation' }}
+                                                        {{ isEnCours ? 'Continuer le module' : 'Voir le module' }}
                                                     </a>
                                                 {% endif %}
                                             </div>
@@ -182,7 +182,7 @@
                             Statistiques
                         </h3>
                         <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="text-muted">Formations totales</span>
+                            <span class="text-muted">Modules totaux</span>
                             <strong style="color: #667eea; font-size: 1.5rem;">{{ user.formationUsers|length }}</strong>
                         </div>
                     </div>

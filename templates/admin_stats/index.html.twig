@@ -34,7 +34,7 @@
                     </a>
                     {% endif %}
                     <a href="{{ path('app_admin_formation_index') }}" class="btn btn-outline-dashboard">
-                        <i class="bi bi-book me-1"></i> Formations
+                        <i class="bi bi-book me-1"></i> Modules
                     </a>
                 </div>
             </div>
@@ -85,7 +85,7 @@
                             <i class="bi bi-mortarboard"></i>
                         </div>
                         <div>
-                            <p class="admin-dashboard-kpi-label">Formations publiées</p>
+                            <p class="admin-dashboard-kpi-label">Modules publiés</p>
                             <p class="admin-dashboard-kpi-value admin-dashboard-kpi-value--pink">{{ overview.formations }}</p>
                             <p class="admin-dashboard-kpi-hint">{{ overview.chapitres }} chapitres au total</p>
                         </div>
@@ -122,7 +122,7 @@
                             <div class="admin-dashboard-promo-box">
                                 <div>
                                     <strong>{{ overview.promoCodes }} code(s) promo actif(s)</strong>
-                                    <span>Gérez les réductions par formation</span>
+                                    <span>Gérez les réductions par module</span>
                                 </div>
                                 <a href="{{ path('app_admin_formation_index') }}" class="btn btn-sm btn-primary">Gérer</a>
                             </div>
@@ -173,13 +173,13 @@
                 </div>
             </div>
 
-            {# Top formations + utilisateurs #}
+            {# Top modules + utilisateurs #}
             <div class="row g-4">
                 <div class="col-lg-7">
                     <div class="admin-dashboard-card">
                         <div class="admin-dashboard-card-header">
-                            <h2 class="admin-dashboard-card-title">Top formations</h2>
-                            <p class="admin-dashboard-card-subtitle">Les formations les plus vendues</p>
+                            <h2 class="admin-dashboard-card-title">Top modules</h2>
+                            <p class="admin-dashboard-card-subtitle">Les modules les plus vendus</p>
                         </div>
                         <div class="admin-dashboard-card-body pt-0">
                             {% if dashboard.topFormations is not empty %}
@@ -187,7 +187,7 @@
                                     <table class="admin-dashboard-table">
                                         <thead>
                                             <tr>
-                                                <th>Formation</th>
+                                                <th>Module</th>
                                                 <th>Ventes</th>
                                                 <th>Prix</th>
                                                 <th>Revenus</th>
@@ -223,7 +223,7 @@
                                                 <td class="text-end">
                                                     <a href="{{ path('app_admin_formation_show', { formation: item.id }) }}"
                                                        class="btn btn-sm btn-link text-muted p-0"
-                                                       title="Voir la formation">
+                                                       title="Voir le module">
                                                         <i class="bi bi-three-dots-vertical"></i>
                                                     </a>
                                                 </td>

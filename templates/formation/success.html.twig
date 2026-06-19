@@ -33,7 +33,7 @@
                             <div class="payment-success-plan-info">
                                 <div class="payment-success-plan-badge">
                                     <i class="bi bi-mortarboard-fill"></i>
-                                    <span>Formation</span>
+                                    <span>Module</span>
                                 </div>
                                 <h2 class="payment-success-plan-name">{{ receipt.formation.titre }}</h2>
                                 <p class="payment-success-plan-period">{{ receipt.accessLabel }}</p>
@@ -98,7 +98,7 @@
 
                     <div class="payment-success-actions text-center">
                         <a href="{{ path('app_formation_show', { formation: receipt.formation.id }) }}" class="btn payment-success-btn-primary">
-                            <i class="bi bi-play-circle me-2"></i>Commencer la formation
+                            <i class="bi bi-play-circle me-2"></i>Commencer le module
                         </a>
                         <a href="{{ path('app_mon_profil') }}" class="btn payment-success-btn-secondary">
                             Voir mon espace client

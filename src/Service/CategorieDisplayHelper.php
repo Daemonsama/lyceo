@@ -12,7 +12,7 @@ final class CategorieDisplayHelper
         'coaching' => ['slug' => 'coaching', 'label' => 'Coaching'],
         'leadership' => ['slug' => 'leadership', 'label' => 'Leadership'],
         'communication' => ['slug' => 'communication', 'label' => 'Communication'],
-        'formation' => ['slug' => 'formation', 'label' => 'Formation'],
+        'formation' => ['slug' => 'formation', 'label' => 'Module'],
         'marketing' => ['slug' => 'marketing', 'label' => 'Marketing'],
         'rh' => ['slug' => 'rh', 'label' => 'Ressources humaines'],
         'finance' => ['slug' => 'finance', 'label' => 'Finance'],

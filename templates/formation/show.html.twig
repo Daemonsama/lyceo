@@ -52,15 +52,15 @@
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15 10L19.553 7.724A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                             </svg>
-                            Vidéo de la formation
+                            Vidéo du module
                         </div>
-                        <h3 class="formation-video-title">Présentation de la formation</h3>
+                        <h3 class="formation-video-title">Présentation du module</h3>
 
                         {% if presentationMediaDisplay.kind == 'upload_image' %}
                             <img
                                 src="{{ asset(presentationMediaDisplay.src) }}"
                                 class="img-fluid rounded formation-video-player"
-                                alt="Présentation de la formation"
+                                alt="Présentation du module"
                             >
                         {% elseif presentationMediaDisplay.kind in ['upload_video', 'direct'] %}
                             <video controls class="formation-video-player" playsinline preload="metadata">
@@ -71,7 +71,7 @@
                             <div class="formation-youtube-wrapper">
                                 <iframe
                                     src="{{ presentationMediaDisplay.src }}"
-                                    title="Vidéo de la formation"
+                                    title="Vidéo du module"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                                     allowfullscreen
@@ -92,7 +92,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body p-4">
                         <h3 class="h4 mb-3">
-                            <i class="bi bi-info-circle text-primary"></i> À propos de cette formation
+                            <i class="bi bi-info-circle text-primary"></i> À propos de ce module
                         </h3>
                         <div class="text-muted">
                             {{ formation.description|raw }}
@@ -106,14 +106,14 @@
                 <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
                     <div class="card-body p-4">
                         {% if not app.user.hasFormation(formation) %}
-                            <h5 class="mb-3">Commencer cette formation</h5>
+                            <h5 class="mb-3">Commencer ce module</h5>
                             <form id="formation-purchase-form" method="post"
                                   action="{{ path('app_formation_buy', {formation: formation.id}) }}"
                                   class="d-grid gap-2">
                                 <input type="hidden" name="_token" value="{{ csrf_token('formation_buy') }}">
 
                                 <div class="text-center py-2 mb-2 border rounded bg-light">
-                                    <p class="text-muted small mb-1">Prix de la formation</p>
+                                    <p class="text-muted small mb-1">Prix du module</p>
                                     <p class="h3 mb-0 fw-bold text-primary">
                                         {{ formation.prix|number_format(2, ',', ' ') }}&nbsp;€
                                     </p>
@@ -142,7 +142,7 @@
                                         formationTitle: formation.titre
                                     } %}
                                     <p class="formation-completion-badge-caption">
-                                        <i class="bi bi-patch-check-fill"></i> Formation terminée et validée
+                                        <i class="bi bi-patch-check-fill"></i> Module terminé et validé
                                     </p>
                                 </div>
                             {% endif %}
@@ -159,10 +159,10 @@
                                        'chapitre': chapitreEnCours ? chapitreEnCours.id : formation.chapitres[0].id
                                    }) }}">
                                     <i class="bi bi-play-circle"></i>
-                                    {{ formationTerminee ? 'Revoir la formation' : (chapitreEnCours ? 'Reprendre la formation' : 'Commencer la formation') }}
+                                    {{ formationTerminee ? 'Revoir le module' : (chapitreEnCours ? 'Reprendre le module' : 'Commencer le module') }}
                                 </a>
                                 <a class="btn btn-outline-secondary" href="{{ path('app_formation') }}">
-                                    <i class="bi bi-arrow-left"></i> Catalogue des formations
+                                    <i class="bi bi-arrow-left"></i> Catalogue des modules
                                 </a>
                             </div>
                         {% endif %}
