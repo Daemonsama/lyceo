@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Catalogue des Modules{% endblock %}
+{% block title %}Catalogue des modules — Lyceo Campus Numérique{% endblock %}
+
+{% block meta_description %}Parcourez le catalogue Lyceo Campus : modules de formation en ligne par thématique, tarifs transparents et accès illimité après achat.{% endblock %}
 
 {% block body %}
     <!-- Hero Section -->
@@ -99,7 +101,7 @@
                                 <span class="price-tag">
                                     {{ formation.prix }}€
                                 </span>
-                                    <a href="{{ path('app_formation_show', {'formation': formation.id}) }}"
+                                    <a href="{{ path('app_formation_public', {'formation': formation.id}) }}"
                                        class="btn btn-details">
                                         Découvrir
                                         <i class="bi bi-arrow-right-circle ms-1"></i>

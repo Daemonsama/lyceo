@@ -66,6 +66,21 @@ final class FormationController extends AbstractController
         ]);
     }
 
+    #[Route('/formation/{formation}', name: 'app_formation_public', requirements: ['formation' => '\d+'])]
+    public function app_formation_public(
+        Formation $formation,
+        ChapitreMediaDisplayHelper $mediaDisplayHelper,
+    ): Response {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('app_formation_show', ['formation' => $formation->getId()]);
+        }
+
+        return $this->render('formation/preview.html.twig', [
+            'formation' => $formation,
+            'presentationMediaDisplay' => $mediaDisplayHelper->resolveMediaReference($formation->getMedia()),
+        ]);
+    }
+
     #[Route('/formation/{formation}/detail', name: 'app_formation_show')]
     #[IsGranted('ROLE_USER')]
     public function app_formation_show(

@@ -2,7 +2,34 @@
 
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - Lyceo Campus{% endblock %}
+{% block title %}Accueil — Lyceo Campus Numérique{% endblock %}
+
+{% block meta_description %}Lyceo Campus Numérique : formations professionnelles en ligne, modules interactifs et parcours certifiants pour développer vos compétences.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Lyceo Campus Numérique",
+    "url": {{ seo_site_url()|json_encode|raw }},
+    "logo": {{ seo_absolute_asset('image/lyceo-logo-brand.png')|json_encode|raw }}
+}
+</script>
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Lyceo Campus Numérique",
+    "url": {{ seo_site_url()|json_encode|raw }},
+    "potentialAction": {
+        "@type": "SearchAction",
+        "target": {{ (seo_site_url() ~ '/formation')|json_encode|raw }},
+        "query-input": "required name=search_term_string"
+    }
+}
+</script>
+{% endblock %}
 
 {% block body %}
     <style>

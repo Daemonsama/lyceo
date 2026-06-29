@@ -1,0 +1,156 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ formation.titre }} — Lyceo Campus{% endblock %}
+
+{% block meta_description %}{{ formation.description|seo_description(160) }}{% endblock %}
+
+{% block og_type %}product{% endblock %}
+
+{% block og_image %}{{ seo_absolute_asset(formation_apercu_url(formation)) }}{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": {{ formation.titre|json_encode|raw }},
+    "description": {{ formation.description|striptags|seo_description(500)|json_encode|raw }},
+    "provider": {
+        "@type": "Organization",
+        "name": "Lyceo Campus Numérique",
+        "url": {{ seo_site_url()|json_encode|raw }}
+    },
+    "url": {{ seo_canonical_url()|json_encode|raw }},
+    "image": {{ block('og_image')|json_encode|raw }},
+    "offers": {
+        "@type": "Offer",
+        "price": "{{ formation.prix }}",
+        "priceCurrency": "EUR",
+        "availability": "https://schema.org/InStock",
+        "url": {{ seo_canonical_url()|json_encode|raw }}
+    }
+}
+</script>
+{% endblock %}
+
+{% block body %}
+    <div class="formation-header-fullwidth">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8">
+                    <h1 class="display-4 fw-bold mb-3">{{ formation.titre }}</h1>
+                    <div class="d-flex flex-wrap gap-3 mb-3">
+                        <span class="badge bg-light text-dark">
+                            <i class="bi bi-book"></i> {{ formation.chapitres|length }} chapitre{{ formation.chapitres|length > 1 ? 's' : '' }}
+                        </span>
+                        <span class="badge bg-light text-dark">
+                            <i class="bi bi-tag"></i> {{ formation.categorie.nom }}
+                        </span>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-lg-end">
+                    <div class="price-badge">{{ formation.prix }}€</div>
+                    <p class="mb-0 opacity-75">Prix unique — accès illimité</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <div class="row mb-5">
+            <div class="col-lg-8">
+                <div class="mb-4">
+                    <img src="{{ formation_apercu_url(formation) }}"
+                         class="img-fluid rounded shadow-sm w-100"
+                         alt="Aperçu — {{ formation.titre }}"
+                         loading="eager">
+                </div>
+
+                {% if presentationMediaDisplay %}
+                    <div class="formation-video-wrapper mb-4">
+                        <h2 class="h4 mb-3">
+                            <i class="bi bi-play-circle text-primary"></i> Présentation du module
+                        </h2>
+                        {% if presentationMediaDisplay.kind == 'upload_image' %}
+                            <img src="{{ asset(presentationMediaDisplay.src) }}"
+                                 class="img-fluid rounded formation-video-player"
+                                 alt="Présentation — {{ formation.titre }}"
+                                 loading="lazy">
+                        {% elseif presentationMediaDisplay.kind in ['upload_video', 'direct'] %}
+                            <video controls class="formation-video-player w-100" playsinline preload="metadata">
+                                <source src="{{ presentationMediaDisplay.kind == 'upload_video' ? asset(presentationMediaDisplay.src) : presentationMediaDisplay.src }}">
+                            </video>
+                        {% elseif presentationMediaDisplay.kind in ['drive', 'youtube', 'vimeo', 'iframe'] %}
+                            <div class="formation-youtube-wrapper">
+                                <iframe src="{{ presentationMediaDisplay.src }}"
+                                        title="Vidéo — {{ formation.titre }}"
+                                        frameborder="0"
+                                        allowfullscreen
+                                        loading="lazy"
+                                        referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h2 class="h4 mb-3">
+                            <i class="bi bi-info-circle text-primary"></i> À propos de ce module
+                        </h2>
+                        <div class="text-muted">
+                            {{ formation.description|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 sticky-top" style="top: calc(var(--navbar-height, 5.5rem) + 1rem);">
+                    <div class="card-body p-4">
+                        <h2 class="h5 mb-3">Rejoindre ce module</h2>
+                        <p class="text-muted small">
+                            Créez un compte ou connectez-vous pour acheter ce module et accéder à tous les chapitres.
+                        </p>
+                        <div class="text-center py-3 mb-3 border rounded bg-light">
+                            <p class="text-muted small mb-1">Prix du module</p>
+                            <p class="h3 mb-0 fw-bold text-primary">{{ formation.prix|number_format(2, ',', ' ') }}&nbsp;€</p>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg">
+                                <i class="bi bi-person-plus"></i> Créer un compte
+                            </a>
+                            <a href="{{ path('app_login') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-in-right"></i> Se connecter
+                            </a>
+                            <a href="{{ path('app_formation') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Retour au catalogue
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="h4 mb-3">Programme du module</h2>
+        <div class="accordion" id="chapitresPreviewAccordion">
+            {% for chapitre in formation.chapitres %}
+                <div class="card chapitre-card mb-3 border-0 shadow-sm">
+                    <div class="card-header bg-white border-0">
+                        <div class="d-flex align-items-center py-2">
+                            <div class="chapter-number me-3">{{ loop.index }}</div>
+                            <div class="flex-grow-1">
+                                <h3 class="h6 mb-0">{{ chapitre.titre }}</h3>
+                            </div>
+                            <span class="badge bg-secondary">
+                                <i class="bi bi-lock"></i> Réservé aux inscrits
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <p class="text-muted">Le programme sera bientôt disponible.</p>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -2,6 +2,8 @@
 
 {% block title %}Quiz final – {{ formation.titre }}{% endblock %}
 
+{% block meta_robots %}noindex, nofollow{% endblock %}
+
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/quiz.css') }}">
